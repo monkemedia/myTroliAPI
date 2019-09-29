@@ -2,7 +2,7 @@ const express = require('express')
 const Client = require('../models/Client')
 const router = express.Router()
 
-// Get token
+// Get access token
 router.post('/access_token', async (req, res) => {
   try {
     const { email, password } = req.body
@@ -34,7 +34,6 @@ router.post('/access_token', async (req, res) => {
 
     const client = await Client.findByCredentials(email, password)
     const accessToken = await client.generateAccessToken()
-    console.log('ACCESSTOKEN', client)
 
     res.send({
       grant_type: 'client_credentials',
