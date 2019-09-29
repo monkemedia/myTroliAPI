@@ -83,16 +83,16 @@ customerSchema.statics.findByCredentials = async (email, password) => {
   return customer
 }
 
-// Search for a customer by email address
-customerSchema.statics.deleteCustomer = async (_id) => {
-  const customer = await Customer.deleteOne({ _id })
-  return customer
-}
-
-// Search for a customer by email address
+// Update customer
 customerSchema.statics.updateCustomer = async (customerDetails) => {
   const { _id, name, email, password } = customerDetails
   const customer = await Customer.updateOne({ _id }, { name, email, password })
+  return customer
+}
+
+// Delete customer by id
+customerSchema.statics.deleteCustomer = async (_id) => {
+  const customer = await Customer.deleteOne({ _id })
   return customer
 }
 

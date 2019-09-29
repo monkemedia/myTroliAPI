@@ -3,48 +3,6 @@ const Customer = require('../models/Customer')
 const auth = require('../middleware/auth')
 const router = express.Router()
 
-// Get token
-router.post('/customers/access_token', async (req, res) => {
-  try {
-    const { email, password, type } = req.body
-
-    if (!email) {
-      return res.status(401).send({
-        message: 'Email is required'
-      })
-    }
-
-    if (!password) {
-      return res.status(401).send({
-        message: 'Password is required'
-      })
-    }
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type && type !== 'token') {
-      return res.status(401).send({
-        message: 'Correct Type is required'
-      })
-    }
-
-    const customer = await Customer.findByCredentials(email, password)
-    const accessToken = await customer.generateAccessToken()
-
-    res.send({
-      grant_type: 'implicit',
-      customer_id: customer._id,
-      access_token: accessToken
-    })
-  } catch (err) {
-    res.status(err.status).send(err)
-  }
-})
-
 // Create a new customer
 router.post('/customers', async (req, res) => {
   try {
@@ -107,21 +65,21 @@ router.post('/customers', async (req, res) => {
 })
 
 // Get all customer
-// router.get('/customers', auth, async (req, res) => {
-//   try {
-//     const customers = await Customer.getAll()
+router.get('/customers', auth, async (req, res) => {
+  try {
+    const customers = await Customer.getAll()
 
-//     const newCustomers = customers.map(customer => Object.assign(customer, {
-//       password: !!customer.password
-//     }))
+    const newCustomers = customers.map(customer => Object.assign(customer, {
+      password: !!customer.password
+    }))
 
-//     res.status(201).send(newCustomers)
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
+    res.status(201).send(newCustomers)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 
-//   // res.status(201).send(customer)
-// })
+  // res.status(201).send(customer)
+})
 
 // Get customer
 router.get('/customers/:customerId', auth, async (req, res) => {

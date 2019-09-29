@@ -57,6 +57,13 @@ clientSchema.statics.findByCredentials = async (email, password) => {
   return client
 }
 
+// Update client
+clientSchema.statics.updateClient = async (clientDetails) => {
+  const { _id, name, email, password } = clientDetails
+  const client = await Client.updateOne({ _id }, { name, email, password })
+  return client
+}
+
 const Client = mongoose.model('Client', clientSchema)
 
 module.exports = Client
