@@ -64,6 +64,12 @@ clientSchema.statics.updateClient = async (clientDetails) => {
   return client
 }
 
+// Delete client by id
+clientSchema.statics.deleteClient = async (_id) => {
+  const client = await Client.deleteOne({ _id })
+  return client
+}
+
 const Client = mongoose.model('Client', clientSchema)
 
 module.exports = Client

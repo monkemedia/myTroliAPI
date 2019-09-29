@@ -49,7 +49,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-// Get customer
+// Get client
 router.get('/client/:clientId', auth, async (req, res) => {
   const client = await Client.findOne({ _id: req.params.clientId })
   const clientClone = Object.assign(client, {
@@ -59,7 +59,7 @@ router.get('/client/:clientId', auth, async (req, res) => {
   res.status(200).send(clientClone)
 })
 
-// Update customer
+// Update client
 router.put('/client/:clientId', auth, async (req, res) => {
   const _id = req.params.clientId
   const currentClientDetails = await Client.findOne({ _id: req.params.clientId })
@@ -89,6 +89,19 @@ router.put('/client/:clientId', auth, async (req, res) => {
     await Client.updateClient(data)
 
     res.status(201).send(data)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+})
+
+// Delete client
+router.delete('/clients/:clientId', auth, async (req, res) => {
+  try {
+    await Client.deleteClient(req.params.clientId)
+
+    res.status(201).send({
+      message: 'Client successfully deleted'
+    })
   } catch (err) {
     res.status(400).send(err)
   }
