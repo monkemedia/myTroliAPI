@@ -39,7 +39,7 @@ const addressSchema = mongoose.Schema({
   },
   country: {
     type: String,
-    required: true,
+    required: true
   },
   phone_number: {
     type: String,
@@ -62,22 +62,22 @@ addressSchema.statics.findAllAddresses = async (customerId) => {
   return addresses
 }
 
-// Find all addresses by customer id
+// Find address by address id
 addressSchema.statics.findAddress = async (addressId) => {
-  const addresses = await Address.findOne({ _id: addressId })
-  return addresses
-}
-
-// Find all addresses by customer id
-addressSchema.statics.deleteAddress = async (addressId) => {
-  const address = await Address.deleteOne({ _id: addressId })
+  const address = await Address.findOne({ _id: addressId })
   return address
 }
 
-// Search for a customer by email address
+// Update address
 addressSchema.statics.updateAddress = async (addressDetails) => {
   const { _id } = addressDetails
   const address = await Address.updateOne({ _id }, addressDetails)
+  return address
+}
+
+// Delete address by address id
+addressSchema.statics.deleteAddress = async (addressId) => {
+  const address = await Address.deleteOne({ _id: addressId })
   return address
 }
 

@@ -52,8 +52,8 @@ customerSchema.methods.generateAccessToken = async function () {
   return accessToken
 }
 
-// Search for a customer by email address
-customerSchema.statics.getAll = async (email) => {
+// Get all customers
+customerSchema.statics.findAllCustomers = async () => {
   const customers = await Customer.find({})
 
   return customers

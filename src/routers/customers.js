@@ -67,7 +67,7 @@ router.post('/customers', async (req, res) => {
 // Get all customer
 router.get('/customers', auth, async (req, res) => {
   try {
-    const customers = await Customer.getAll()
+    const customers = await Customer.findAllCustomers()
 
     const newCustomers = customers.map(customer => Object.assign(customer, {
       password: !!customer.password
