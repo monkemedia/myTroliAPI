@@ -73,12 +73,10 @@ router.get('/customers', auth, async (req, res) => {
       password: !!customer.password
     }))
 
-    res.status(201).send(newCustomers)
+    res.status(200).send(newCustomers)
   } catch (err) {
     res.status(400).send(err)
   }
-
-  // res.status(201).send(customer)
 })
 
 // Get customer
@@ -88,7 +86,7 @@ router.get('/customers/:customerId', auth, async (req, res) => {
     password: !!customer.password
   })
 
-  res.status(201).send(customerClone)
+  res.status(200).send(customerClone)
 })
 
 // Update customer
@@ -120,7 +118,7 @@ router.put('/customers/:customerId', auth, async (req, res) => {
   try {
     await Customer.updateCustomer(data)
 
-    res.status(201).send(data)
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -131,7 +129,7 @@ router.delete('/customers/:customerId', auth, async (req, res) => {
   try {
     await Customer.deleteCustomer(req.params.customerId)
 
-    res.status(201).send({
+    res.status(204).send({
       message: 'Customer successfully deleted'
     })
   } catch (err) {

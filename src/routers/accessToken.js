@@ -35,7 +35,7 @@ router.post('/access_token', async (req, res) => {
     const client = await Client.findByCredentials(email, password)
     const accessToken = await client.generateAccessToken()
 
-    res.send({
+    res.status(200).send({
       grant_type: 'client_credentials',
       client_id: client._id,
       access_token: accessToken

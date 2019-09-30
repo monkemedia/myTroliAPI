@@ -88,7 +88,7 @@ router.put('/client/:clientId', auth, async (req, res) => {
   try {
     await Client.updateClient(data)
 
-    res.status(201).send(data)
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -99,7 +99,7 @@ router.delete('/clients/:clientId', auth, async (req, res) => {
   try {
     await Client.deleteClient(req.params.clientId)
 
-    res.status(201).send({
+    res.status(204).send({
       message: 'Client successfully deleted'
     })
   } catch (err) {
