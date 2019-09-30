@@ -1,6 +1,6 @@
 const express = require('express')
-const Product = require('../models/Product')
-const auth = require('../middleware/auth')
+const Product = require('../../models/product/Product')
+const auth = require('../../middleware/auth')
 const currencySymbol = require('currency-symbol-map')
 const router = express.Router()
 
