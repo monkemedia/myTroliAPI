@@ -5,7 +5,7 @@ const router = express.Router()
 
 // Create a new address
 router.post('/customers/:customerId/addresses', auth, async (req, res) => {
-  const { type } = req.body
+  const { type, first_name, last_name, line_1, county, postcode, country } = req.body
 
   if (!type) {
     return res.status(401).send({
@@ -16,6 +16,42 @@ router.post('/customers/:customerId/addresses', auth, async (req, res) => {
   if (type && type !== 'address') {
     return res.status(401).send({
       message: 'Correct Type is required'
+    })
+  }
+
+  if (!first_name) {
+    return res.status(401).send({
+      message: 'First name is required'
+    })
+  }
+
+  if (!last_name) {
+    return res.status(401).send({
+      message: 'Last name is required'
+    })
+  }
+
+  if (!line_1) {
+    return res.status(401).send({
+      message: 'Line 1 is required'
+    })
+  }
+
+  if (!county) {
+    return res.status(401).send({
+      message: 'County is required'
+    })
+  }
+
+  if (!postcode) {
+    return res.status(401).send({
+      message: 'Postcode is required'
+    })
+  }
+
+  if (!country) {
+    return res.status(401).send({
+      message: 'Country is required'
     })
   }
 
@@ -55,7 +91,7 @@ router.get('/customers/:customerId/addresses/:addressId', auth, async (req, res)
 // Update can address
 router.put('/customers/:customerId/addresses/:addressId', auth, async (req, res) => {
   const _id = req.params.addressId
-  const { type } = req.body
+  const { type, first_name, last_name, company_name, line_1, line_2, city, county, postcode, country, phone_number, instructions } = req.body
 
   if (!type) {
     return res.status(401).send({
@@ -69,23 +105,59 @@ router.put('/customers/:customerId/addresses/:addressId', auth, async (req, res)
     })
   }
 
+  if (!first_name) {
+    return res.status(401).send({
+      message: 'First name is required'
+    })
+  }
+
+  if (!last_name) {
+    return res.status(401).send({
+      message: 'Last name is required'
+    })
+  }
+
+  if (!line_1) {
+    return res.status(401).send({
+      message: 'Line 1 is required'
+    })
+  }
+
+  if (!county) {
+    return res.status(401).send({
+      message: 'County is required'
+    })
+  }
+
+  if (!postcode) {
+    return res.status(401).send({
+      message: 'Postcode is required'
+    })
+  }
+
+  if (!country) {
+    return res.status(401).send({
+      message: 'Country is required'
+    })
+  }
+
   try {
     const currentAddress = await Address.findAddress(req.params.addressId)
 
     const data = {
       type,
       _id,
-      first_name: req.body.first_name || currentAddress.first_name,
-      last_name: req.body.last_name || currentAddress.last_name,
-      company_name: req.body.company_name || currentAddress.company_name,
-      line_1: req.body.line_1 || currentAddress.line_1,
-      line_2: req.body.line_2 || currentAddress.line_2,
-      city: req.body.city || currentAddress.city,
-      county: req.body.county || currentAddress.county,
-      postcode: req.body.postcode || currentAddress.postcode,
-      country: req.body.country || currentAddress.country,
-      phone_number: req.body.phone_number || currentAddress.phone_number,
-      instructions: req.body.instructions || currentAddress.instructions,
+      first_name: first_name || currentAddress.first_name,
+      last_name: last_name || currentAddress.last_name,
+      company_name: company_name || currentAddress.company_name,
+      line_1: line_1 || currentAddress.line_1,
+      line_2: line_2 || currentAddress.line_2,
+      city: city || currentAddress.city,
+      county: county || currentAddress.county,
+      postcode: postcode || currentAddress.postcode,
+      country: country || currentAddress.country,
+      phone_number: phone_number || currentAddress.phone_number,
+      instructions: instructions || currentAddress.instructions,
       default: req.body.default || currentAddress.default
     }
 
