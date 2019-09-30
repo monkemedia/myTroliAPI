@@ -47,7 +47,6 @@ function formatCurrency (amount, currency) {
 }
 
 function updateMeta (product, amount, currency, stock) {
-  console.log('POO', amount, currency, stock)
   return {
     display_price: {
       currency,

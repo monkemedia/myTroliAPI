@@ -174,7 +174,7 @@ router.delete('/customers/:customerId/addresses/:addressId', auth, async (req, r
   try {
     await Address.deleteAddress(req.params.addressId)
 
-    res.status(204).send({
+    res.status(200).send({
       message: 'Address successfully deleted'
     })
   } catch (err) {

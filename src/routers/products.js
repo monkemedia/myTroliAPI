@@ -124,7 +124,7 @@ router.get('/products/:productId', auth, async (req, res) => {
 // Update product
 router.put('/products/:productId', auth, async (req, res) => {
   const _id = req.params.productId
-  const currentProductDetails = await Product.findOne({ _id: req.params.productId })
+  const currentProductDetails = await Product.findOne({ _id })
   const { type, name, slug, sku, stock, description, price, commodity_type } = req.body
 
   if (!type) {

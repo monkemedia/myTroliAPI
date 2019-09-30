@@ -99,7 +99,7 @@ router.delete('/clients/:clientId', auth, async (req, res) => {
   try {
     await Client.deleteClient(req.params.clientId)
 
-    res.status(204).send({
+    res.status(200).send({
       message: 'Client successfully deleted'
     })
   } catch (err) {
