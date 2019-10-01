@@ -7,7 +7,8 @@ const router = express.Router()
 router.post('/customers', async (req, res) => {
   try {
     // Check to see if customer already exists
-    const { name, email, password, type } = req.body
+    const data = req.body.data
+    const { name, email, password, type } = data
     const customerExists = await Customer.findByEmail(email)
 
     if (!name) {
@@ -46,18 +47,20 @@ router.post('/customers', async (req, res) => {
       })
     }
 
-    const customer = new Customer(req.body)
+    const customer = new Customer(data)
 
     await customer.save()
 
     const { _id } = customer
 
     res.status(201).send({
-      type,
-      _id,
-      name,
-      email,
-      password: !!password
+      data: {
+        type,
+        _id,
+        name,
+        email,
+        password: !!password
+      }
     })
   } catch (err) {
     res.status(400).send(err)
@@ -73,7 +76,7 @@ router.get('/customers', auth, async (req, res) => {
       password: !!customer.password
     }))
 
-    res.status(200).send(newCustomers)
+    res.status(200).send({ data: [...newCustomers] })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -86,14 +89,14 @@ router.get('/customers/:customerId', auth, async (req, res) => {
     password: !!customer.password
   })
 
-  res.status(200).send(customerClone)
+  res.status(200).send({ data: customerClone })
 })
 
 // Update customer
 router.put('/customers/:customerId', auth, async (req, res) => {
   const _id = req.params.customerId
   const currentCustomerDetails = await Customer.findOne({ _id: req.params.customerId })
-  const { type, name, email, password } = req.body
+  const { type, name, email, password } = req.body.data
 
   if (!type) {
     return res.status(401).send({
@@ -118,7 +121,7 @@ router.put('/customers/:customerId', auth, async (req, res) => {
   try {
     await Customer.updateCustomer(data)
 
-    res.status(200).send(data)
+    res.status(200).send({ data })
   } catch (err) {
     res.status(400).send(err)
   }
