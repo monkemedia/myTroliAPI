@@ -1,27 +1,16 @@
 const mongoose = require('mongoose')
 
 const productCategoryRelationshipSchema = mongoose.Schema({
-  type: {
-    type: String,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  description: {
-    type: String,
-    required: false
-  },
-  status: {
-    type: Object,
-    required: false
-  }
+  data: [{
+    type: {
+      type: String,
+      required: true
+    },
+    category_id: {
+      type: String,
+      required: true
+    }
+  }]
 })
 
 // Get all Categories
