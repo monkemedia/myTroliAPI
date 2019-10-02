@@ -100,7 +100,14 @@ router.put('/client/:clientId', auth, async (req, res) => {
   try {
     await Client.updateClient(data)
 
-    res.status(200).send({ data })
+    res.status(200).send({
+      data: {
+        type: data.type,
+        _id: data._id,
+        email: data.email,
+        password: `${!!data.password}`
+      }
+    })
   } catch (err) {
     res.status(400).send(err)
   }

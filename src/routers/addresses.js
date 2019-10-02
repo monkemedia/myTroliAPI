@@ -5,7 +5,9 @@ const router = express.Router()
 
 // Create a new address
 router.post('/customers/:customerId/addresses', auth, async (req, res) => {
-  const { type, first_name, last_name, line_1, county, postcode, country } = req.body
+  const data = req.body.data
+  const { type, first_name, last_name, line_1, county, postcode, country } = data
+  const customer_id = req.params.customerId
 
   if (!type) {
     return res.status(401).send({
@@ -56,11 +58,11 @@ router.post('/customers/:customerId/addresses', auth, async (req, res) => {
   }
 
   try {
-    const addresses = new Address({ ...req.body, customer_id: req.params.customerId })
+    const addresses = new Address({ ...data, customer_id })
 
     await addresses.save()
 
-    res.status(201).send(addresses)
+    res.status(201).send({ data: addresses })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -69,9 +71,10 @@ router.post('/customers/:customerId/addresses', auth, async (req, res) => {
 // Get all addresses
 router.get('/customers/:customerId/addresses', auth, async (req, res) => {
   try {
-    const addresses = await Address.findAllAddresses(req.params.customerId)
+    const customer_id = req.params.customerId
+    const addresses = await Address.findAllAddresses(customer_id)
 
-    res.status(200).send(addresses)
+    res.status(200).send({ data: addresses })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -80,9 +83,10 @@ router.get('/customers/:customerId/addresses', auth, async (req, res) => {
 // Get an address
 router.get('/customers/:customerId/addresses/:addressId', auth, async (req, res) => {
   try {
-    const addresses = await Address.findAddress(req.params.addressId)
+    const address_id = req.params.addressId
+    const addresses = await Address.findAddress(address_id)
 
-    res.status(200).send(addresses)
+    res.status(200).send({ data: addresses })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -91,7 +95,8 @@ router.get('/customers/:customerId/addresses/:addressId', auth, async (req, res)
 // Update can address
 router.put('/customers/:customerId/addresses/:addressId', auth, async (req, res) => {
   const _id = req.params.addressId
-  const { type, first_name, last_name, company_name, line_1, line_2, city, county, postcode, country, phone_number, instructions } = req.body
+  const data = req.body.data
+  const { type, first_name, last_name, company_name, line_1, line_2, city, county, postcode, country, phone_number, instructions } = data
 
   if (!type) {
     return res.status(401).send({
@@ -105,44 +110,9 @@ router.put('/customers/:customerId/addresses/:addressId', auth, async (req, res)
     })
   }
 
-  if (!first_name) {
-    return res.status(401).send({
-      message: 'First name is required'
-    })
-  }
-
-  if (!last_name) {
-    return res.status(401).send({
-      message: 'Last name is required'
-    })
-  }
-
-  if (!line_1) {
-    return res.status(401).send({
-      message: 'Line 1 is required'
-    })
-  }
-
-  if (!county) {
-    return res.status(401).send({
-      message: 'County is required'
-    })
-  }
-
-  if (!postcode) {
-    return res.status(401).send({
-      message: 'Postcode is required'
-    })
-  }
-
-  if (!country) {
-    return res.status(401).send({
-      message: 'Country is required'
-    })
-  }
-
   try {
-    const currentAddress = await Address.findAddress(req.params.addressId)
+    const address_id = req.params.addressId
+    const currentAddress = await Address.findAddress(address_id)
 
     const data = {
       type,
@@ -163,7 +133,7 @@ router.put('/customers/:customerId/addresses/:addressId', auth, async (req, res)
 
     await Address.updateAddress(data)
 
-    res.status(200).send(data)
+    res.status(200).send({ data })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -172,7 +142,8 @@ router.put('/customers/:customerId/addresses/:addressId', auth, async (req, res)
 // Delete an address
 router.delete('/customers/:customerId/addresses/:addressId', auth, async (req, res) => {
   try {
-    await Address.deleteAddress(req.params.addressId)
+    const address_id = req.params.addressId
+    await Address.deleteAddress(address_id)
 
     res.status(200).send({
       message: 'Address successfully deleted'
