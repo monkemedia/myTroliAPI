@@ -2,11 +2,14 @@ const express = require('express')
 const Product = require('../../models/product/Product')
 const auth = require('../../middleware/auth')
 const currencySymbol = require('currency-symbol-map')
+const errorHandler = require('../../utils/errorHandler')
 const router = express.Router()
 
 // Create a new Product
 router.post('/products', auth, async (req, res) => {
-  const { type, name, slug, sku, stock, description, price, commodity_type } = req.body
+  const customer_id = req.params.customerId
+  const data = req.body.data
+  const { type, name, slug, sku, stock, description, price, commodity_type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -93,13 +96,13 @@ router.post('/products', auth, async (req, res) => {
   }
 
   try {
-    const products = new Product({ ...req.body, customer_id: req.params.customerId })
+    const products = new Product({ ...data, customer_id })
 
     await products.save()
 
-    res.status(201).send(products)
+    res.status(201).send({ data: products })
   } catch (err) {
-    res.status(400).send(err)
+    res.status(400).send(errorHandler(400, err))
   }
 })
 
@@ -108,7 +111,7 @@ router.get('/products', auth, async (req, res) => {
   try {
     const products = await Product.findAllProducts()
 
-    res.status(200).send(products)
+    res.status(200).send({ data: products })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -116,16 +119,18 @@ router.get('/products', auth, async (req, res) => {
 
 // Get product
 router.get('/products/:productId', auth, async (req, res) => {
-  const product = await Product.findOne({ _id: req.params.productId })
+  const _id = req.params.productId
+  const product = await Product.findOne({ _id })
 
-  res.status(200).send(product)
+  res.status(200).send({ data: product })
 })
 
 // Update product
 router.put('/products/:productId', auth, async (req, res) => {
   const _id = req.params.productId
   const currentProductDetails = await Product.findOne({ _id })
-  const { type, name, slug, sku, stock, description, price, commodity_type } = req.body
+  const data = req.body.data
+  const { type, name, slug, sku, stock, description, price, commodity_type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -163,22 +168,20 @@ router.put('/products/:productId', auth, async (req, res) => {
     })
   }
 
-  const data = {
-    type,
-    _id,
-    name: name || currentProductDetails.name,
-    slug: slug || currentProductDetails.slug,
-    sku: sku || currentProductDetails.sku,
-    stock: stock || currentProductDetails.stock,
-    description: description || currentProductDetails.description,
-    price: price || currentProductDetails.price,
-    commodity_type: commodity_type || currentProductDetails.commodity_type
-  }
-
   try {
-    const product = await Product.updateProduct(data)
+    const product = await Product.updateProduct({
+      type,
+      _id,
+      name: name || currentProductDetails.name,
+      slug: slug || currentProductDetails.slug,
+      sku: sku || currentProductDetails.sku,
+      stock: stock || currentProductDetails.stock,
+      description: description || currentProductDetails.description,
+      price: price || currentProductDetails.price,
+      commodity_type: commodity_type || currentProductDetails.commodity_type
+    })
 
-    res.status(200).send(product)
+    res.status(200).send({ data: product })
   } catch (err) {
     res.status(400).send(err)
   }
