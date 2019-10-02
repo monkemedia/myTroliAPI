@@ -4,17 +4,18 @@ const auth = require('../middleware/auth')
 const router = express.Router()
 
 // Create client
-router.post('/', async (req, res) => {
-  const { email, password } = req.body
-  const grantType = req.body.grant_type
+router.post('/client', async (req, res) => {
+  const data = req.body.data
+  const { email, password, grant_type } = data
+  const clientExists = await Client.findByEmail(email)
 
-  if (!grantType) {
+  if (!grant_type) {
     return res.status(401).send({
       message: 'Grant Type is required'
     })
   }
 
-  if (grantType && grantType !== 'client_credentials') {
+  if (grant_type && grant_type !== 'client_credentials') {
     return res.status(401).send({
       message: 'Correct Grant Type is required'
     })
@@ -32,18 +33,24 @@ router.post('/', async (req, res) => {
     })
   }
 
+  if (clientExists) {
+    return res.status(401).send({
+      message: 'Client already exists'
+    })
+  }
+
   try {
-    const client = new Client(req.body)
+    const client = new Client(data)
     await client.save()
 
     const { _id } = client
 
-    const clientCopy = Object.assign(req.body, {
+    const clientCopy = Object.assign(data, {
       password: !!password,
       _id
     })
 
-    res.status(201).send(clientCopy)
+    res.status(201).send({ data: clientCopy })
   } catch (err) {
     res.status(err.status).send(err)
   }

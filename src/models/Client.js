@@ -11,7 +11,8 @@ const clientSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -38,6 +39,13 @@ clientSchema.methods.generateAccessToken = async function () {
   }, process.env.CLIENT_SECRET, { expiresIn: '1h' })
 
   return accessToken
+}
+
+// Search for a client by email address
+clientSchema.statics.findByEmail = async (email) => {
+  const client = await Client.findOne({ email })
+
+  return client
 }
 
 // Search for a Client user by email and password
