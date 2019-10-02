@@ -59,18 +59,24 @@ router.post('/client', async (req, res) => {
 // Get client
 router.get('/client/:clientId', auth, async (req, res) => {
   const client = await Client.findOne({ _id: req.params.clientId })
+
+  if (!client) {
+    return res.status(401).send({
+      message: 'Client does not exist'
+    })
+  }
   const clientClone = Object.assign(client, {
     password: !!client.password
   })
 
-  res.status(200).send(clientClone)
+  res.status(200).send({ data: clientClone })
 })
 
 // Update client
 router.put('/client/:clientId', auth, async (req, res) => {
   const _id = req.params.clientId
   const currentClientDetails = await Client.findOne({ _id: req.params.clientId })
-  const { type, name, email, password } = req.body
+  const { type, email, password } = req.body.data
 
   if (!type) {
     return res.status(401).send({
@@ -87,7 +93,6 @@ router.put('/client/:clientId', auth, async (req, res) => {
   const data = {
     type,
     _id,
-    name: name || currentClientDetails.name,
     email: email || currentClientDetails.email,
     password: password || currentClientDetails.password
   }
@@ -95,7 +100,7 @@ router.put('/client/:clientId', auth, async (req, res) => {
   try {
     await Client.updateClient(data)
 
-    res.status(200).send(data)
+    res.status(200).send({ data })
   } catch (err) {
     res.status(400).send(err)
   }
