@@ -85,7 +85,10 @@ customerSchema.statics.findByCredentials = async (email, password) => {
 
 // Update customer
 customerSchema.statics.updateCustomer = async (customerDetails) => {
-  const { _id, name, email, password } = customerDetails
+  const { _id, name, email } = customerDetails
+  let { password } = customerDetails
+
+  password = await bcrypt.hash(password, 8)
   const customer = await Customer.updateOne({ _id }, { name, email, password })
   return customer
 }
