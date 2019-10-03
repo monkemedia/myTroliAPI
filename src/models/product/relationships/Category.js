@@ -1,17 +1,22 @@
 const mongoose = require('mongoose')
+const uniqueArrayPlugin = require('mongoose-unique-array')
 
 const productCategoryRelationshipSchema = mongoose.Schema({
-  data: [{
+  categories: [{
     type: {
       type: String,
       required: true
     },
     category_id: {
       type: String,
-      required: true
-    }
+      required: true,
+      unique: true
+    },
+    _id: false
   }]
 })
+
+productCategoryRelationshipSchema.plugin(uniqueArrayPlugin)
 
 // Get all Categories
 productCategoryRelationshipSchema.statics.findAllCategories = async () => {

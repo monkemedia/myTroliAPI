@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 const currencySymbol = require('currency-symbol-map')
 
+var categoriesSchema = mongoose.Schema({
+  type: String,
+  category_id: String
+})
+
 const productSchema = mongoose.Schema({
   type: {
     type: String,
@@ -39,6 +44,9 @@ const productSchema = mongoose.Schema({
   meta: {
     type: Object,
     required: false
+  },
+  relationships: {
+    categories: [categoriesSchema]
   }
 })
 
