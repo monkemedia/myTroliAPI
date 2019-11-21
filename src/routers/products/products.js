@@ -109,9 +109,11 @@ router.post('/products', auth, async (req, res) => {
 // Get all products
 router.get('/products', auth, async (req, res) => {
   try {
-    const products = await Product.findAllProducts()
+    const page = parseInt(req.body.page) || 1
+    const limit = parseInt(req.body.limit) || 2
+    const products = await Product.findAllProducts(page, limit)
 
-    res.status(200).send({ data: products })
+    res.status(200).send({ data: products.data, meta: products.meta })
   } catch (err) {
     res.status(400).send(err)
   }

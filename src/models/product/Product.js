@@ -85,10 +85,21 @@ productSchema.pre('save', async function (next) {
 })
 
 // Get all products
-productSchema.statics.findAllProducts = async () => {
-  const products = await Product.find({})
-
-  return products
+productSchema.statics.findAllProducts = async (page, limit) => {
+  const products = await Product.find({}).populate('relationships.categories').skip((page - 1) * limit).limit(limit)
+  const total = await Product.countDocuments()
+  return {
+    data: products,
+    meta: {
+      pagination: {
+        current: page,
+        total: products.length
+      },
+      results: {
+        total
+      }
+    }
+  }
 }
 
 // Get product by product id
