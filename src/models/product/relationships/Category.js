@@ -2,40 +2,29 @@ const mongoose = require('mongoose')
 const uniqueArrayPlugin = require('mongoose-unique-array')
 
 const productCategoryRelationshipSchema = mongoose.Schema({
-  categories: [{
-    type: {
-      type: String,
-      required: true
-    },
-    category_id: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    _id: false
-  }]
+  type: {
+    type: String,
+    required: true
+  },
+  category_id: {
+    type: String,
+    required: true,
+    unique: true
+  }
 })
 
 productCategoryRelationshipSchema.plugin(uniqueArrayPlugin)
 
 // Get all Categories
-productCategoryRelationshipSchema.statics.findAllCategories = async () => {
-  const categories = await Category.find({})
+// productCategoryRelationshipSchema.statics.findAllCategories = async () => {
+//   const categories = await Category.find({})
 
-  return categories
-}
-
-// Update product
-productCategoryRelationshipSchema.statics.updateCategory = async (categoryDetails) => {
-  const { _id } = categoryDetails
-
-  const category = await Category.updateOne({ _id }, categoryDetails)
-  return category
-}
+//   return categories
+// }
 
 // Delete category
 productCategoryRelationshipSchema.statics.deleteCategory = async (categoryId) => {
-  const category = await Category.deleteOne({ _id: categoryId })
+  const category = await Category.deleteOne({ category_id: categoryId })
   return category
 }
 

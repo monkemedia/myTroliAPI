@@ -120,7 +120,7 @@ router.get('/products', auth, async (req, res) => {
 // Get product
 router.get('/products/:productId', auth, async (req, res) => {
   const _id = req.params.productId
-  const product = await Product.findOne({ _id })
+  const product = await Product.findOne({ _id }).populate('relationships.categories')
 
   res.status(200).send({ data: product })
 })
