@@ -11,7 +11,7 @@ const auth = async (req, res, next) => {
   token = token.replace('Bearer ', '')
 
   try {
-    await jwt.verify(token, process.env.CLIENT_SECRET)
+    jwt.verify(token, process.env.CLIENT_SECRET)
 
     next()
   } catch (err) {

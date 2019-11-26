@@ -17,6 +17,10 @@ const clientSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  refresh_token: {
+    type: String,
+    required: false
   }
 })
 
@@ -30,20 +34,38 @@ clientSchema.pre('save', async function (next) {
   next()
 })
 
-// GenErate an access token
+// Generate an access token
 clientSchema.methods.generateAccessToken = async function () {
   const client = this
   const accessToken = jwt.sign({
     client_id: client._id,
     grant_type: client.grant_type
-  }, process.env.CLIENT_SECRET, { expiresIn: '1h' })
+  }, process.env.CLIENT_SECRET, { expiresIn: '1hr' })
 
   return accessToken
+}
+
+// Generate refresh token
+clientSchema.methods.generateRefreshToken = async function () {
+  const client = this
+  const refreshToken = jwt.sign({
+    client_id: client._id,
+    grant_type: client.grant_type
+  }, process.env.CLIENT_SECRET, { expiresIn: '24hr' })
+
+  return refreshToken
 }
 
 // Search for a client by email address
 clientSchema.statics.findByEmail = async (email) => {
   const client = await Client.findOne({ email })
+
+  return client
+}
+
+// Search for a client by refresh token
+clientSchema.statics.findByRefreshToken = async (refresh_token) => {
+  const client = await Client.findOne({ refresh_token })
 
   return client
 }

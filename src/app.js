@@ -1,6 +1,6 @@
 const express = require('express')
 const routers = require('./routers/index.js')
-const accessToken = require('./routers/accessToken.js')
+const oauth = require('./routers/oauth.js')
 const bodyParser = require('body-parser')
 
 const port = process.env.PORT
@@ -9,7 +9,7 @@ require('./db/db')
 const app = express()
 
 app.use(bodyParser.json())
-app.use('/oauth/', accessToken)
+app.use('/oauth/', oauth)
 app.use('/v1/', routers)
 
 app.listen(port, () => {
