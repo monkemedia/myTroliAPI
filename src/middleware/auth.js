@@ -5,18 +5,18 @@ const auth = async (req, res, next) => {
   let token = req.header('Authorization')
 
   if (!token) {
-    return res.status(422).send(errorHandler(422, 'Token is required'))
+    return res.status(401).send(errorHandler(401, 'Token is required'))
   }
 
   token = token.replace('Bearer ', '')
 
   try {
-    jwt.verify(token, process.env.CLIENT_SECRET)
+    jwt.verify(token, process.env.API_SECRET)
 
     next()
   } catch (err) {
     if (err.message === 'jwt expired') {
-      return res.status(422).send(errorHandler(422, 'Token has expired'))
+      return res.status(401).send(errorHandler(401, 'Token has expired'))
     }
 
     res.status(err.status).send(err)

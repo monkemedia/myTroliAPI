@@ -41,7 +41,7 @@ router.post('/refresh_token', async (req, res) => {
     }
 
     try {
-      jwt.verify(client.refresh_token, process.env.CLIENT_SECRET)
+      jwt.verify(client.refresh_token, process.env.API_SECRET)
 
       const accessToken = await client.generateAccessToken()
       const refreshToken = await client.generateRefreshToken()
@@ -55,7 +55,7 @@ router.post('/refresh_token', async (req, res) => {
       })
     } catch (err) {
       if (err.message === 'jwt expired') {
-        return res.status(422).send({
+        return res.status(401).send({
           message: 'Refresh Token has expired'
         })
       }
@@ -68,9 +68,9 @@ router.post('/refresh_token', async (req, res) => {
 })
 
 // Get access token when user logins in
-router.post('/access_token', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
-    const { grant_type, email, password } = req.body
+    const { grant_type, client_secret, email, password } = req.body
 
     if (!email) {
       return res.status(401).send({
@@ -81,6 +81,18 @@ router.post('/access_token', async (req, res) => {
     if (!password) {
       return res.status(401).send({
         message: 'Password is required'
+      })
+    }
+
+    if (!client_secret) {
+      return res.status(401).send({
+        message: 'Client Secret is required'
+      })
+    }
+
+    if (!client_secret && client_secret !== process.env.CLIENT_SECRET) {
+      return res.status(401).send({
+        message: 'Correct Client Secret is required'
       })
     }
 

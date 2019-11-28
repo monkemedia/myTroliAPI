@@ -40,7 +40,7 @@ clientSchema.methods.generateAccessToken = async function () {
   const accessToken = jwt.sign({
     client_id: client._id,
     grant_type: client.grant_type
-  }, process.env.CLIENT_SECRET, { expiresIn: '1hr' })
+  }, process.env.API_SECRET, { expiresIn: '10s' })
 
   return accessToken
 }
@@ -51,7 +51,7 @@ clientSchema.methods.generateRefreshToken = async function () {
   const refreshToken = jwt.sign({
     client_id: client._id,
     grant_type: client.grant_type
-  }, process.env.CLIENT_SECRET, { expiresIn: '24hr' })
+  }, process.env.API_SECRET, { expiresIn: '24hr' })
 
   return refreshToken
 }
