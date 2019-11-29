@@ -21,6 +21,10 @@ const clientSchema = mongoose.Schema({
   refresh_token: {
     type: String,
     required: false
+  },
+  reset_token: {
+    type: String,
+    required: false
   }
 })
 
@@ -34,26 +38,15 @@ clientSchema.pre('save', async function (next) {
   next()
 })
 
-// Generate an access token
-clientSchema.methods.generateAccessToken = async function () {
+// Generatea token
+clientSchema.methods.generateToken = async function (expiresIn) {
   const client = this
   const accessToken = jwt.sign({
     client_id: client._id,
     grant_type: client.grant_type
-  }, process.env.API_SECRET, { expiresIn: '10s' })
+  }, process.env.API_SECRET, { expiresIn: expiresIn || '24hrs' })
 
   return accessToken
-}
-
-// Generate refresh token
-clientSchema.methods.generateRefreshToken = async function () {
-  const client = this
-  const refreshToken = jwt.sign({
-    client_id: client._id,
-    grant_type: client.grant_type
-  }, process.env.API_SECRET, { expiresIn: '24hr' })
-
-  return refreshToken
 }
 
 // Search for a client by email address
@@ -66,6 +59,13 @@ clientSchema.statics.findByEmail = async (email) => {
 // Search for a client by refresh token
 clientSchema.statics.findByRefreshToken = async (refresh_token) => {
   const client = await Client.findOne({ refresh_token })
+
+  return client
+}
+
+// Search for a client by reset token
+clientSchema.statics.findByResetToken = async (reset_token) => {
+  const client = await Client.findOne({ reset_token })
 
   return client
 }
@@ -94,6 +94,16 @@ clientSchema.statics.updateClient = async (clientDetails) => {
 
   password = await bcrypt.hash(password, 8)
   const client = await Client.updateOne({ _id }, { name, email, password })
+  return client
+}
+
+// Update password
+clientSchema.statics.updatePassword = async (details) => {
+  const { _id, password } = details
+
+  const hashedPassword = await bcrypt.hash(password, 8)
+
+  const client = await Client.updateOne({ _id }, { password: hashedPassword, reset_token: null })
   return client
 }
 

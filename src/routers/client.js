@@ -58,7 +58,7 @@ router.post('/client', async (req, res) => {
 
 // Get client
 router.get('/client/:clientId', auth, async (req, res) => {
-  const client = await Client.findOne({ _id: req.params.clientId })
+  const client = await Client.findOne({ _id: req.params.clientId }).select('-reset_token -refresh_token')
 
   if (!client) {
     return res.status(401).send({

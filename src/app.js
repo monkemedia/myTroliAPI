@@ -4,7 +4,7 @@ const routers = require('./routers/index.js')
 const oauth = require('./routers/oauth.js')
 const bodyParser = require('body-parser')
 
-const port = process.env.PORT
+const port = process.env.PORT || 3060
 require('./db/db')
 
 const app = express()
