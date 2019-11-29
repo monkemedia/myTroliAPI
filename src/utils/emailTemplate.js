@@ -3,7 +3,7 @@ const postmarkClient = new postmark.ServerClient(process.env.POSTMARK_ID)
 
 module.exports = {
   forgottenPasswordEmail: async (data) => {
-    const textBodyUrl = `${process.env.WEB_ADDRESS}/forgotten-password/${data.resetToken}`
+    const textBodyUrl = `${process.env.WEB_ADDRESS}/auth/forgotten-password/${data.resetToken}`
     await postmarkClient.sendEmail({
       From: process.env.EMAIL_ADDRESS,
       To: data.email,
@@ -13,7 +13,7 @@ module.exports = {
   },
 
   confirmAccount: async (data) => {
-    const textBodyUrl = `${process.env.WEB_ADDRESS}/forgotten-password/${data.resetToken}`
+    const textBodyUrl = `${process.env.WEB_ADDRESS}/auth/forgotten-password/${data.resetToken}`
     await postmarkClient.sendEmail({
       From: process.env.EMAIL_ADDRESS,
       To: data.email,
