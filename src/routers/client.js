@@ -6,7 +6,7 @@ const router = express.Router()
 // Create client
 router.post('/client', async (req, res) => {
   const data = req.body.data
-  const { email, password, grant_type } = data
+  const { email, name, password, grant_type } = data
   const clientExists = await Client.findByEmail(email)
 
   if (!grant_type) {
@@ -24,6 +24,12 @@ router.post('/client', async (req, res) => {
   if (!email) {
     return res.status(401).send({
       message: 'Email is required'
+    })
+  }
+
+  if (!name) {
+    return res.status(401).send({
+      message: 'Name is required'
     })
   }
 
@@ -76,7 +82,7 @@ router.get('/client/:clientId', auth, async (req, res) => {
 router.put('/client/:clientId', auth, async (req, res) => {
   const _id = req.params.clientId
   const currentClientDetails = await Client.findOne({ _id: req.params.clientId })
-  const { type, email, password } = req.body.data
+  const { type, email, name, password } = req.body.data
 
   if (!type) {
     return res.status(401).send({
@@ -94,6 +100,7 @@ router.put('/client/:clientId', auth, async (req, res) => {
     type,
     _id,
     email: email || currentClientDetails.email,
+    name: name || currentClientDetails.name,
     password: password || currentClientDetails.password
   }
 
@@ -105,6 +112,7 @@ router.put('/client/:clientId', auth, async (req, res) => {
         type: data.type,
         _id: data._id,
         email: data.email,
+        name: data.name,
         password: `${!!data.password}`
       }
     })
