@@ -230,31 +230,10 @@ router.put('/reset-password', async (req, res) => {
           message: 'Token has expired'
         })
       }
-      res.status(err.status).send(err)
+      return res.status(401).send({
+        message: 'Token is incorrect'
+      })
     }
-
-    // const client = await Client.findByResetToken(reset_token)
-
-    // if (!client) {
-    //   // customer doesn't exist but we can't tell users that
-    //   return res.status(401).send({
-    //     message: 'Client does\'t exist'
-    //   })
-    // }
-
-    // const resetToken = await client.generateToken('20s')
-
-    // client.reset_token = resetToken
-    // await client.save()
-
-    // emailTemplate.forgottenPasswordEmail({
-    //   email,
-    //   resetToken
-    // })
-
-    // res.status(200).send({
-    //   message: 'Reset email is on it\'s way'
-    // })
   } catch (err) {
     res.status(err.status).send(err)
   }
