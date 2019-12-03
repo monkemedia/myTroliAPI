@@ -94,7 +94,7 @@ productSchema.pre('save', async function (next) {
 
 // Get all products
 productSchema.statics.findAllProducts = async (page, limit) => {
-  const products = await Product.find({}).sort('date').populate('relationships.categories').skip((page - 1) * limit).limit(limit)
+  const products = await Product.find({}).sort('-created_at').populate('relationships.categories').skip((page - 1) * limit).limit(limit)
   const total = await Product.countDocuments()
   return {
     data: products,
