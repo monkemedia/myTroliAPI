@@ -9,7 +9,7 @@ const router = express.Router()
 router.post('/products', auth, async (req, res) => {
   const customer_id = req.params.customerId
   const data = req.body.data
-  const { type, name, slug, sku, stock, description, price, commodity_type } = data
+  const { type, name, slug, sku, stock, status, description, price, commodity_type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -44,6 +44,12 @@ router.post('/products', auth, async (req, res) => {
   if (!stock) {
     return res.status(401).send({
       message: 'Stock is required'
+    })
+  }
+
+  if (status && (status !== 'draft' || status !== 'live')) {
+    return res.status(401).send({
+      message: 'Status must be either `draft` or `live`'
     })
   }
 
@@ -132,7 +138,13 @@ router.put('/products/:productId', auth, async (req, res) => {
   const _id = req.params.productId
   const currentProductDetails = await Product.findOne({ _id })
   const data = req.body.data
-  const { type, name, slug, sku, stock, description, price, commodity_type } = data
+  const { type, name, slug, sku, stock, status, description, price, commodity_type } = data
+
+  if (status && (status !== 'draft' || status !== 'live')) {
+    return res.status(401).send({
+      message: 'Status must be either `draft` or `live`'
+    })
+  }
 
   if (!type) {
     return res.status(401).send({
@@ -178,6 +190,7 @@ router.put('/products/:productId', auth, async (req, res) => {
       slug: slug || currentProductDetails.slug,
       sku: sku || currentProductDetails.sku,
       stock: stock || currentProductDetails.stock,
+      status: status || currentProductDetails.status,
       description: description || currentProductDetails.description,
       price: price || currentProductDetails.price,
       commodity_type: commodity_type || currentProductDetails.commodity_type

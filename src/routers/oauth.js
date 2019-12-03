@@ -110,8 +110,8 @@ router.post('/login', async (req, res) => {
     }
 
     const client = await Client.findByCredentials(email, password)
-    const accessToken = await client.generateToken()
-    const refreshToken = await client.generateToken('48hrs')
+    const accessToken = await client.generateToken('1hr')
+    const refreshToken = await client.generateToken('24hr')
 
     client.refresh_token = refreshToken
     await client.save()

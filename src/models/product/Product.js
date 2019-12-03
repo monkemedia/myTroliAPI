@@ -25,6 +25,10 @@ const productSchema = Schema({
     type: Number,
     required: true
   },
+  status: {
+    type: String,
+    default: 'draft'
+  },
   description: {
     type: String,
     required: true
