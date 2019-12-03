@@ -138,7 +138,7 @@ router.put('/products/:productId', auth, async (req, res) => {
   const _id = req.params.productId
   const currentProductDetails = await Product.findOne({ _id })
   const data = req.body.data
-  const { type, name, slug, sku, stock, status, description, price, commodity_type } = data
+  const { type, name, slug, sku, stock, status, description, price, commodity_type, updated_at, created_at } = data
 
   if (status && (status !== 'draft' || status !== 'live')) {
     return res.status(401).send({
@@ -193,7 +193,9 @@ router.put('/products/:productId', auth, async (req, res) => {
       status: status || currentProductDetails.status,
       description: description || currentProductDetails.description,
       price: price || currentProductDetails.price,
-      commodity_type: commodity_type || currentProductDetails.commodity_type
+      commodity_type: commodity_type || currentProductDetails.commodity_type,
+      updated_at: updated_at || currentProductDetails.updated_at,
+      created_at: created_at || currentProductDetails.created_at
     })
 
     res.status(200).send({ data: product })

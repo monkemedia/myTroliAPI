@@ -52,6 +52,14 @@ const productSchema = Schema({
         ref: 'ProductCategoryRelationship'
       }
     ]
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date,
+    default: ''
   }
 })
 
@@ -79,13 +87,14 @@ productSchema.pre('save', async function (next) {
   const currency = product.price.currency
   const stock = product.stock
 
+  // product.created_at = Date.now
   product.meta = updateMeta(product, amount, currency, stock)
   next()
 })
 
 // Get all products
 productSchema.statics.findAllProducts = async (page, limit) => {
-  const products = await Product.find({}).populate('relationships.categories').skip((page - 1) * limit).limit(limit)
+  const products = await Product.find({}).sort('date').populate('relationships.categories').skip((page - 1) * limit).limit(limit)
   const total = await Product.countDocuments()
   return {
     data: products,
@@ -110,6 +119,7 @@ productSchema.statics.findAddress = async (productId) => {
 // Update product
 productSchema.statics.updateProduct = async (productDetails) => {
   const { _id, price, stock } = productDetails
+  productDetails.updated_at = new Date()
   const data = {
     ...productDetails,
     meta: updateMeta(productDetails, price.amount, price.currency, stock)
