@@ -125,6 +125,20 @@ router.get('/products', auth, async (req, res) => {
   }
 })
 
+// Get all products
+router.get('/products/search', auth, async (req, res) => {
+  try {
+    const searchQuery = req.query.query
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+    const products = await Product.search(page, limit, searchQuery)
+
+    res.status(200).send({ data: products.data, meta: products.meta })
+  } catch (err) {
+    res.status(400).send(err)
+  }
+})
+
 // Get product
 router.get('/products/:productId', auth, async (req, res) => {
   const _id = req.params.productId

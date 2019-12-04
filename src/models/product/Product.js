@@ -110,6 +110,29 @@ productSchema.statics.findAllProducts = async (page, limit) => {
   }
 }
 
+// Search products by Name or SKU
+productSchema.statics.search = async (page, limit, query) => {
+  const products = await Product.find({
+    $or: [
+      { name: { $regex: query, $options: 'i' } },
+      { sku: { $regex: query, $options: 'i' } }
+    ]
+  })
+  const total = await Product.countDocuments()
+  return {
+    data: products,
+    meta: {
+      pagination: {
+        current: page,
+        total: products.length
+      },
+      results: {
+        total
+      }
+    }
+  }
+}
+
 // Get product by product id
 productSchema.statics.findAddress = async (productId) => {
   const product = await Product.findOne({ _id: productId })
