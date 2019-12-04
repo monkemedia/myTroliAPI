@@ -93,7 +93,7 @@ productSchema.pre('save', async function (next) {
 })
 
 // Get all products
-productSchema.statics.findAllProducts = async (page, limit) => {
+productSchema.statics.findAllProducts = async ({ page, limit }) => {
   const products = await Product.find({}).sort('-created_at').populate('relationships.categories').skip((page - 1) * limit).limit(limit)
   const total = await Product.countDocuments()
   return {
@@ -111,7 +111,7 @@ productSchema.statics.findAllProducts = async (page, limit) => {
 }
 
 // Search products by Name or SKU
-productSchema.statics.search = async (page, limit, query) => {
+productSchema.statics.search = async ({ page, limit, query }) => {
   const products = await Product.find({
     $or: [
       { name: { $regex: query, $options: 'i' } },
