@@ -27,6 +27,7 @@
     "mongoose": "^5.7.1",
     "mongoose-unique-array": "^0.3.3",
     "postmark": "^2.3.4",
+    "uploadcare": "^0.4.5",
     "validator": "^11.1.0"
   },
   "devDependencies": {
