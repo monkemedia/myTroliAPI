@@ -1,5 +1,5 @@
 const express = require('express')
-const Product = require('../../../models/product/Product')
+const Product = require('../../../models/mongo/product/Product')
 const auth = require('../../../middleware/auth')
 const currencySymbol = require('currency-symbol-map')
 const errorHandler = require('../../../utils/errorHandler')

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 // const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const errorHandler = require('../utils/errorHandler')
+const errorHandler = require('../../utils/errorHandler')
 
 const clientSchema = mongoose.Schema({
   grant_type: {

@@ -1,5 +1,5 @@
 const express = require('express')
-const Promotion = require('../../models/Promotion')
+const Promotion = require('../../models/mongo/Promotion')
 const auth = require('../../middleware/auth')
 const errorHandler = require('../../utils/errorHandler')
 const router = express.Router()

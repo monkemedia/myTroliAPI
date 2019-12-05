@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
-const Client = require('../../models/Client')
+const Client = require('../../models/mongo/Client')
 const emailTemplate = require('../../utils/emailTemplate')
 
 // Get access token from refresh token

@@ -1,5 +1,5 @@
 const express = require('express')
-const Client = require('../../models/Client')
+const Client = require('../../models/mongo/Client')
 const auth = require('../../middleware/auth')
 const router = express.Router()
 

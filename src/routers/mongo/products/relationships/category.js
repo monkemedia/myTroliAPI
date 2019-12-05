@@ -1,6 +1,6 @@
 const express = require('express')
-const Product = require('../../../../models/product/Product')
-const CategoryRelationship = require('../../../../models/product/relationships/Category')
+const Product = require('../../../../models/mongo/product/Product')
+const CategoryRelationship = require('../../../../models/mongo/product/relationships/Category')
 const auth = require('../../../../middleware/auth')
 const router = express.Router()
 
