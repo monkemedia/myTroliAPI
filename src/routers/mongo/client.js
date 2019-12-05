@@ -1,6 +1,6 @@
 const express = require('express')
-const Client = require('../models/Client')
-const auth = require('../middleware/auth')
+const Client = require('../../models/Client')
+const auth = require('../../middleware/auth')
 const router = express.Router()
 
 // Create client

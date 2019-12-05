@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const jwt = require('jsonwebtoken')
-const Client = require('../models/Client')
-const emailTemplate = require('../utils/emailTemplate')
+const Client = require('../../models/Client')
+const emailTemplate = require('../../utils/emailTemplate')
 
 // Get access token from refresh token
 router.post('/refresh_token', async (req, res) => {

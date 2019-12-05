@@ -1,7 +1,7 @@
 const express = require('express')
-const Promotion = require('../models/Promotion')
-const auth = require('../middleware/auth')
-const errorHandler = require('../utils/errorHandler')
+const Promotion = require('../../models/Promotion')
+const auth = require('../../middleware/auth')
+const errorHandler = require('../../utils/errorHandler')
 const router = express.Router()
 
 // Create a new Promotion

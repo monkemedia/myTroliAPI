@@ -1,7 +1,7 @@
 const express = require('express')
-const Product = require('../../../models/product/Product')
-const CategoryRelationship = require('../../../models/product/relationships/Category')
-const auth = require('../../../middleware/auth')
+const Product = require('../../../../models/product/Product')
+const CategoryRelationship = require('../../../../models/product/relationships/Category')
+const auth = require('../../../../middleware/auth')
 const router = express.Router()
 
 // Create a new Category Relationship

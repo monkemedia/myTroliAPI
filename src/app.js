@@ -1,7 +1,8 @@
 const express = require('express')
 const cors = require('cors')
-const routers = require('./routers/index.js')
-const oauth = require('./routers/oauth.js')
+const mongoRouters = require('./routers/mongo/index.js')
+// const uploadcareRouters = require('./routers/uploadcare/index.js')
+const oauth = require('./routers/mongo/oauth.js')
 const bodyParser = require('body-parser')
 
 const port = process.env.PORT || 3060
@@ -13,7 +14,8 @@ app.use(cors())
 
 app.use(bodyParser.json())
 app.use('/oauth/', oauth)
-app.use('/v1/', routers)
+app.use('/v1/', mongoRouters)
+// app.use('/v1/', uploadcareRouters)
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`)

@@ -1,8 +1,8 @@
 const express = require('express')
-const Product = require('../../models/product/Product')
-const auth = require('../../middleware/auth')
+const Product = require('../../../models/product/Product')
+const auth = require('../../../middleware/auth')
 const currencySymbol = require('currency-symbol-map')
-const errorHandler = require('../../utils/errorHandler')
+const errorHandler = require('../../../utils/errorHandler')
 const router = express.Router()
 
 // Create a new Product
