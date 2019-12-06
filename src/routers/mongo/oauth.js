@@ -7,8 +7,8 @@ router.post('/refresh-token', (req, res) => refreshToken(req, res))
 // Get access token when user logins in
 router.post('/login', (req, res) => login(req, res))
 // Send reset token to clients email
-router.post('/reset-token', async (req, res) => resetToken(req, res))
+router.post('/reset-token', (req, res) => resetToken(req, res))
 // Reset password
-router.put('/reset-password', async (req, res) => resetPassword(req, res))
+router.put('/reset-password', (req, res) => resetPassword(req, res))
 
 module.exports = router

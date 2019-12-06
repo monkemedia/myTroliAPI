@@ -4,14 +4,14 @@ const auth = require('../../middleware/auth')
 const { createCustomer, getCustomers, getCustomer, updateCustomer, deleteCustomer } = require('../../controller/customers')
 
 // Create a new customer
-router.post('/customers', async (req, res) => createCustomer(req, res))
+router.post('/customers', (req, res) => createCustomer(req, res))
 // Get all customer
-router.get('/customers', auth, async (req, res) => getCustomers(req, res))
+router.get('/customers', auth, (req, res) => getCustomers(req, res))
 // Get customer
-router.get('/customers/:customerId', auth, async (req, res) => getCustomer(req, res))
+router.get('/customers/:customerId', auth, (req, res) => getCustomer(req, res))
 // Update customer
-router.put('/customers/:customerId', auth, async (req, res) => updateCustomer(req, res))
+router.put('/customers/:customerId', auth, (req, res) => updateCustomer(req, res))
 // Delete customer
-router.delete('/customers/:customerId', auth, async (req, res) => deleteCustomer(req, res))
+router.delete('/customers/:customerId', auth, (req, res) => deleteCustomer(req, res))
 
 module.exports = router
