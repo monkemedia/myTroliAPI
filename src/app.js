@@ -14,7 +14,7 @@ app.use(cors())
 
 app.use(bodyParser.json())
 app.use('/oauth/', oauth)
-app.use('/v1/mongo', mongoRouters)
+app.use('/v1/', mongoRouters)
 app.use('/v1/images', uploadcareRouters)
 
 app.listen(port, () => {
