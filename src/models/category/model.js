@@ -1,28 +1,5 @@
 const mongoose = require('mongoose')
-
-const categorySchema = mongoose.Schema({
-  type: {
-    type: String,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  description: {
-    type: String,
-    required: false
-  },
-  status: {
-    type: Object,
-    required: false
-  }
-})
+const categorySchema = require('./schema')
 
 // Get all Categories
 categorySchema.statics.findAllCategories = async () => {

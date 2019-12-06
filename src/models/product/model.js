@@ -1,67 +1,6 @@
 const mongoose = require('mongoose')
 const currencySymbol = require('currency-symbol-map')
-const Schema = mongoose.Schema
-
-const productSchema = Schema({
-  type: {
-    type: String,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  slug: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  sku: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  stock: {
-    type: Number,
-    required: true
-  },
-  status: {
-    type: String,
-    default: 'draft'
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Object,
-    required: true
-  },
-  commodity_type: {
-    type: String,
-    required: true
-  },
-  meta: {
-    type: Object,
-    required: false
-  },
-  relationships: {
-    categories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductCategoryRelationship'
-      }
-    ]
-  },
-  created_at: {
-    type: Date,
-    default: Date.now
-  },
-  updated_at: {
-    type: Date,
-    default: ''
-  }
-})
+const productSchema = require('./schema')
 
 function formatCurrency (amount, currency) {
   return currencySymbol(currency) + amount.toFixed(2).toString()

@@ -1,5 +1,5 @@
 const express = require('express')
-const Category = require('../../models/mongo/Category')
+const Category = require('../../models/category')
 const auth = require('../../middleware/auth')
 const router = express.Router()
 
@@ -42,7 +42,7 @@ router.post('/categories', auth, async (req, res) => {
 
     await categories.save()
 
-    res.status(201).send(categories)
+    res.status(201).send({ data: categories })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -53,7 +53,7 @@ router.get('/categories', auth, async (req, res) => {
   try {
     const categories = await Category.findAllCategories()
 
-    res.status(200).send(categories)
+    res.status(200).send({ data: categories })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -63,7 +63,7 @@ router.get('/categories', auth, async (req, res) => {
 router.get('/categories/:categoryId', auth, async (req, res) => {
   const category = await Category.findOne({ _id: req.params.categoryId })
 
-  res.status(200).send(category)
+  res.status(200).send({ data: category })
 })
 
 // Update category

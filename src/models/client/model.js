@@ -1,36 +1,8 @@
 const mongoose = require('mongoose')
-// const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const errorHandler = require('../../utils/errorHandler')
-
-const clientSchema = mongoose.Schema({
-  grant_type: {
-    type: String,
-    required: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  name: {
-    type: String,
-    required: false
-  },
-  password: {
-    type: String,
-    required: true
-  },
-  refresh_token: {
-    type: String,
-    required: false
-  },
-  reset_token: {
-    type: String,
-    required: false
-  }
-})
+const clientSchema = require('./schema')
 
 // Hash the password before saving the Client model
 clientSchema.pre('save', async function (next) {

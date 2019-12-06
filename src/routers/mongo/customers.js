@@ -1,143 +1,17 @@
 const express = require('express')
-const Customer = require('../../models/mongo/Customer')
-const auth = require('../../middleware/auth')
 const router = express.Router()
+const auth = require('../../middleware/auth')
+const { createCustomer, getCustomers, getCustomer, updateCustomer, deleteCustomer } = require('../../controller/customers')
 
 // Create a new customer
-router.post('/customers', async (req, res) => {
-  try {
-    // Check to see if customer already exists
-    const data = req.body.data
-    const { name, email, password, type } = data
-    const customerExists = await Customer.findByEmail(email)
-
-    if (!name) {
-      return res.status(401).send({
-        message: 'Name is required'
-      })
-    }
-
-    if (!email) {
-      return res.status(401).send({
-        message: 'Email is required'
-      })
-    }
-
-    if (!password) {
-      return res.status(401).send({
-        message: 'Password is required'
-      })
-    }
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type && type !== 'customer') {
-      return res.status(401).send({
-        message: 'Correct Type is required'
-      })
-    }
-
-    if (customerExists) {
-      return res.status(401).send({
-        message: 'Customer already exists'
-      })
-    }
-
-    const customer = new Customer(data)
-
-    await customer.save()
-
-    const { _id } = customer
-
-    res.status(201).send({
-      data: {
-        type,
-        _id,
-        name,
-        email,
-        password: !!password
-      }
-    })
-  } catch (err) {
-    res.status(400).send(err)
-  }
-})
-
+router.post('/customers', async (req, res) => createCustomer(req, res))
 // Get all customer
-router.get('/customers', auth, async (req, res) => {
-  try {
-    const customers = await Customer.findAllCustomers()
-
-    const newCustomers = customers.map(customer => Object.assign(customer, {
-      password: !!customer.password
-    }))
-
-    res.status(200).send({ data: [...newCustomers] })
-  } catch (err) {
-    res.status(400).send(err)
-  }
-})
-
+router.get('/customers', auth, async (req, res) => getCustomers(req, res))
 // Get customer
-router.get('/customers/:customerId', auth, async (req, res) => {
-  const customer = await Customer.findOne({ _id: req.params.customerId })
-  const customerClone = Object.assign(customer, {
-    password: !!customer.password
-  })
-
-  res.status(200).send({ data: customerClone })
-})
-
+router.get('/customers/:customerId', auth, async (req, res) => getCustomer(req, res))
 // Update customer
-router.put('/customers/:customerId', auth, async (req, res) => {
-  const _id = req.params.customerId
-  const currentCustomerDetails = await Customer.findOne({ _id: req.params.customerId })
-  const { type, name, email, password } = req.body.data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'customer') {
-    return res.status(401).send({
-      message: 'Correct Type is required'
-    })
-  }
-
-  const data = {
-    type,
-    _id,
-    name: name || currentCustomerDetails.name,
-    email: email || currentCustomerDetails.email,
-    password: password || currentCustomerDetails.password
-  }
-
-  try {
-    await Customer.updateCustomer(data)
-
-    res.status(200).send({ data })
-  } catch (err) {
-    res.status(400).send(err)
-  }
-})
-
+router.put('/customers/:customerId', auth, async (req, res) => updateCustomer(req, res))
 // Delete customer
-router.delete('/customers/:customerId', auth, async (req, res) => {
-  try {
-    await Customer.deleteCustomer(req.params.customerId)
-
-    res.status(204).send({
-      message: 'Customer successfully deleted'
-    })
-  } catch (err) {
-    res.status(400).send(err)
-  }
-})
+router.delete('/customers/:customerId', auth, async (req, res) => deleteCustomer(req, res))
 
 module.exports = router

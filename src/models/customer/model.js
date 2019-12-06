@@ -1,36 +1,8 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const errorHandler = require('../../utils/errorHandler')
-
-const customerSchema = mongoose.Schema({
-  type: {
-    type: String,
-    required: true
-  },
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    validate: value => {
-      if (!validator.isEmail(value)) {
-        throw errorHandler(422, 'Invalid email address')
-      }
-    }
-  },
-  password: {
-    type: String,
-    required: true,
-    minLength: 8
-  }
-})
+const customerSchema = require('./schema.js')
 
 // Hash the password before saving the customer model
 customerSchema.pre('save', async function (next) {

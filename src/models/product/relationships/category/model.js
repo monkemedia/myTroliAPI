@@ -1,17 +1,6 @@
 const mongoose = require('mongoose')
 const uniqueArrayPlugin = require('mongoose-unique-array')
-
-const productCategoryRelationshipSchema = mongoose.Schema({
-  type: {
-    type: String,
-    required: true
-  },
-  category_id: {
-    type: String,
-    required: true,
-    unique: true
-  }
-})
+const productCategoryRelationshipSchema = require('./schema')
 
 productCategoryRelationshipSchema.plugin(uniqueArrayPlugin)
 
