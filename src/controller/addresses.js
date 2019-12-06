@@ -131,6 +131,7 @@ const updateAddress = async (req, res) => {
     res.status(400).send(err)
   }
 }
+
 const deleteAddress = async (req, res) => {
   try {
     const address_id = req.params.addressId

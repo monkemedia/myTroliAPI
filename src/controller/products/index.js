@@ -1,12 +1,8 @@
-const express = require('express')
-const Product = require('../../../models/product')
-const auth = require('../../../middleware/auth')
+const Product = require('../../models/product')
 const currencySymbol = require('currency-symbol-map')
-const errorHandler = require('../../../utils/errorHandler')
-const router = express.Router()
+const errorHandler = require('../../utils/errorHandler')
 
-// Create a new Product
-router.post('/products', auth, async (req, res) => {
+const createProduct = async (req, res) => {
   const customer_id = req.params.customerId
   const data = req.body.data
   const { type, name, slug, sku, stock, status, description, price, commodity_type } = data
@@ -110,10 +106,9 @@ router.post('/products', auth, async (req, res) => {
   } catch (err) {
     res.status(400).send(errorHandler(400, err))
   }
-})
+}
 
-// Get all products
-router.get('/products', auth, async (req, res) => {
+const getProducts = async (req, res) => {
   try {
     const query = req.query.query
     const page = parseInt(req.query.page) || 1
@@ -129,18 +124,16 @@ router.get('/products', auth, async (req, res) => {
   } catch (err) {
     res.status(400).send(err)
   }
-})
+}
 
-// Get product
-router.get('/products/:productId', auth, async (req, res) => {
+const getProduct = async (req, res) => {
   const _id = req.params.productId
   const product = await Product.findOne({ _id }).populate('relationships.categories')
 
   res.status(200).send({ data: product })
-})
+}
 
-// Update product
-router.put('/products/:productId', auth, async (req, res) => {
+const uodateProduct = async (req, res) => {
   const _id = req.params.productId
   const currentProductDetails = await Product.findOne({ _id })
   const data = req.body.data
@@ -208,10 +201,9 @@ router.put('/products/:productId', auth, async (req, res) => {
   } catch (err) {
     res.status(400).send(err)
   }
-})
+}
 
-// Delete product
-router.delete('/products/:productId', auth, async (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
     await Product.deleteProduct(req.params.productId)
 
@@ -221,6 +213,12 @@ router.delete('/products/:productId', auth, async (req, res) => {
   } catch (err) {
     res.status(400).send(err)
   }
-})
+}
 
-module.exports = router
+module.exports = {
+  createProduct,
+  getProducts,
+  getProduct,
+  uodateProduct,
+  deleteProduct
+}
