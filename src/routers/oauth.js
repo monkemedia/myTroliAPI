@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { refreshToken, login, resetToken, resetPassword } = require('../../controller/oauth')
+const { refreshToken, login, resetToken, resetPassword } = require('../controller/oauth')
 
 // Get access token from refresh token
 router.post('/refresh-token', (req, res) => refreshToken(req, res))

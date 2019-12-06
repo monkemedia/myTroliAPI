@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const auth = require('../../middleware/auth')
-const { createAddress, getAddresses, getAddress, updateAddress, deleteAddress } = require('../../controller/addresses')
+const auth = require('../middleware/auth')
+const { createAddress, getAddresses, getAddress, updateAddress, deleteAddress } = require('../controller/addresses')
 
 // Create a new address
 router.post('/customers/:customerId/addresses', auth, (req, res) => createAddress(req, res))

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const auth = require('../../middleware/auth')
-const { createCategory, getCategories, getCategory, updateCategory, deleteCategory } = require('../../controller/categories')
+const auth = require('../middleware/auth')
+const { createCategory, getCategories, getCategory, updateCategory, deleteCategory } = require('../controller/categories')
 
 // Create a new Category
 router.post('/categories', auth, (req, res) => createCategory(req, res))
