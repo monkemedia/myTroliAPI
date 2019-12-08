@@ -4,15 +4,14 @@ const dbRoutes = require('./routers/index.js')
 const imageRoute = require('./routers/image.js')
 const oauth = require('./routers/oauth.js')
 const bodyParser = require('body-parser')
-
 const port = process.env.PORT || 3060
-require('./db/db')
-
 const app = express()
 
-app.use(cors())
+require('./db/db')
 
+app.use(cors())
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/oauth/', oauth)
 app.use('/v1/', dbRoutes)
 app.use('/v1/images', imageRoute)
