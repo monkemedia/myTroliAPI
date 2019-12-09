@@ -4,8 +4,9 @@ const customers = require('./customers.js')
 const addresses = require('./addresses.js')
 const products = require('./products/index.js')
 const promotions = require('./promotions.js')
-const productsCategoryRelationships = require('./products/relationships/category.js')
 const categories = require('./categories.js')
+const productsCategoryRelationships = require('./products/relationships/categories.js')
+const productsFileRelationships = require('./products/relationships/files.js')
 
 const router = Router()
 
@@ -16,7 +17,8 @@ router.use(
   products,
   promotions,
   categories,
-  productsCategoryRelationships
+  productsCategoryRelationships,
+  productsFileRelationships
 )
 
 module.exports = router

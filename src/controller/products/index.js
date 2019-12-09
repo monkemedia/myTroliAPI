@@ -128,7 +128,7 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const _id = req.params.productId
-  const product = await Product.findOne({ _id }).populate('relationships.categories')
+  const product = await Product.findOne({ _id }).populate('relationships.categories relationships.files')
 
   res.status(200).send({ data: product })
 }

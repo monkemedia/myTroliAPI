@@ -50,6 +50,12 @@ const productSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'ProductCategoryRelationship'
       }
+    ],
+    files: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'ProductFileRelationship'
+      }
     ]
   },
   created_at: {
