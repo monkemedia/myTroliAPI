@@ -133,7 +133,7 @@ const getProduct = async (req, res) => {
   res.status(200).send({ data: product })
 }
 
-const uodateProduct = async (req, res) => {
+const updateProduct = async (req, res) => {
   const _id = req.params.productId
   const currentProductDetails = await Product.findOne({ _id })
   const data = req.body.data
@@ -219,6 +219,6 @@ module.exports = {
   createProduct,
   getProducts,
   getProduct,
-  uodateProduct,
+  updateProduct,
   deleteProduct
 }
