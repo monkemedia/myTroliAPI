@@ -139,7 +139,7 @@ const updateProduct = async (req, res) => {
   const data = req.body.data
   const { type, name, slug, sku, stock, status, description, price, commodity_type, updated_at, created_at } = data
 
-  if (status && (status !== 'draft' || status !== 'live')) {
+  if (status && (status !== 'draft' && status !== 'live')) {
     return res.status(401).send({
       message: 'Status must be either `draft` or `live`'
     })
