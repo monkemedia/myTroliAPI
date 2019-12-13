@@ -137,7 +137,7 @@ const updateProduct = async (req, res) => {
   const _id = req.params.productId
   const currentProductDetails = await Product.findOne({ _id })
   const data = req.body.data
-  const { type, name, slug, sku, stock, status, description, price, commodity_type, updated_at, created_at } = data
+  const { type, name, slug, sku, stock, status, description, relationships, price, commodity_type, updated_at, created_at } = data
 
   if (status && (status !== 'draft' && status !== 'live')) {
     return res.status(401).send({
@@ -191,6 +191,7 @@ const updateProduct = async (req, res) => {
       stock: stock || currentProductDetails.stock,
       status: status || currentProductDetails.status,
       description: description || currentProductDetails.description,
+      relationships: relationships || currentProductDetails.relationships,
       price: price || currentProductDetails.price,
       commodity_type: commodity_type || currentProductDetails.commodity_type,
       updated_at: updated_at || currentProductDetails.updated_at,

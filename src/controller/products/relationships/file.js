@@ -24,8 +24,6 @@ const createFileRelationship = async (req, res) => {
     })
   }
 
-  console.log('DATA', data)
-
   try {
     const files = new FileRelationship(data)
     const savedFileRelationship = await files.save()
@@ -64,10 +62,6 @@ const deleteFileRelationship = async (req, res) => {
 
   try {
     await FileRelationship.deleteFile(file_id)
-    const product = await Product.findById(_id)
-
-    product.relationships.files.pull({ _id: file_id })
-    product.save()
 
     res.status(200).send({
       message: 'File relationship successfully deleted'
