@@ -39,7 +39,6 @@ const createFileRelationship = async (req, res) => {
 
 const deleteFileRelationship = async (req, res) => {
   const data = req.body.data
-  const _id = req.params.productId
   const { type, file_id } = data
 
   if (!type) {

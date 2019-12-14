@@ -4,9 +4,9 @@ const fs = require('fs')
 const errorHandler = require('../utils/errorHandler')
 
 const uploadFile = (req, res) => {
-  const data = req.body.data
   const file = req.file
-  const { type, is_public } = data
+  const type = req.body.type
+  const is_public = req.body.is_public
 
   if (!file) {
     return res.status(401).send({
@@ -20,7 +20,7 @@ const uploadFile = (req, res) => {
     })
   }
 
-  if (type && type !== 'image') {
+  if (type && type !== 'file') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -43,6 +43,7 @@ const uploadFile = (req, res) => {
       if (err) {
         return res.status(401).send(errorHandler(401, error))
       }
+
       // Remove file from upload directory
       fs.unlink(file.path, (er) => {
         if (er) {

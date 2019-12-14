@@ -6,9 +6,7 @@ const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
 // Upload new file
-router.post('/', auth, upload.single('file'), (req, res) => {
-  return uploadFile(req, res)
-})
+router.post('/', auth, upload.single('file'), (req, res) => uploadFile(req, res))
 
 // Get all files
 router.get('/', auth, (req, res) => getFiles(req, res))

@@ -57,7 +57,7 @@ productSchema.statics.search = async ({ page, query }) => {
       { sku: { $regex: query, $options: 'i' } }
     ]
   })
-  const total = await Product.countDocuments()
+
   return {
     data: products,
     meta: {
