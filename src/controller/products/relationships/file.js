@@ -38,8 +38,10 @@ const createFileRelationship = async (req, res) => {
 }
 
 const deleteFileRelationship = async (req, res) => {
+  const productId = req.params.productId
+  console.log('productId', productId)
   const data = req.body.data
-  const { type, file_id } = data
+  const { type, file_id, relationship_id } = data
 
   if (!type) {
     return res.status(401).send({
@@ -59,9 +61,17 @@ const deleteFileRelationship = async (req, res) => {
     })
   }
 
-  try {
-    await FileRelationship.deleteFile(file_id)
+  if (!relationship_id) {
+    return res.status(401).send({
+      message: 'File ID is required'
+    })
+  }
 
+  try {
+    const product = await Product.findById(productId)
+    product.relationships.files.remove(relationship_id)
+    product.save()
+    await FileRelationship.deleteFile(file_id)
     res.status(200).send({
       message: 'File relationship successfully deleted'
     })
