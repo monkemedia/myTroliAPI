@@ -6,7 +6,6 @@ const errorHandler = require('../utils/errorHandler')
 const uploadFile = (req, res) => {
   const file = req.file
   const type = req.body.type
-  const is_public = req.body.is_public
 
   if (!file) {
     return res.status(401).send({
@@ -23,12 +22,6 @@ const uploadFile = (req, res) => {
   if (type && type !== 'file') {
     return res.status(401).send({
       message: 'Correct Type is required'
-    })
-  }
-
-  if (!is_public) {
-    return res.status(401).send({
-      message: 'Public is required'
     })
   }
 
