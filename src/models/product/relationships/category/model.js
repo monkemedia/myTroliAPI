@@ -11,9 +11,21 @@ productCategoryRelationshipSchema.plugin(uniqueArrayPlugin)
 //   return categories
 // }
 
+// Find category by id
+productCategoryRelationshipSchema.statics.findCategory = async (id) => {
+  const category = await Category.findOne({ _id: id })
+  return category
+}
+
 // Delete category
 productCategoryRelationshipSchema.statics.deleteCategory = async (categoryId) => {
   const category = await Category.deleteOne({ category_id: categoryId })
+  return category
+}
+
+// Update category
+productCategoryRelationshipSchema.statics.updateCategory = async ({ _id, data }) => {
+  const category = await Category.updateOne({ _id }, { data })
   return category
 }
 

@@ -3,7 +3,7 @@ const currencySymbol = require('currency-symbol-map')
 const productSchema = require('./schema')
 
 function formatCurrency (amount, currency) {
-  return currencySymbol(currency) + amount.toFixed(2).toString()
+  return currencySymbol(currency) + amount
 }
 
 function updateMeta (product, amount, currency, stock) {

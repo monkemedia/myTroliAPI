@@ -45,12 +45,11 @@ const productSchema = Schema({
     required: false
   },
   relationships: {
-    categories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductCategoryRelationship'
-      }
-    ],
+    categories:
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductCategoryRelationship'
+    },
     files: [
       {
         type: Schema.Types.ObjectId,

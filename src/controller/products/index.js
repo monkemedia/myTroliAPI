@@ -163,12 +163,6 @@ const updateProduct = async (req, res) => {
     })
   }
 
-  if (price && typeof price.amount !== 'number') {
-    return res.status(401).send({
-      message: 'Price amount requires a number'
-    })
-  }
-
   if ((price && price.currency) && !currencySymbol(price.currency)) {
     return res.status(401).send({
       message: 'Price currency is not a 3 letter ISO'
