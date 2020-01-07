@@ -63,7 +63,7 @@ const getCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
   const _id = req.params.categoryId
   const currentCategoryDetails = await Category.findOne({ _id })
-  const { type, name, slug, description, status } = req.body
+  const { type, name, slug, description, status } = req.body.data
 
   if (!type) {
     return res.status(401).send({
@@ -95,7 +95,7 @@ const updateCategory = async (req, res) => {
   try {
     await Category.updateCategory(data)
 
-    res.status(200).send(data)
+    res.status(200).send({ data })
   } catch (err) {
     res.status(400).send(err)
   }

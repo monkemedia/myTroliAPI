@@ -185,7 +185,10 @@ const updateProduct = async (req, res) => {
       stock: stock || currentProductDetails.stock,
       status: status || currentProductDetails.status,
       description: description || currentProductDetails.description,
-      relationships: relationships || currentProductDetails.relationships,
+      relationships: {
+        files: relationships.files || currentProductDetails.relationships.files,
+        categories: relationships.categories || currentProductDetails.relationships.categories
+      },
       price: price || currentProductDetails.price,
       commodity_type: commodity_type || currentProductDetails.commodity_type,
       updated_at: updated_at || currentProductDetails.updated_at,
