@@ -4,32 +4,31 @@ const Product = require('../../../models/product')
 const createFileRelationship = async (req, res) => {
   const data = req.body.data
   const _id = req.params.productId
-  const { type, file_id } = data
 
-  if (!type) {
+  if (data.some(val => !val.type)) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (type !== 'file') {
+  if (data.some(val => val.type !== 'file')) {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
-  if (!file_id) {
+  if (data.some(val => !val.file_id)) {
     return res.status(401).send({
-      message: 'File ID is required'
+      message: 'Category ID is required'
     })
   }
 
   try {
-    const files = new FileRelationship(data)
+    const files = new FileRelationship({ data })
     const savedFileRelationship = await files.save()
     const product = await Product.findById(_id)
 
-    product.relationships.files.push(savedFileRelationship)
+    product.relationships.files = savedFileRelationship._id
     product.save()
     res.status(201).send(savedFileRelationship)
   } catch (err) {
