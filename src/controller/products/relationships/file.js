@@ -24,13 +24,23 @@ const createFileRelationship = async (req, res) => {
   }
 
   try {
-    const files = new FileRelationship({ data })
-    const savedFileRelationship = await files.save()
+    const relationshipPromise = data.map(async obj => {
+      const files = new FileRelationship(obj)
+
+      const save = await files.save()
+      return save
+    })
+
+    const savedFileRelationship = await Promise.all(relationshipPromise)
     const product = await Product.findById(_id)
 
-    product.relationships.files = savedFileRelationship._id
-    product.save()
-    res.status(201).send(savedFileRelationship)
+    const productPromise = savedFileRelationship.map(async obj => {
+      product.relationships.files.push(obj)
+      product.save()
+    })
+
+    await Promise.all(productPromise)
+    res.status(201).send({ data: savedFileRelationship })
   } catch (err) {
     res.status(400).send(err)
   }
@@ -39,35 +49,37 @@ const createFileRelationship = async (req, res) => {
 const deleteFileRelationship = async (req, res) => {
   const productId = req.params.productId
   const data = req.body.data
-  const { type, file_id } = data
 
   function relationshipId (fileId, files) {
     return files.filter(file => file.file_id === fileId)[0]._id
   }
 
-  if (!type) {
+  if (data.some(val => !val.type)) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (type !== 'file') {
+  if (data.some(val => val.type !== 'file')) {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
-  if (!file_id) {
+  if (data.some(val => !val.file_id)) {
     return res.status(401).send({
-      message: 'File ID is required'
+      message: 'Category ID is required'
     })
   }
 
   try {
     const product = await Product.findById(productId).populate('relationships.files')
-    product.relationships.files.remove(relationshipId(file_id, product.relationships.files))
-    await product.save()
-    await FileRelationship.deleteFile(file_id)
+
+    await data.map(async obj => {
+      await FileRelationship.deleteFile(obj.file_id)
+      await product.relationships.files.pull(obj.file_id)
+    })
+
     res.status(200).send({
       message: 'File relationship successfully deleted'
     })

@@ -50,11 +50,12 @@ const productSchema = Schema({
       type: Schema.Types.ObjectId,
       ref: 'ProductCategoryRelationship'
     },
-    files:
+    files: [
       {
         type: Schema.Types.ObjectId,
         ref: 'ProductFileRelationship'
       }
+    ]
   },
   created_at: {
     type: Date,
@@ -64,6 +65,6 @@ const productSchema = Schema({
     type: Date,
     default: ''
   }
-})
+}, { versionKey: false })
 
 module.exports = productSchema

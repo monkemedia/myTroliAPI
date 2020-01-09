@@ -14,6 +14,6 @@ const productCategoryRelationshipSchema = new Schema({
       unique: true
     }
   }]
-})
+}, { versionKey: false })
 
 module.exports = productCategoryRelationshipSchema
