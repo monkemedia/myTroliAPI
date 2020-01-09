@@ -23,6 +23,6 @@ const categorySchema = new Schema({
     type: Object,
     required: false
   }
-})
+}, { versionKey: false })
 
 module.exports = categorySchema

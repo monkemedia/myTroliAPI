@@ -27,6 +27,6 @@ const clientSchema = new Schema({
     type: String,
     required: false
   }
-})
+}, { versionKey: false })
 
 module.exports = clientSchema

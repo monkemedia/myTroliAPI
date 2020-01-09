@@ -55,6 +55,6 @@ const addressSchema = new Schema({
     required: false,
     default: false
   }
-})
+}, { versionKey: false })
 
 module.exports = addressSchema

@@ -34,6 +34,6 @@ const promotionSchema = Schema({
     type: Number,
     required: false
   }
-})
+}, { versionKey: false })
 
 module.exports = promotionSchema

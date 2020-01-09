@@ -29,6 +29,6 @@ const customerSchema = new Schema({
     required: true,
     minLength: 8
   }
-})
+}, { versionKey: false })
 
 module.exports = customerSchema
