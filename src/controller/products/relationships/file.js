@@ -50,10 +50,6 @@ const deleteFileRelationship = async (req, res) => {
   const productId = req.params.productId
   const data = req.body.data
 
-  function relationshipId (fileId, files) {
-    return files.filter(file => file.file_id === fileId)[0]._id
-  }
-
   if (data.some(val => !val.type)) {
     return res.status(401).send({
       message: 'Type is required'
