@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../middleware/auth')
-const { uploadFile, getFiles, getFile, deleteFile } = require('../controller/files')
+const { uploadFile, getFiles, getFile, deleteFile, storeFiles } = require('../controller/files')
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
@@ -16,5 +16,8 @@ router.get('/:fileId', auth, (req, res) => getFile(req, res))
 
 // delete file
 router.delete('/:fileId', auth, (req, res) => deleteFile(req, res))
+
+// Store files
+router.put('/storage', auth, (req, res) => storeFiles(req, res))
 
 module.exports = router

@@ -79,9 +79,32 @@ const deleteFile = (req, res) => {
   })
 }
 
+const storeFiles = async (req, res) => {
+  const files = req.body.data
+
+  const promises = files.map(async (id) => {
+    return new Promise((resolve, reject) => {
+      return uploadcare.files.store(id, (err, info) => {
+        if (err) {
+          reject(new Error(err))
+        }
+        resolve(info)
+      })
+    })
+  })
+
+  try {
+    const results = await Promise.all(promises)
+    res.status(201).send({ data: results })
+  } catch (err) {
+    res.status(401).send(errorHandler(401, err))
+  }
+}
+
 module.exports = {
   uploadFile,
   getFiles,
   getFile,
-  deleteFile
+  deleteFile,
+  storeFiles
 }
