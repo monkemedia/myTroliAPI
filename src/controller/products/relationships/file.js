@@ -19,7 +19,7 @@ const createFileRelationship = async (req, res) => {
 
   if (data.some(val => !val.file_id)) {
     return res.status(401).send({
-      message: 'Category ID is required'
+      message: 'File ID is required'
     })
   }
 
