@@ -37,13 +37,19 @@ const createProduct = async (req, res) => {
     })
   }
 
-  if (!stock) {
+  if (isNaN(stock)) {
     return res.status(401).send({
       message: 'Stock is required'
     })
   }
 
-  if (status && (status !== 'draft' || status !== 'live')) {
+  if (!status) {
+    return res.status(401).send({
+      message: 'Status is required'
+    })
+  }
+
+  if (status !== 'draft' && status !== 'live') {
     return res.status(401).send({
       message: 'Status must be either `draft` or `live`'
     })
@@ -61,13 +67,13 @@ const createProduct = async (req, res) => {
     })
   }
 
-  if (!price.amount) {
+  if (!Object.prototype.hasOwnProperty.call(price, 'amount')) {
     return res.status(401).send({
       message: 'Price amount is required'
     })
   }
 
-  if (typeof price.amount !== 'number') {
+  if (isNaN(price.amount)) {
     return res.status(401).send({
       message: 'Price amount requires a number'
     })
