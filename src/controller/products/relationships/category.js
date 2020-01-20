@@ -17,12 +17,6 @@ const createCategoryRelationship = async (req, res) => {
     })
   }
 
-  if (data.some(val => !val.category_id)) {
-    return res.status(401).send({
-      message: 'Category ID is required'
-    })
-  }
-
   try {
     const categories = new CategoryRelationship({ data })
     const savedCategoryRelationship = await categories.save()
