@@ -19,7 +19,7 @@ productCategoryRelationshipSchema.statics.findCategory = async (id) => {
 
 // Delete category
 productCategoryRelationshipSchema.statics.deleteCategory = async (categoryId) => {
-  const category = await Category.deleteOne({ category_id: categoryId })
+  const category = await Category.deleteOne({ _id: categoryId })
   return category
 }
 

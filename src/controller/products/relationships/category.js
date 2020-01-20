@@ -31,33 +31,14 @@ const createCategoryRelationship = async (req, res) => {
 }
 
 const deleteCategoryRelationship = async (req, res) => {
-  const data = req.body.data
-  const _id = req.params.productId
-  const { type, category_id } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type !== 'category') {
-    return res.status(401).send({
-      message: 'Correct Type is required'
-    })
-  }
-
-  if (!category_id) {
-    return res.status(401).send({
-      message: 'Category ID is required'
-    })
-  }
+  const productId = req.params.productId
 
   try {
-    await CategoryRelationship.deleteCategory(category_id)
-    const product = await Product.findById(_id)
-
-    product.relationships.categories.pull({ _id: category_id })
+    const product = await Product.findById(productId)
+    const categoryId = product.relationships.categories
+    await CategoryRelationship.deleteCategory(categoryId)
+  
+    product.relationships.categories = null
     product.save()
 
     res.status(200).send({
