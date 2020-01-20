@@ -67,12 +67,6 @@ const createProduct = async (req, res) => {
     })
   }
 
-  if (!Object.prototype.hasOwnProperty.call(price, 'amount')) {
-    return res.status(401).send({
-      message: 'Price amount is required'
-    })
-  }
-
   if (isNaN(price.amount)) {
     return res.status(401).send({
       message: 'Price amount requires a number'
@@ -163,13 +157,31 @@ const updateProduct = async (req, res) => {
     })
   }
 
-  if (price && !price.amount) {
+  if (isNaN(stock)) {
     return res.status(401).send({
-      message: 'Price amount is required'
+      message: 'Stock is required'
     })
   }
 
-  if ((price && price.currency) && !currencySymbol(price.currency)) {
+  if (!price) {
+    return res.status(401).send({
+      message: 'Price is required'
+    })
+  }
+
+  if (isNaN(price.amount)) {
+    return res.status(401).send({
+      message: 'Price amount requires a number'
+    })
+  }
+
+  if (!price.currency) {
+    return res.status(401).send({
+      message: 'Price currency is required'
+    })
+  }
+
+  if (!currencySymbol(price.currency)) {
     return res.status(401).send({
       message: 'Price currency is not a 3 letter ISO'
     })
