@@ -1,7 +1,8 @@
 const Category = require('../models/category')
 
 const createCategory = async (req, res) => {
-  const { type, name, slug, status } = req.body
+  const data = req.body.data
+  const { type, name, slug, status } = req.body.data
 
   if (!type) {
     return res.status(401).send({
@@ -34,7 +35,7 @@ const createCategory = async (req, res) => {
   }
 
   try {
-    const categories = new Category(req.body)
+    const categories = new Category(data)
 
     await categories.save()
 
