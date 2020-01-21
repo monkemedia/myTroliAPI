@@ -1,4 +1,5 @@
 const Category = require('../models/category')
+const CategoryRelationship = require('../models/product/relationships/category')
 
 const createCategory = async (req, res) => {
   const data = req.body.data
@@ -104,6 +105,12 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
+    // Delete any relationships first
+    const relationships = await CategoryRelationship.findAllByCategoryIds(req.params.categoryId)
+    relationships.map(async relationship => {
+      await CategoryRelationship.deleteCategory(relationship._id)
+    })
+
     await Category.deleteCategory(req.params.categoryId)
 
     res.status(200).send({

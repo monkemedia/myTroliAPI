@@ -11,6 +11,12 @@ productCategoryRelationshipSchema.plugin(uniqueArrayPlugin)
 //   return categories
 // }
 
+// Find all category relationships by category id
+productCategoryRelationshipSchema.statics.findAllByCategoryIds = async (id) => {
+  const category = await Category.find({ 'data.category_id': id })
+  return category
+}
+
 // Find category by id
 productCategoryRelationshipSchema.statics.findCategory = async (id) => {
   const category = await Category.findOne({ _id: id })
