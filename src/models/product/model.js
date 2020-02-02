@@ -33,7 +33,7 @@ productSchema.pre('save', async function (next) {
 
 // Get all products
 productSchema.statics.findAllProducts = async ({ page, limit }) => {
-  const products = await Product.find({}).sort('-created_at').populate('relationships.categories relationships.files').skip((page - 1) * limit).limit(limit)
+  const products = await Product.find({}).sort('-created_at').populate('relationships.categories relationships.files relationships.variants').skip((page - 1) * limit).limit(limit)
   const total = await Product.countDocuments()
   return {
     data: products,
@@ -73,8 +73,9 @@ productSchema.statics.search = async ({ page, query }) => {
 }
 
 // Get product by product id
-productSchema.statics.findAddress = async (productId) => {
-  const product = await Product.findOne({ _id: productId })
+productSchema.statics.findById = async (_id) => {
+  console.log('find')
+  const product = await Product.findOne({ _id }).populate('relationships.categories relationships.files relationships.variants')
   return product
 }
 

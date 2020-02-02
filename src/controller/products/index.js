@@ -37,9 +37,15 @@ const createProduct = async (req, res) => {
     })
   }
 
-  if (isNaN(stock)) {
+  if (!stock) {
     return res.status(401).send({
       message: 'Stock is required'
+    })
+  }
+
+  if (typeof stock !== 'number') {
+    return res.status(401).send({
+      message: 'Stock requires a number'
     })
   }
 
@@ -67,7 +73,13 @@ const createProduct = async (req, res) => {
     })
   }
 
-  if (isNaN(price.amount)) {
+  if (!price.amount) {
+    return res.status(401).send({
+      message: 'Price amount is required'
+    })
+  }
+
+  if (typeof price.amount !== 'number') {
     return res.status(401).send({
       message: 'Price amount requires a number'
     })
@@ -128,7 +140,7 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const _id = req.params.productId
-  const product = await Product.findOne({ _id }).populate('relationships.categories relationships.files')
+  const product = await Product.findById({ _id })
 
   res.status(200).send({ data: product })
 }
@@ -157,31 +169,19 @@ const updateProduct = async (req, res) => {
     })
   }
 
-  if (isNaN(stock)) {
+  if (stock && typeof stock !== 'number') {
     return res.status(401).send({
-      message: 'Stock is required'
+      message: 'Stock requires a number'
     })
   }
 
-  if (!price) {
-    return res.status(401).send({
-      message: 'Price is required'
-    })
-  }
-
-  if (isNaN(price.amount)) {
+  if (price && price.amount && typeof price.amount !== 'number') {
     return res.status(401).send({
       message: 'Price amount requires a number'
     })
   }
 
-  if (!price.currency) {
-    return res.status(401).send({
-      message: 'Price currency is required'
-    })
-  }
-
-  if (!currencySymbol(price.currency)) {
+  if (price && price.currency && !currencySymbol(price.currency)) {
     return res.status(401).send({
       message: 'Price currency is not a 3 letter ISO'
     })
@@ -215,6 +215,7 @@ const updateProduct = async (req, res) => {
 
     res.status(200).send({ data: product })
   } catch (err) {
+    console.log(err)
     res.status(400).send(err)
   }
 }

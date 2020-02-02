@@ -8,7 +8,7 @@ categorySchema.statics.findAllCategories = async () => {
   return categories
 }
 
-// Update product
+// Update category
 categorySchema.statics.updateCategory = async (categoryDetails) => {
   const { _id } = categoryDetails
 
