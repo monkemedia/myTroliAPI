@@ -3,6 +3,7 @@ const Option = require('../../../models/variant/options/index.js')
 const createVariantOption = async (req, res) => {
   const data = req.body.data
   const { type, name, description } = req.body.data
+  const variant_id = req.params.variantId
 
   if (!type) {
     return res.status(401).send({
@@ -29,7 +30,7 @@ const createVariantOption = async (req, res) => {
   }
 
   try {
-    const option = new Option(data)
+    const option = new Option({ ...data, variant_id })
 
     await option.save()
 
@@ -41,7 +42,8 @@ const createVariantOption = async (req, res) => {
 
 const getVariantOptions = async (req, res) => {
   try {
-    const options = await Option.findAllOptions()
+    const variant_id = req.params.variantId
+    const options = await Option.findAllOptions(variant_id)
 
     res.status(200).send({ data: options })
   } catch (err) {

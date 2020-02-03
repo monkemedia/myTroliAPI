@@ -37,7 +37,7 @@ const createProduct = async (req, res) => {
     })
   }
 
-  if (!stock) {
+  if (isNaN(stock)) {
     return res.status(401).send({
       message: 'Stock is required'
     })
@@ -79,13 +79,13 @@ const createProduct = async (req, res) => {
     })
   }
 
-  if (!price.amount) {
+  if (isNaN(price.amount)) {
     return res.status(401).send({
       message: 'Price amount is required'
     })
   }
 
-  if (price && !isNaN(price.amount) && typeof price.amount !== 'number') {
+  if (!isNaN(price.amount) && typeof price.amount !== 'number') {
     return res.status(401).send({
       message: 'Price amount requires a number'
     })
@@ -213,7 +213,10 @@ const updateProduct = async (req, res) => {
         files: (relationships && relationships.files) || currentProductDetails.relationships.files,
         categories: (relationships && relationships.categories) || currentProductDetails.relationships.categories
       },
-      price: price || currentProductDetails.price,
+      price: {
+        amount: (price && !isNaN(price.amount)) ? price.amount : currentProductDetails.price.amount,
+        currency: (price && price.currency) ? price.currency : currentProductDetails.price.currency
+      },
       commodity_type: commodity_type || currentProductDetails.commodity_type,
       updated_at: updated_at || currentProductDetails.updated_at,
       created_at: created_at || currentProductDetails.created_at

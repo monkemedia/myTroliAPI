@@ -14,6 +14,10 @@ const productVariantOptionSchema = new Schema({
   description: {
     type: String,
     required: false
+  },
+  variant_id: {
+    type: String,
+    required: true
   }
 }, { versionKey: false })
 

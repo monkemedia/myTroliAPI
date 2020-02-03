@@ -13,6 +13,15 @@ const productOptionModifierSchema = new Schema({
   price: {
     type: Object,
     required: false
+  },
+  variant_id: {
+    type: String,
+    required: true
+  },
+  option_id: {
+    type: String,
+    required: true,
+    unique: true
   }
 }, { versionKey: false })
 

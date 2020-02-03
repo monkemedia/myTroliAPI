@@ -10,8 +10,8 @@ productOptionModifierSchema.plugin(uniqueArrayPlugin)
 //   return category
 // }
 
-// Get all modifier
-productOptionModifierSchema.statics.findAllModifiers = () => Modifier.find({})
+// Get all modifiers
+productOptionModifierSchema.statics.findAllModifiers = ({ variant_id, option_id }) => Modifier.find({ variant_id, option_id })
 
 // Find modifier by id
 productOptionModifierSchema.statics.findModifier = (modifierId) => Modifier.findOne({ _id: modifierId })

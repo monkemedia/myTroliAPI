@@ -11,7 +11,7 @@ productVariantOptionSchema.plugin(uniqueArrayPlugin)
 // }
 
 // Get all Options
-productVariantOptionSchema.statics.findAllOptions = () => Option.find({})
+productVariantOptionSchema.statics.findAllOptions = (variantId) => Option.find({ variant_id: variantId })
 
 // Find option by id
 productVariantOptionSchema.statics.findOption = (optionId) => Option.findOne({ _id: optionId })

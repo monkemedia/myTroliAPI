@@ -4,6 +4,10 @@ const currencySymbol = require('currency-symbol-map')
 const createOptionModifier = async (req, res) => {
   const data = req.body.data
   const { type, stock, price } = req.body.data
+  const variant_id = req.params.variantId
+  const option_id = req.params.optionId
+  const modifiers = await Modifier.findAllModifiers({ variant_id, option_id })
+  const unique = modifiers.length > 0
 
   if (!type) {
     return res.status(401).send({
@@ -17,7 +21,7 @@ const createOptionModifier = async (req, res) => {
     })
   }
 
-  if (stock) {
+  if (isNaN(stock)) {
     return res.status(401).send({
       message: 'Stock is required'
     })
@@ -59,8 +63,14 @@ const createOptionModifier = async (req, res) => {
     })
   }
 
+  if (unique) {
+    return res.status(401).send({
+      message: 'Only 1 modifier can be created per option'
+    })
+  }
+
   try {
-    const modifier = new Modifier(data)
+    const modifier = new Modifier({ ...data, variant_id, option_id })
 
     await modifier.save()
 
@@ -71,8 +81,10 @@ const createOptionModifier = async (req, res) => {
 }
 
 const getOptionModifiers = async (req, res) => {
+  const variant_id = req.params.variantId
+  const option_id = req.params.optionId
   try {
-    const modifiers = await Modifier.findAllModifiers()
+    const modifiers = await Modifier.findAllModifiers({ variant_id, option_id })
 
     res.status(200).send({ data: modifiers })
   } catch (err) {
