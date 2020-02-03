@@ -73,13 +73,19 @@ const createProduct = async (req, res) => {
     })
   }
 
+  if (price && typeof price !== 'object') {
+    return res.status(401).send({
+      message: 'Price requires an object'
+    })
+  }
+
   if (!price.amount) {
     return res.status(401).send({
       message: 'Price amount is required'
     })
   }
 
-  if (typeof price.amount !== 'number') {
+  if (price && !isNaN(price.amount) && typeof price.amount !== 'number') {
     return res.status(401).send({
       message: 'Price amount requires a number'
     })
@@ -163,19 +169,19 @@ const updateProduct = async (req, res) => {
     })
   }
 
-  if (type && type !== 'product') {
-    return res.status(401).send({
-      message: 'Correct Type is required'
-    })
-  }
-
-  if (stock && typeof stock !== 'number') {
+  if (!isNaN(stock) && typeof stock !== 'number') {
     return res.status(401).send({
       message: 'Stock requires a number'
     })
   }
 
-  if (price && price.amount && typeof price.amount !== 'number') {
+  if (price && typeof price !== 'object') {
+    return res.status(401).send({
+      message: 'Price requires an object'
+    })
+  }
+
+  if (price && !isNaN(price.amount) && typeof price.amount !== 'number') {
     return res.status(401).send({
       message: 'Price amount requires a number'
     })
@@ -200,12 +206,12 @@ const updateProduct = async (req, res) => {
       name: name || currentProductDetails.name,
       slug: slug || currentProductDetails.slug,
       sku: sku || currentProductDetails.sku,
-      stock: stock || currentProductDetails.stock,
+      stock: !isNaN(stock) ? stock : currentProductDetails.stock,
       status: status || currentProductDetails.status,
       description: description || currentProductDetails.description,
       relationships: {
-        files: relationships.files || currentProductDetails.relationships.files,
-        categories: relationships.categories || currentProductDetails.relationships.categories
+        files: (relationships && relationships.files) || currentProductDetails.relationships.files,
+        categories: (relationships && relationships.categories) || currentProductDetails.relationships.categories
       },
       price: price || currentProductDetails.price,
       commodity_type: commodity_type || currentProductDetails.commodity_type,

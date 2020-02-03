@@ -8,11 +8,11 @@ const productOptionModifierSchema = new Schema({
   },
   stock: {
     type: Number,
-    required: true
+    required: false
   },
   price: {
     type: Object,
-    required: true
+    required: false
   }
 }, { versionKey: false })
 

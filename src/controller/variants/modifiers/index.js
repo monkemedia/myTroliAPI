@@ -35,7 +35,7 @@ const createOptionModifier = async (req, res) => {
     })
   }
 
-  if (!price.amount) {
+  if (isNaN(price.amount)) {
     return res.status(401).send({
       message: 'Price amount is required'
     })
@@ -103,13 +103,19 @@ const updateOptionModifier = async (req, res) => {
     })
   }
 
-  if (stock && typeof stock !== 'number') {
+  if (!isNaN(stock) && typeof stock !== 'number') {
     return res.status(401).send({
       message: 'Stock requires a number'
     })
   }
 
-  if (price && price.amount && typeof price.amount !== 'number') {
+  if (price && typeof price !== 'object') {
+    return res.status(401).send({
+      message: 'Price requires an object'
+    })
+  }
+
+  if (price && !isNaN(price.amount) && typeof price.amount !== 'number') {
     return res.status(401).send({
       message: 'Price amount requires a number'
     })
@@ -124,7 +130,7 @@ const updateOptionModifier = async (req, res) => {
   const data = {
     type,
     _id,
-    stock: stock || currentModifierDetails.stock,
+    stock: !isNaN(stock) ? stock : currentModifierDetails.stock,
     price: price || currentModifierDetails.price
   }
 
