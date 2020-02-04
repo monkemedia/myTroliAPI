@@ -69,7 +69,7 @@ const deleteFileRelationship = async (req, res) => {
   }
 
   try {
-    const product = await Product.findById(productId).populate('relationships.files')
+    const product = await Product.findById(productId)
 
     await data.map(async obj => {
       await FileRelationship.deleteFile(obj.file_id)
