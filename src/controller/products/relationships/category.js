@@ -23,6 +23,7 @@ const createCategoryRelationship = async (req, res) => {
     const product = await Product.findById(_id)
 
     product.relationships.categories = savedCategoryRelationship._id
+    product.updated_at = new Date()
     product.save()
     res.status(201).send(savedCategoryRelationship)
   } catch (err) {
@@ -37,8 +38,9 @@ const deleteCategoryRelationship = async (req, res) => {
     const product = await Product.findById(productId)
     const categoryId = product.relationships.categories
     await CategoryRelationship.deleteCategory(categoryId)
-  
+
     product.relationships.categories = null
+    product.updated_at = new Date()
     product.save()
 
     res.status(200).send({
@@ -76,6 +78,9 @@ const updateCategoryRelationship = async (req, res) => {
     const relationshipId = product.relationships.categories
 
     await CategoryRelationship.updateCategory({ _id: relationshipId, data })
+
+    product.updated_at = new Date()
+    product.save()
 
     res.status(200).send({ data })
   } catch (err) {

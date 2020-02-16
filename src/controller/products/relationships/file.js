@@ -39,6 +39,9 @@ const createFileRelationship = async (req, res) => {
       product.save()
     })
 
+    product.updated_at = new Date()
+    product.save()
+
     await Promise.all(productPromise)
     res.status(201).send({ data: savedFileRelationship })
   } catch (err) {
@@ -75,6 +78,9 @@ const deleteFileRelationship = async (req, res) => {
       await FileRelationship.deleteFile(obj.file_id)
       await product.relationships.files.pull(obj.file_id)
     })
+
+    product.updated_at = new Date()
+    product.save()
 
     res.status(200).send({
       message: 'File relationship successfully deleted'

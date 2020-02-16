@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const auth = require('../../middleware/auth')
-const { createVariant, getVariants, getVariant, updateVariant, deleteVariant } = require('../../controller/variants/index.js')
+const auth = require('../middleware/auth')
+const { createVariant, getVariants, getVariant, updateVariant, deleteVariant } = require('../controller/variants.js')
 
 // Create a new variant
 router.post('/variants', auth, (req, res) => createVariant(req, res))

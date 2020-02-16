@@ -63,6 +63,12 @@ const productSchema = Schema({
       }
     ]
   },
+  variants: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductVariants'
+    }
+  ],
   created_at: {
     type: Date,
     default: Date.now

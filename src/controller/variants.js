@@ -1,5 +1,4 @@
-const Variant = require('../../models/variant/index.js')
-const VariantRelationship = require('../../models/product/relationships/variant')
+const Variant = require('../models/variant/index.js')
 
 const createVariant = async (req, res) => {
   const data = req.body.data
@@ -11,7 +10,7 @@ const createVariant = async (req, res) => {
     })
   }
 
-  if (type && type !== 'product-variant') {
+  if (type && type !== 'variant') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -61,7 +60,7 @@ const updateVariant = async (req, res) => {
     })
   }
 
-  if (type && type !== 'product-variant') {
+  if (type && type !== 'variant') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -84,12 +83,6 @@ const updateVariant = async (req, res) => {
 
 const deleteVariant = async (req, res) => {
   try {
-    // Delete any relationships first
-    const relationships = await VariantRelationship.findAllByVariantIds(req.params.variantId)
-    relationships.map(async relationship => {
-      await VariantRelationship.deleteVariant(relationship._id)
-    })
-
     await Variant.deleteVariant(req.params.variantId)
 
     res.status(200).send({
