@@ -5,7 +5,7 @@ const addresses = require('./addresses.js')
 const products = require('./products/index.js')
 const promotions = require('./promotions.js')
 const categories = require('./categories.js')
-const variants = require('./variants.js')
+const variations = require('./variations.js')
 const productsVariants = require('./products/variants/index.js')
 const productsVariantOptions = require('./products/variants/options/index.js')
 const productsCategoryRelationships = require('./products/relationships/categories.js')
@@ -20,7 +20,7 @@ router.use(
   products,
   promotions,
   categories,
-  variants,
+  variations,
   productsVariants,
   productsVariantOptions,
   productsCategoryRelationships,
