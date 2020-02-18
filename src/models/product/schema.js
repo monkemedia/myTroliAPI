@@ -55,12 +55,6 @@ const productSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'ProductFileRelationship'
       }
-    ],
-    variants: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductVariantRelationship'
-      }
     ]
   },
   variants: [

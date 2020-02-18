@@ -6,7 +6,8 @@ const products = require('./products/index.js')
 const promotions = require('./promotions.js')
 const categories = require('./categories.js')
 const variants = require('./variants.js')
-const productsVariants = require('./products/variants.js')
+const productsVariants = require('./products/variants/index.js')
+const productsVariantOptions = require('./products/variants/options/index.js')
 const productsCategoryRelationships = require('./products/relationships/categories.js')
 const productsFileRelationships = require('./products/relationships/files.js')
 
@@ -21,6 +22,7 @@ router.use(
   categories,
   variants,
   productsVariants,
+  productsVariantOptions,
   productsCategoryRelationships,
   productsFileRelationships
 )

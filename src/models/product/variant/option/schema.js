@@ -9,14 +9,18 @@ const productVariantSchema = new Schema({
 
   name: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
 
-  options: [{
-    type: Schema.Types.ObjectId,
-    ref: 'ProductVariantOptions'
-  }]
+  stock: {
+    type: Number,
+    required: true
+  },
+
+  price: {
+    type: Object,
+    required: true
+  }
 }, { versionKey: false })
 
 module.exports = productVariantSchema

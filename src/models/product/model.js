@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
+const deepPopulate = require('mongoose-deep-populate')(mongoose)
 const currencySymbol = require('currency-symbol-map')
 const productSchema = require('./schema')
+
+productSchema.plugin(deepPopulate)
 
 function formatCurrency (amount, currency) {
   return currencySymbol(currency) + amount
@@ -74,7 +77,7 @@ productSchema.statics.search = async ({ page, query }) => {
 
 // Get product by product id
 productSchema.statics.findById = async (_id) => {
-  const product = await Product.findOne({ _id }).populate('variants')
+  const product = await Product.findOne({ _id }).populate('variants').deepPopulate('variants.options')
   return product
 }
 
