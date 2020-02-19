@@ -3,7 +3,7 @@ const productVariantSchema = require('./schema')
 
 // Get all product variants
 productVariantSchema.statics.findAllProductVariants = async () => {
-  const productVariants = await ProductVariants.find({}).populate('options')
+  const productVariants = await ProductVariants.find({})
 
   return productVariants
 }
