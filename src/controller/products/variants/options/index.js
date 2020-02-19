@@ -74,7 +74,7 @@ const createProductVariantOption = async (req, res) => {
   }
 
   try {
-    const productVariantOption = new ProductVariantOption(data)
+    const productVariantOption = new ProductVariantOption({ ...data, variant_id })
 
     const savedProductVariantOption = await productVariantOption.save()
     const productVariant = await ProductVariant.findById(variant_id)
@@ -90,7 +90,8 @@ const createProductVariantOption = async (req, res) => {
 
 const getProductVariantOptions = async (req, res) => {
   try {
-    const productVariants = await ProductVariantOption.findAllProductVariantOptions()
+    const variantId = req.params.variantId
+    const productVariants = await ProductVariantOption.findAllProductVariantOptions(variantId)
 
     res.status(200).send({ data: productVariants })
   } catch (err) {
@@ -99,18 +100,18 @@ const getProductVariantOptions = async (req, res) => {
 }
 
 const getProductVariantOption = async (req, res) => {
+  const variantId = req.params.variantId
   const optionId = req.params.optionId
-  const productVariant = await ProductVariantOption.findOne({ _id: optionId })
+  const productVariant = await ProductVariantOption.findOne({ _id: optionId, variant_id: variantId })
 
   res.status(200).send({ data: productVariant })
 }
 
 const updateProductVariantOption = async (req, res) => {
+  const variantId = req.params.variantId
   const optionId = req.params.optionId
-  const currentProductVariantOptionDetails = await ProductVariantOption.findOne({ _id: optionId })
+  const currentProductVariantOptionDetails = await ProductVariantOption.findOne({ _id: optionId, variant_id: variantId })
   const { type, name, stock, price } = req.body.data
-
-  console.log('poo', currentProductVariantOptionDetails)
 
   if (!type) {
     return res.status(401).send({
@@ -184,7 +185,7 @@ const deleteProductVariantOption = async (req, res) => {
   try {
     const optionId = req.params.optionId
     const variantId = req.params.variantId
-    const productVariant = await ProductVariant.findById(variantId)
+    const productVariant = await ProductVariant.findOne({ _id: optionId, variant_id: variantId })
 
     await productVariant.options.pull(optionId)
     await productVariant.save()

@@ -20,6 +20,11 @@ const productVariantSchema = new Schema({
   price: {
     type: Object,
     required: true
+  },
+
+  variant_id: {
+    type: String,
+    required: true
   }
 }, { versionKey: false })
 
