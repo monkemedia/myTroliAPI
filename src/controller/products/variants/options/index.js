@@ -185,8 +185,7 @@ const deleteProductVariantOption = async (req, res) => {
   try {
     const optionId = req.params.optionId
     const variantId = req.params.variantId
-    const productVariant = await ProductVariant.findOne({ _id: optionId, variant_id: variantId })
-
+    const productVariant = await ProductVariant.findOne({ _id: variantId })
     await productVariant.options.pull(optionId)
     await productVariant.save()
     await ProductVariantOption.deleteProductVariantOption(optionId)
