@@ -1,4 +1,5 @@
 const ProductVariant = require('../../../models/product/variant/index.js')
+const ProductVariantOption = require('../../../models/product/variant/option/index.js')
 const Product = require('../../../models/product')
 
 const createProductVariant = async (req, res) => {
@@ -103,6 +104,16 @@ const deleteProductVariant = async (req, res) => {
     const productId = req.params.productId
     const variantId = req.params.variantId
     const product = await Product.findById(productId)
+    const productVariant = await ProductVariant.findById(variantId)
+
+    console.log('POO', productVariant)
+
+    // DELETE all related options
+    if (productVariant.options.length > 0) {
+      productVariant.options.map(async (optionId) => {
+        await ProductVariantOption.deleteProductVariantOption(optionId)
+      })
+    }
 
     await product.variants.pull(variantId)
     await product.save()
