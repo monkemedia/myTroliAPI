@@ -26,7 +26,10 @@ const createProductVariant = async (req, res) => {
   }
 
   try {
-    const productVariant = new ProductVariant(data)
+    const productVariant = new ProductVariant({
+      ...data,
+      product_id
+    })
 
     const savedProductVariant = await productVariant.save()
     const product = await Product.findById(product_id)
@@ -42,7 +45,8 @@ const createProductVariant = async (req, res) => {
 
 const getProductVariants = async (req, res) => {
   try {
-    const productVariants = await ProductVariant.findAllProductVariants()
+    const productId = req.params.productId
+    const productVariants = await ProductVariant.findAllProductVariants(productId)
 
     res.status(200).send({ data: productVariants })
   } catch (err) {
@@ -51,7 +55,9 @@ const getProductVariants = async (req, res) => {
 }
 
 const getProductVariant = async (req, res) => {
-  const productVariant = await ProductVariant.findOne({ _id: req.params.variantId }).populate('name', 'value')
+  const _id = req.params.variantId
+  const product_id = req.params.productId
+  const productVariant = await ProductVariant.findOne({ _id, product_id }).populate('name', 'value')
 
   res.status(200).send({ data: productVariant })
 }
@@ -83,6 +89,7 @@ const updateProductVariant = async (req, res) => {
   const data = {
     type,
     _id: variantId,
+    product_id: productId,
     name: name || currentProductVariantDetails.name
   }
 
@@ -105,8 +112,6 @@ const deleteProductVariant = async (req, res) => {
     const variantId = req.params.variantId
     const product = await Product.findById(productId)
     const productVariant = await ProductVariant.findById(variantId)
-
-    console.log('POO', productVariant)
 
     // DELETE all related options
     if (productVariant.options.length > 0) {

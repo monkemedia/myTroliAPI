@@ -12,6 +12,11 @@ const productVariantSchema = new Schema({
     ref: 'Variation'
   },
 
+  product_id: {
+    type: String,
+    required: true
+  },
+
   options: [{
     type: Schema.Types.ObjectId,
     ref: 'ProductVariantOptions'
