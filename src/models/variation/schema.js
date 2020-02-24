@@ -6,7 +6,7 @@ const variantSchema = new Schema({
     type: String,
     required: true
   },
-  name: {
+  value: {
     type: String,
     required: true
   }

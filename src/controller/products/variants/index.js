@@ -51,7 +51,7 @@ const getProductVariants = async (req, res) => {
 }
 
 const getProductVariant = async (req, res) => {
-  const productVariant = await ProductVariant.findOne({ _id: req.params.variantId })
+  const productVariant = await ProductVariant.findOne({ _id: req.params.variantId }).populate('name', 'value')
 
   res.status(200).send({ data: productVariant })
 }

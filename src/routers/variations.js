@@ -12,6 +12,6 @@ router.get('/variations/:variationId', auth, (req, res) => getVariation(req, res
 // Update variation
 router.put('/variations/:variationId', auth, (req, res) => updateVariation(req, res))
 // Delete variation
-router.delete('/variation/:variationId', auth, (req, res) => deleteVariation(req, res))
+router.delete('/variations/:variationId', auth, (req, res) => deleteVariation(req, res))
 
 module.exports = router
