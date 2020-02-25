@@ -1,43 +1,52 @@
-const CategoryRelationship = require('../../../models/product/relationships/category')
+const ProductCategory = require('../../../models/product/category')
 const Product = require('../../../models/product')
 
-const createCategoryRelationship = async (req, res) => {
+const createProductCategory = async (req, res) => {
   const data = req.body.data
-  const _id = req.params.productId
+  const product_id = req.params.productId
+  const { type, category_id } = data
 
-  if (data.some(val => !val.type)) {
+  if (!type) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (data.some(val => val.type !== 'category')) {
+  if (type !== 'category') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
-  try {
-    const categories = new CategoryRelationship({ data })
-    const savedCategoryRelationship = await categories.save()
-    const product = await Product.findById(_id)
+  if (!category_id) {
+    return res.status(401).send({
+      message: 'Category ID is required'
+    })
+  }
 
-    product.relationships.categories = savedCategoryRelationship._id
+  try {
+    const productCategories = new ProductCategory({
+      ...data,
+      product_id
+    })
+    const savedProductCategory = await productCategories.save()
+    const product = await Product.findById(product_id)
+    product.categories.push(savedProductCategory._id)
     product.updated_at = new Date()
     product.save()
-    res.status(201).send(savedCategoryRelationship)
+    res.status(201).send(savedProductCategory)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
-const deleteCategoryRelationship = async (req, res) => {
+const deleteProductCategory = async (req, res) => {
   const productId = req.params.productId
 
   try {
     const product = await Product.findById(productId)
     const categoryId = product.relationships.categories
-    await CategoryRelationship.deleteCategory(categoryId)
+    await ProductCategory.deleteCategory(categoryId)
 
     product.relationships.categories = null
     product.updated_at = new Date()
@@ -51,7 +60,7 @@ const deleteCategoryRelationship = async (req, res) => {
   }
 }
 
-const updateCategoryRelationship = async (req, res) => {
+const updateProductCategory = async (req, res) => {
   const data = req.body.data
 
   if (data.some(val => !val.type)) {
@@ -77,7 +86,7 @@ const updateCategoryRelationship = async (req, res) => {
     const product = await Product.findById(product_id)
     const relationshipId = product.relationships.categories
 
-    await CategoryRelationship.updateCategory({ _id: relationshipId, data })
+    await ProductCategory.updateCategory({ _id: relationshipId, data })
 
     product.updated_at = new Date()
     product.save()
@@ -89,7 +98,7 @@ const updateCategoryRelationship = async (req, res) => {
 }
 
 module.exports = {
-  createCategoryRelationship,
-  deleteCategoryRelationship,
-  updateCategoryRelationship
+  createProductCategory,
+  deleteProductCategory,
+  updateProductCategory
 }

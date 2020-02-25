@@ -45,11 +45,6 @@ const productSchema = Schema({
     required: false
   },
   relationships: {
-    categories:
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'ProductCategoryRelationship'
-    },
     files: [
       {
         type: Schema.Types.ObjectId,
@@ -61,6 +56,12 @@ const productSchema = Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'ProductVariants'
+    }
+  ],
+  categories: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductCategories'
     }
   ],
   created_at: {

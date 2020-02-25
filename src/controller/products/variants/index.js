@@ -4,8 +4,8 @@ const Product = require('../../../models/product')
 
 const createProductVariant = async (req, res) => {
   const data = req.body.data
-  const { type, name } = req.body.data
   const product_id = req.params.productId
+  const { type, name } = req.body.data
 
   if (!type) {
     return res.status(401).send({
@@ -35,6 +35,7 @@ const createProductVariant = async (req, res) => {
     const product = await Product.findById(product_id)
 
     product.variants.push(savedProductVariant._id)
+    product.updated_at = new Date()
     product.save()
 
     res.status(201).send({ data: productVariant })
