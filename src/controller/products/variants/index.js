@@ -63,50 +63,6 @@ const getProductVariant = async (req, res) => {
   res.status(200).send({ data: productVariant })
 }
 
-const updateProductVariant = async (req, res) => {
-  const variantId = req.params.variantId
-  const productId = req.params.productId
-  const currentProductVariantDetails = await ProductVariant.findOne({ variantId })
-  const { type, name } = req.body.data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-variant') {
-    return res.status(401).send({
-      message: 'Correct Type is required'
-    })
-  }
-
-  if (!name) {
-    return res.status(401).send({
-      message: 'Name is required'
-    })
-  }
-
-  const data = {
-    type,
-    _id: variantId,
-    product_id: productId,
-    name: name || currentProductVariantDetails.name
-  }
-
-  try {
-    await ProductVariant.updateProductVariant(data)
-    const product = await Product.findById(productId)
-
-    product.updated_at = new Date()
-    product.save()
-
-    res.status(200).send({ data })
-  } catch (err) {
-    res.status(400).send(err)
-  }
-}
-
 const deleteProductVariant = async (req, res) => {
   try {
     const productId = req.params.productId
@@ -137,6 +93,5 @@ module.exports = {
   createProductVariant,
   getProductVariants,
   getProductVariant,
-  updateProductVariant,
   deleteProductVariant
 }

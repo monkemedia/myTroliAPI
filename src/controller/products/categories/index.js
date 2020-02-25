@@ -4,7 +4,7 @@ const Product = require('../../../models/product')
 const createProductCategory = async (req, res) => {
   const data = req.body.data
   const product_id = req.params.productId
-  const { type, category_id } = data
+  const { type, name } = data
 
   if (!type) {
     return res.status(401).send({
@@ -12,15 +12,15 @@ const createProductCategory = async (req, res) => {
     })
   }
 
-  if (type !== 'category') {
+  if (type !== 'product-category') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
-  if (!category_id) {
+  if (!name) {
     return res.status(401).send({
-      message: 'Category ID is required'
+      message: 'Name is required'
     })
   }
 
@@ -38,6 +38,25 @@ const createProductCategory = async (req, res) => {
   } catch (err) {
     res.status(400).send(err)
   }
+}
+
+const getProductCategories = async (req, res) => {
+  try {
+    const productId = req.params.productId
+    const productCategories = await ProductCategory.findAllProductCategories(productId)
+
+    res.status(200).send({ data: productCategories })
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
+
+const getProductCategory = async (req, res) => {
+  const _id = req.params.categoryId
+  const product_id = req.params.productId
+  const productCategory = await ProductCategory.findOne({ _id, product_id }).populate('name', 'name')
+
+  res.status(200).send({ data: productCategory })
 }
 
 const deleteProductCategory = async (req, res) => {
@@ -60,45 +79,9 @@ const deleteProductCategory = async (req, res) => {
   }
 }
 
-const updateProductCategory = async (req, res) => {
-  const data = req.body.data
-
-  if (data.some(val => !val.type)) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (data.some(val => val.type !== 'category')) {
-    return res.status(401).send({
-      message: 'Correct Type is required'
-    })
-  }
-
-  if (data.some(val => !val.category_id)) {
-    return res.status(401).send({
-      message: 'Category ID is required'
-    })
-  }
-
-  try {
-    const product_id = req.params.productId
-    const product = await Product.findById(product_id)
-    const relationshipId = product.relationships.categories
-
-    await ProductCategory.updateCategory({ _id: relationshipId, data })
-
-    product.updated_at = new Date()
-    product.save()
-
-    res.status(200).send({ data })
-  } catch (err) {
-    res.status(400).send(err)
-  }
-}
-
 module.exports = {
   createProductCategory,
-  deleteProductCategory,
-  updateProductCategory
+  getProductCategories,
+  getProductCategory,
+  deleteProductCategory
 }
