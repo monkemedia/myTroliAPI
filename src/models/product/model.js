@@ -74,7 +74,7 @@ productSchema.statics.search = async ({ page, query }) => {
 
 // Get product by product id
 productSchema.statics.findById = async (_id) => {
-  const product = await Product.findOne({ _id }).populate('variants')
+  const product = await Product.findOne({ _id }).populate('variants categories')
   return product
 }
 
