@@ -4,7 +4,7 @@ const auth = require('../../../middleware/auth')
 const {
   createProductCategory,
   getProductCategories,
-  getProductCategory,
+  updateProductCategory,
   deleteProductCategory
 } = require('../../../controller/products/categories')
 
@@ -12,8 +12,8 @@ const {
 router.post('/products/:productId/categories', auth, (req, res) => createProductCategory(req, res))
 // Get Product Categories
 router.get('/products/:productId/categories', auth, (req, res) => getProductCategories(req, res))
-// Get Product Category
-router.get('/products/:productId/categories/:categoryId', auth, (req, res) => getProductCategory(req, res))
+// Update Product Category
+router.put('/products/:productId/categories', auth, (req, res) => updateProductCategory(req, res))
 // Delete Product Category
 router.delete('/products/:productId/categories/:categoryId', auth, (req, res) => deleteProductCategory(req, res))
 

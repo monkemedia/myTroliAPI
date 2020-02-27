@@ -3,34 +3,24 @@ const Product = require('../../../models/product')
 
 const createProductCategory = async (req, res) => {
   const data = req.body.data
-  const product_id = req.params.productId
-  const { type, name } = data
+  const productId = req.params.productId
 
-  if (!type) {
+  if (data.some(val => !val.type)) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (type !== 'product-category') {
+  if (data.some(val => val.type !== 'product-category')) {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
-  if (!name) {
-    return res.status(401).send({
-      message: 'Name is required'
-    })
-  }
-
   try {
-    const productCategories = new ProductCategory({
-      ...data,
-      product_id
-    })
+    const productCategories = new ProductCategory(data)
     const savedProductCategory = await productCategories.save()
-    const product = await Product.findById(product_id)
+    const product = await Product.findById(productId)
     product.categories.push(savedProductCategory._id)
     product.updated_at = new Date()
     product.save()
