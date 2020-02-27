@@ -11,7 +11,7 @@ const createCategory = async (req, res) => {
     })
   }
 
-  if (type && type !== 'category') {
+  if (type && type !== 'categories') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -73,7 +73,7 @@ const updateCategory = async (req, res) => {
     })
   }
 
-  if (type && type !== 'category') {
+  if (type && type !== 'categories') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
