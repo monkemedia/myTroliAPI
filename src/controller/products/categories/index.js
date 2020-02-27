@@ -1,7 +1,7 @@
-const CategoryRelationship = require('../../../models/product/relationships/category')
+const ProductCategories = require('../../../models/product/category')
 const Product = require('../../../models/product')
 
-const createCategoryRelationship = async (req, res) => {
+const createProductCategories = async (req, res) => {
   const data = req.body.data
   const _id = req.params.productId
 
@@ -11,35 +11,35 @@ const createCategoryRelationship = async (req, res) => {
     })
   }
 
-  if (data.some(val => val.type !== 'category')) {
+  if (data.some(val => val.type !== 'product-category')) {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
   try {
-    const categories = new CategoryRelationship({ data })
-    const savedCategoryRelationship = await categories.save()
+    const productCategories = new ProductCategories({ data })
+    const savedProductCategories = await productCategories.save()
     const product = await Product.findById(_id)
 
-    product.relationships.categories = savedCategoryRelationship._id
+    product.categories = savedProductCategories._id
     product.updated_at = new Date()
     product.save()
-    res.status(201).send(savedCategoryRelationship)
+    res.status(201).send(savedProductCategories)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
-const deleteCategoryRelationship = async (req, res) => {
+const deleteProductCategories = async (req, res) => {
   const productId = req.params.productId
 
   try {
     const product = await Product.findById(productId)
-    const categoryId = product.relationships.categories
-    await CategoryRelationship.deleteCategory(categoryId)
+    const categoryId = product.categories
+    await ProductCategories.deleteCategory(categoryId)
 
-    product.relationships.categories = null
+    product.categories = null
     product.updated_at = new Date()
     product.save()
 
@@ -51,7 +51,7 @@ const deleteCategoryRelationship = async (req, res) => {
   }
 }
 
-const updateCategoryRelationship = async (req, res) => {
+const updateProductCategories = async (req, res) => {
   const data = req.body.data
 
   if (data.some(val => !val.type)) {
@@ -60,7 +60,7 @@ const updateCategoryRelationship = async (req, res) => {
     })
   }
 
-  if (data.some(val => val.type !== 'category')) {
+  if (data.some(val => val.type !== 'product-category')) {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -75,9 +75,9 @@ const updateCategoryRelationship = async (req, res) => {
   try {
     const product_id = req.params.productId
     const product = await Product.findById(product_id)
-    const relationshipId = product.relationships.categories
+    const relationshipId = product.categories
 
-    await CategoryRelationship.updateCategory({ _id: relationshipId, data })
+    await ProductCategories.updateCategory({ _id: relationshipId, data })
 
     product.updated_at = new Date()
     product.save()
@@ -89,7 +89,7 @@ const updateCategoryRelationship = async (req, res) => {
 }
 
 module.exports = {
-  createCategoryRelationship,
-  deleteCategoryRelationship,
-  updateCategoryRelationship
+  createProductCategories,
+  deleteProductCategories,
+  updateProductCategories
 }
