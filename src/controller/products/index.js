@@ -209,9 +209,10 @@ const updateProduct = async (req, res) => {
       stock: !isNaN(stock) ? stock : currentProductDetails.stock,
       status: status || currentProductDetails.status,
       description: description || currentProductDetails.description,
+      categories: currentProductDetails.categories,
+      variants: currentProductDetails.variants,
       relationships: {
-        files: (relationships && relationships.files) || currentProductDetails.relationships.files,
-        categories: (relationships && relationships.categories) || currentProductDetails.relationships.categories
+        files: (relationships && relationships.files) || currentProductDetails.relationships.files
       },
       price: {
         amount: (price && !isNaN(price.amount)) ? price.amount : currentProductDetails.price.amount,
