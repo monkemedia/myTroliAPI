@@ -30,7 +30,7 @@ const createVariation = async (req, res) => {
 
     await variation.save()
 
-    res.status(201).send({ data: variation })
+    res.status(201).send(variation)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -40,7 +40,7 @@ const getVariations = async (req, res) => {
   try {
     const variation = await Variation.findAllVariations()
 
-    res.status(200).send({ data: variation })
+    res.status(200).send(variation)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -49,7 +49,7 @@ const getVariations = async (req, res) => {
 const getVariation = async (req, res) => {
   const variation = await Variation.findOne({ _id: req.params.variationId })
 
-  res.status(200).send({ data: variation })
+  res.status(200).send(variation)
 }
 
 const updateVariation = async (req, res) => {
@@ -78,7 +78,7 @@ const updateVariation = async (req, res) => {
   try {
     await Variation.updateVariation(data)
 
-    res.status(200).send({ data })
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }

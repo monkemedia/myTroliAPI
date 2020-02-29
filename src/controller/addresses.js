@@ -58,7 +58,7 @@ const createAddress = async (req, res) => {
 
     await addresses.save()
 
-    res.status(201).send({ data: addresses })
+    res.status(201).send(addresses)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -69,7 +69,7 @@ const getAddresses = async (req, res) => {
     const customer_id = req.params.customerId
     const addresses = await Address.findAllAddresses(customer_id)
 
-    res.status(200).send({ data: addresses })
+    res.status(200).send(addresses)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -80,7 +80,7 @@ const getAddress = async (req, res) => {
     const address_id = req.params.addressId
     const addresses = await Address.findAddress(address_id)
 
-    res.status(200).send({ data: addresses })
+    res.status(200).send(addresses)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -126,7 +126,7 @@ const updateAddress = async (req, res) => {
 
     await Address.updateAddress(data)
 
-    res.status(200).send({ data })
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }

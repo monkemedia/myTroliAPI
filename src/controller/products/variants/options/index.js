@@ -82,7 +82,7 @@ const createProductVariantOption = async (req, res) => {
     productVariant.options.push(savedProductVariantOption._id)
     productVariant.save()
 
-    res.status(201).send({ data: productVariantOption })
+    res.status(201).send(productVariantOption)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -93,7 +93,7 @@ const getProductVariantOptions = async (req, res) => {
     const variantId = req.params.variantId
     const productVariants = await ProductVariantOption.findAllProductVariantOptions(variantId)
 
-    res.status(200).send({ data: productVariants })
+    res.status(200).send(productVariants)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -104,7 +104,7 @@ const getProductVariantOption = async (req, res) => {
   const optionId = req.params.optionId
   const productVariant = await ProductVariantOption.findOne({ _id: optionId, variant_id: variantId })
 
-  res.status(200).send({ data: productVariant })
+  res.status(200).send(productVariant)
 }
 
 const updateProductVariantOption = async (req, res) => {
@@ -175,7 +175,7 @@ const updateProductVariantOption = async (req, res) => {
   try {
     await ProductVariantOption.updateProductVariantOption(data)
 
-    res.status(200).send({ data })
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }

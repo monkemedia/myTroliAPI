@@ -42,7 +42,7 @@ const uploadFile = (req, res) => {
         if (er) {
           return res.status(401).send(errorHandler(401, er))
         }
-        return res.status(201).send({ data: info })
+        return res.status(201).send(info)
       })
     })
   })
@@ -53,7 +53,7 @@ const getFiles = (req, res) => {
     if (err) {
       return res.status(401).send(errorHandler(401, err))
     }
-    return res.status(201).send({ data: info })
+    return res.status(201).send(info)
   })
 }
 
@@ -64,7 +64,7 @@ const getFile = (req, res) => {
     if (err) {
       return res.status(401).send(errorHandler(401, err))
     }
-    return res.status(201).send({ data: info })
+    return res.status(201).send(info)
   })
 }
 
@@ -75,7 +75,7 @@ const deleteFile = (req, res) => {
     if (err) {
       return res.status(401).send(errorHandler(401, err))
     }
-    return res.status(201).send({ data: 'File has been deleted' })
+    return res.status(201).send('File has been deleted')
   })
 }
 
@@ -95,7 +95,7 @@ const storeFiles = async (req, res) => {
 
   try {
     const results = await Promise.all(promises)
-    res.status(201).send({ data: results })
+    res.status(201).send(results)
   } catch (err) {
     res.status(401).send(errorHandler(401, err))
   }

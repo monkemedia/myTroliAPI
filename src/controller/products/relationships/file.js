@@ -43,7 +43,7 @@ const createFileRelationship = async (req, res) => {
     product.save()
 
     await Promise.all(productPromise)
-    res.status(201).send({ data: savedFileRelationship })
+    res.status(201).send(savedFileRelationship)
   } catch (err) {
     res.status(400).send(err)
   }

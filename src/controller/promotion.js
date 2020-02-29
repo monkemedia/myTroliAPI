@@ -58,7 +58,7 @@ const createPromotion = async (req, res) => {
 
     await promotions.save()
 
-    res.status(201).send({ data: promotions })
+    res.status(201).send(promotions)
   } catch (err) {
     res.status(400).send(errorHandler(400, err))
   }
@@ -68,7 +68,7 @@ const getPromotions = async (req, res) => {
   try {
     const promotions = await Promotion.findAllPromotions()
 
-    res.status(200).send({ data: promotions })
+    res.status(200).send(promotions)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -78,7 +78,7 @@ const getPromotion = async (req, res) => {
   const _id = req.params.promotionId
   const promotion = await Promotion.findOne({ _id })
 
-  res.status(200).send({ data: promotion })
+  res.status(200).send(promotion)
 }
 
 const updatePromotion = async (req, res) => {
@@ -149,7 +149,7 @@ const updatePromotion = async (req, res) => {
 
     await Promotion.updatePromotion(data)
 
-    res.status(200).send({ data })
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }

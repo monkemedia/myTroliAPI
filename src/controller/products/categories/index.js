@@ -82,7 +82,7 @@ const updateProductCategories = async (req, res) => {
     product.updated_at = new Date()
     product.save()
 
-    res.status(200).send({ data })
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }

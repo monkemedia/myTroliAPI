@@ -37,7 +37,7 @@ const createProductVariant = async (req, res) => {
     product.variants.push(savedProductVariant._id)
     product.save()
 
-    res.status(201).send({ data: productVariant })
+    res.status(201).send(productVariant)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -48,7 +48,7 @@ const getProductVariants = async (req, res) => {
     const productId = req.params.productId
     const productVariants = await ProductVariant.findAllProductVariants(productId)
 
-    res.status(200).send({ data: productVariants })
+    res.status(200).send(productVariants)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -59,7 +59,7 @@ const getProductVariant = async (req, res) => {
   const product_id = req.params.productId
   const productVariant = await ProductVariant.findOne({ _id, product_id }).populate('name', 'value')
 
-  res.status(200).send({ data: productVariant })
+  res.status(200).send(productVariant)
 }
 
 const updateProductVariant = async (req, res) => {
@@ -100,7 +100,7 @@ const updateProductVariant = async (req, res) => {
     product.updated_at = new Date()
     product.save()
 
-    res.status(200).send({ data })
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
