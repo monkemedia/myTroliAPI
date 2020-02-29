@@ -52,7 +52,7 @@ const createClient = async (req, res) => {
       _id
     })
 
-    res.status(201).send({ data: clientCopy })
+    res.status(201).send(clientCopy)
   } catch (err) {
     res.status(err.status).send(err)
   }
@@ -70,7 +70,7 @@ const getClient = async (req, res) => {
     password: !!client.password
   })
 
-  res.status(200).send({ data: clientClone })
+  res.status(200).send(clientClone)
 }
 
 const updateClient = async (req, res) => {

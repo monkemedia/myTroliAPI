@@ -120,7 +120,7 @@ const createProduct = async (req, res) => {
 
     await products.save()
 
-    res.status(201).send({ data: products })
+    res.status(201).send(products)
   } catch (err) {
     res.status(400).send(errorHandler(400, err))
   }
@@ -148,7 +148,7 @@ const getProduct = async (req, res) => {
   const _id = req.params.productId
   const product = await Product.findById({ _id })
 
-  res.status(200).send({ data: product })
+  res.status(200).send(product)
 }
 
 const updateProduct = async (req, res) => {
@@ -223,7 +223,7 @@ const updateProduct = async (req, res) => {
       created_at: created_at || currentProductDetails.created_at
     })
 
-    res.status(200).send({ data: product })
+    res.status(200).send(product)
   } catch (err) {
     console.log(err)
     res.status(400).send(err)

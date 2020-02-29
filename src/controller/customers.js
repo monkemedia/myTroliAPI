@@ -50,13 +50,11 @@ const createCustomer = async (req, res) => {
     const { _id } = customer
 
     res.status(201).send({
-      data: {
-        type,
-        _id,
-        name,
-        email,
-        password: !!password
-      }
+      type,
+      _id,
+      name,
+      email,
+      password: !!password
     })
   } catch (err) {
     res.status(400).send(err)
@@ -71,7 +69,7 @@ const getCustomers = async (req, res) => {
       password: !!customer.password
     }))
 
-    res.status(200).send({ data: [...newCustomers] })
+    res.status(200).send([...newCustomers])
   } catch (err) {
     res.status(400).send(err)
   }
@@ -83,7 +81,7 @@ const getCustomer = async (req, res) => {
     password: !!customer.password
   })
 
-  res.status(200).send({ data: customerClone })
+  res.status(200).send(customerClone)
 }
 
 const updateCustomer = async (req, res) => {
@@ -114,7 +112,7 @@ const updateCustomer = async (req, res) => {
   try {
     await Customer.updateCustomer(data)
 
-    res.status(200).send({ data })
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }

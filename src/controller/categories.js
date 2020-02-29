@@ -40,7 +40,7 @@ const createCategory = async (req, res) => {
 
     await categories.save()
 
-    res.status(201).send({ data: categories })
+    res.status(201).send(categories)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -50,7 +50,7 @@ const getCategories = async (req, res) => {
   try {
     const categories = await Category.findAllCategories()
 
-    res.status(200).send({ data: categories })
+    res.status(200).send(categories)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -59,7 +59,7 @@ const getCategories = async (req, res) => {
 const getCategory = async (req, res) => {
   const category = await Category.findOne({ _id: req.params.categoryId })
 
-  res.status(200).send({ data: category })
+  res.status(200).send(category)
 }
 
 const updateCategory = async (req, res) => {
@@ -97,7 +97,7 @@ const updateCategory = async (req, res) => {
   try {
     await Category.updateCategory(data)
 
-    res.status(200).send({ data })
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
