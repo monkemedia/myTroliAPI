@@ -4,7 +4,12 @@ const Product = require('../../../models/product')
 
 const createProductVariant = async (req, res) => {
   const data = req.body.data
-  const { type, name } = req.body.data
+  const {
+    type,
+    name,
+    is_priced,
+    has_stock
+  } = req.body.data
   const product_id = req.params.productId
 
   if (!type) {
@@ -22,6 +27,18 @@ const createProductVariant = async (req, res) => {
   if (!name) {
     return res.status(401).send({
       message: 'Name is required'
+    })
+  }
+
+  if (is_priced && typeof is_priced !== 'boolean') {
+    return res.status(401).send({
+      message: 'Is priced requires a boolean'
+    })
+  }
+
+  if (has_stock && typeof has_stock !== 'boolean') {
+    return res.status(401).send({
+      message: 'Has stock requires a boolean'
     })
   }
 
@@ -66,7 +83,12 @@ const updateProductVariant = async (req, res) => {
   const variantId = req.params.variantId
   const productId = req.params.productId
   const currentProductVariantDetails = await ProductVariant.findOne({ variantId })
-  const { type, name } = req.body.data
+  const {
+    type,
+    name,
+    is_priced,
+    has_stock
+  } = req.body.data
 
   if (!type) {
     return res.status(401).send({
@@ -86,10 +108,24 @@ const updateProductVariant = async (req, res) => {
     })
   }
 
+  if (is_priced && typeof is_priced !== 'boolean') {
+    return res.status(401).send({
+      message: 'Is priced requires a boolean'
+    })
+  }
+
+  if (has_stock && typeof has_stock !== 'boolean') {
+    return res.status(401).send({
+      message: 'Has stock requires a boolean'
+    })
+  }
+
   const data = {
     type,
     _id: variantId,
     product_id: productId,
+    is_priced: is_priced || currentProductVariantDetails.is_priced,
+    has_stock: has_stock || currentProductVariantDetails.has_stock,
     name: name || currentProductVariantDetails.name
   }
 

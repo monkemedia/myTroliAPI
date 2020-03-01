@@ -12,6 +12,16 @@ const productVariantSchema = new Schema({
     ref: 'Variation'
   },
 
+  is_priced: {
+    type: String,
+    default: false
+  },
+
+  has_stock: {
+    type: String,
+    default: false
+  },
+
   product_id: {
     type: String,
     required: true
