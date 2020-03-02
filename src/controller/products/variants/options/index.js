@@ -1,11 +1,26 @@
 const ProductVariantOption = require('../../../../models/product/variant/option/index.js')
-const ProductVariant = require('../../../../models/product/variant/index.js')
+const Product = require('../../../../models/product')
 const currencySymbol = require('currency-symbol-map')
+
+function updateName (current, option1, option2, option3) {
+  const opt1 = option1 || current.option1
+  const opt2 = option2 === '' ? null : option2 || current.option2
+  const opt3 = option3 === '' ? null : option3 || current.option3
+
+  return [opt1, opt2, opt3].filter(Boolean).join(' / ')
+}
 
 const createProductVariantOption = async (req, res) => {
   const data = req.body.data
-  const { type, name, stock, price } = data
-  const variant_id = req.params.variantId
+  const {
+    type,
+    option1,
+    option2,
+    option3,
+    stock,
+    price
+  } = data
+  const product_id = req.params.productId
 
   if (!type) {
     return res.status(401).send({
@@ -13,15 +28,15 @@ const createProductVariantOption = async (req, res) => {
     })
   }
 
-  if (type && type !== 'product-variant-option') {
+  if (type && type !== 'product-variant-options') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
-  if (!name) {
+  if (!option1) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Option 1 is required'
     })
   }
 
@@ -74,13 +89,17 @@ const createProductVariantOption = async (req, res) => {
   }
 
   try {
-    const productVariantOption = new ProductVariantOption({ ...data, variant_id })
+    var productVariantOption = new ProductVariantOption({
+      ...data,
+      name: [option1, option2, option3].slice(0, -1).join(' / '),
+      product_id
+    })
 
-    const savedProductVariantOption = await productVariantOption.save()
-    const productVariant = await ProductVariant.findById(variant_id)
+    const savedProductVariantOptions = await productVariantOption.save()
+    const product = await Product.findById(product_id)
 
-    productVariant.options.push(savedProductVariantOption._id)
-    productVariant.save()
+    product.variant_options.push(savedProductVariantOptions._id)
+    product.save()
 
     res.status(201).send(productVariantOption)
   } catch (err) {
@@ -90,8 +109,8 @@ const createProductVariantOption = async (req, res) => {
 
 const getProductVariantOptions = async (req, res) => {
   try {
-    const variantId = req.params.variantId
-    const productVariants = await ProductVariantOption.findAllProductVariantOptions(variantId)
+    const productId = req.params.productId
+    const productVariants = await ProductVariantOption.findAllProductVariantOptions(productId)
 
     res.status(200).send(productVariants)
   } catch (err) {
@@ -111,7 +130,14 @@ const updateProductVariantOption = async (req, res) => {
   const variantId = req.params.variantId
   const optionId = req.params.optionId
   const currentProductVariantOptionDetails = await ProductVariantOption.findOne({ _id: optionId, variant_id: variantId })
-  const { type, name, stock, price } = req.body.data
+  const {
+    type,
+    stock,
+    price,
+    option1,
+    option2,
+    option3
+  } = req.body.data
 
   if (!type) {
     return res.status(401).send({
@@ -119,7 +145,7 @@ const updateProductVariantOption = async (req, res) => {
     })
   }
 
-  if (type && type !== 'product-variant-option') {
+  if (type && type !== 'product-variant-options') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -164,7 +190,10 @@ const updateProductVariantOption = async (req, res) => {
   const data = {
     type,
     _id: optionId,
-    name: name || currentProductVariantOptionDetails.name,
+    name: updateName(currentProductVariantOptionDetails, option1, option2, option3),
+    option1: option1 || currentProductVariantOptionDetails.option1,
+    option2: option2 === '' ? null : option2 || currentProductVariantOptionDetails.option2,
+    option3: option3 === '' ? null : option3 || currentProductVariantOptionDetails.option3,
     stock: stock || currentProductVariantOptionDetails.stock,
     price: {
       amount: (price && !isNaN(price.amount)) ? price.amount : currentProductVariantOptionDetails.price.amount,
@@ -182,12 +211,12 @@ const updateProductVariantOption = async (req, res) => {
 }
 
 const deleteProductVariantOption = async (req, res) => {
+  const productId = req.params.productId
   try {
     const optionId = req.params.optionId
-    const variantId = req.params.variantId
-    const productVariant = await ProductVariant.findOne({ _id: variantId })
-    await productVariant.options.pull(optionId)
-    await productVariant.save()
+    const product = await Product.findById(productId)
+    await product.variant_options.pull(optionId)
+    await product.save()
     await ProductVariantOption.deleteProductVariantOption(optionId)
 
     res.status(200).send({

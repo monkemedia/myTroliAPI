@@ -8,18 +8,8 @@ const productVariantSchema = new Schema({
   },
 
   name: {
-    type: Schema.Types.ObjectId,
-    ref: 'Variation'
-  },
-
-  is_priced: {
     type: String,
-    default: false
-  },
-
-  has_stock: {
-    type: String,
-    default: false
+    required: true
   },
 
   product_id: {
@@ -27,9 +17,8 @@ const productVariantSchema = new Schema({
     required: true
   },
 
-  options: [{
-    type: Schema.Types.ObjectId,
-    ref: 'ProductVariantOptions'
+  values: [{
+    type: String
   }]
 }, { versionKey: false })
 

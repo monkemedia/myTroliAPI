@@ -1,15 +1,29 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const productVariantSchema = new Schema({
+const productVariantOptionSchema = new Schema({
   type: {
     type: String,
     required: true
   },
 
   name: {
+    type: String
+  },
+
+  option1: {
     type: String,
     required: true
+  },
+
+  option2: {
+    type: String,
+    default: null
+  },
+
+  option3: {
+    type: String,
+    default: null
   },
 
   stock: {
@@ -22,10 +36,10 @@ const productVariantSchema = new Schema({
     required: true
   },
 
-  variant_id: {
+  product_id: {
     type: String,
     required: true
   }
 }, { versionKey: false })
 
-module.exports = productVariantSchema
+module.exports = productVariantOptionSchema
