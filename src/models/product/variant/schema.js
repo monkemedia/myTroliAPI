@@ -8,8 +8,8 @@ const productVariantSchema = new Schema({
   },
 
   name: {
-    type: String,
-    required: true
+    type: Schema.Types.ObjectId,
+    ref: 'Variation'
   },
 
   product_id: {
