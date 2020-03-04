@@ -4,8 +4,8 @@ const ProductVariant = require('../models/product/variant/index.js')
 const ProductVariantOption = require('../models/product/variant/option/index.js')
 
 const createVariation = async (req, res) => {
-  const data = req.body.data
-  const { type, value } = req.body.data
+  const data = req.body
+  const { type, value } = data
 
   if (!type) {
     return res.status(401).send({
@@ -55,7 +55,7 @@ const getVariation = async (req, res) => {
 const updateVariation = async (req, res) => {
   const _id = req.params.variationId
   const currentVariationDetails = await Variation.findOne({ _id })
-  const { type, value } = req.body.data
+  const { type, value } = req.body
 
   if (!type) {
     return res.status(401).send({

@@ -11,7 +11,7 @@ function updateName (current, option1, option2, option3) {
 }
 
 const createProductVariantOption = async (req, res) => {
-  const data = req.body.data
+  const data = req.body
   const {
     type,
     option1,
@@ -137,7 +137,7 @@ const updateProductVariantOption = async (req, res) => {
     option1,
     option2,
     option3
-  } = req.body.data
+  } = req.body
 
   if (!type) {
     return res.status(401).send({

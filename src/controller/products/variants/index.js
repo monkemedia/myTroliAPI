@@ -2,11 +2,11 @@ const ProductVariant = require('../../../models/product/variant/index.js')
 const Product = require('../../../models/product')
 
 const createProductVariant = async (req, res) => {
-  const data = req.body.data
+  const data = req.body
   const {
     type,
     name
-  } = req.body.data
+  } = data
   const product_id = req.params.productId
 
   if (!type) {
@@ -34,10 +34,12 @@ const createProductVariant = async (req, res) => {
     })
 
     const savedProductVariant = await productVariant.save()
-    const product = await Product.findById(product_id)
+    const product = await Product.findOne({ _id: product_id })
 
     product.variants.push(savedProductVariant._id)
     product.save()
+
+    console.log('product', product)
 
     res.status(201).send(productVariant)
   } catch (err) {
@@ -59,7 +61,7 @@ const getProductVariants = async (req, res) => {
 const getProductVariant = async (req, res) => {
   const _id = req.params.variantId
   const product_id = req.params.productId
-  const productVariant = await ProductVariant.findOne({ _id, product_id }).populate('name', 'value')
+  const productVariant = await ProductVariant.findOne({ _id, product_id }) // .populate('name', 'value')
 
   res.status(200).send(productVariant)
 }
@@ -71,7 +73,7 @@ const updateProductVariant = async (req, res) => {
   const {
     type,
     name
-  } = req.body.data
+  } = req.body
 
   if (!type) {
     return res.status(401).send({

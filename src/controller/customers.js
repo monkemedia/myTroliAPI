@@ -3,7 +3,7 @@ const Customer = require('../models/customer')
 const createCustomer = async (req, res) => {
   try {
     // Check to see if customer already exists
-    const data = req.body.data
+    const data = req.body
     const { name, email, password, type } = data
     const customerExists = await Customer.findByEmail(email)
 
@@ -87,7 +87,7 @@ const getCustomer = async (req, res) => {
 const updateCustomer = async (req, res) => {
   const _id = req.params.customerId
   const currentCustomerDetails = await Customer.findOne({ _id: req.params.customerId })
-  const { type, name, email, password } = req.body.data
+  const { type, name, email, password } = req.body
 
   if (!type) {
     return res.status(401).send({

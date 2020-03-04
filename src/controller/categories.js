@@ -2,8 +2,8 @@ const Category = require('../models/category')
 const ProductCategories = require('../models/product/category')
 
 const createCategory = async (req, res) => {
-  const data = req.body.data
-  const { type, name, slug, status } = req.body.data
+  const data = req.body
+  const { type, name, slug, status } = data
 
   if (!type) {
     return res.status(401).send({
@@ -65,7 +65,7 @@ const getCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
   const _id = req.params.categoryId
   const currentCategoryDetails = await Category.findOne({ _id })
-  const { type, name, slug, description, status } = req.body.data
+  const { type, name, slug, description, status } = req.body
 
   if (!type) {
     return res.status(401).send({

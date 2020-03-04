@@ -2,7 +2,7 @@ const ProductCategories = require('../../../models/product/category')
 const Product = require('../../../models/product')
 
 const createProductCategories = async (req, res) => {
-  const data = req.body.data
+  const data = req.body
   const _id = req.params.productId
 
   if (data.some(val => !val.type)) {
@@ -52,7 +52,7 @@ const deleteProductCategories = async (req, res) => {
 }
 
 const updateProductCategories = async (req, res) => {
-  const data = req.body.data
+  const data = req.body
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
