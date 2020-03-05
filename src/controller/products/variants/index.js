@@ -34,12 +34,10 @@ const createProductVariant = async (req, res) => {
     })
 
     const savedProductVariant = await productVariant.save()
-    const product = await Product.findOne({ _id: product_id })
+    const product = await Product.findById(product_id)
 
     product.variants.push(savedProductVariant._id)
     product.save()
-
-    console.log('product', product)
 
     res.status(201).send(productVariant)
   } catch (err) {
