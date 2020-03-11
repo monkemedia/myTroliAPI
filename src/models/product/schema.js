@@ -62,10 +62,10 @@ const productSchema = Schema({
       ref: 'ProductVariants'
     }
   ],
-  variant_options: [
+  options: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'ProductVariantOptions'
+      ref: 'ProductOptions'
     }
   ],
   created_at: {

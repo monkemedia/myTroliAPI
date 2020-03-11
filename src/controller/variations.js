@@ -1,7 +1,7 @@
 const Variation = require('../models/variation/index.js')
 const Product = require('../models/product/index.js')
 const ProductVariant = require('../models/product/variant/index.js')
-const ProductVariantOption = require('../models/product/variant/option/index.js')
+const ProductOption = require('../models/product/option/index.js')
 
 const createVariation = async (req, res) => {
   const data = req.body
@@ -92,7 +92,7 @@ const deleteVariation = async (req, res) => {
     // Map through options and delete
     productVariant.map(async variant => {
       variant.options.map(async option => {
-        await ProductVariantOption.deleteOne({ _id: option._id })
+        await ProductOption.deleteOne({ _id: option._id })
       })
       await ProductVariant.deleteOne({ _id: variant._id })
 
