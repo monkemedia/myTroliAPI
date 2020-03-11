@@ -1,7 +1,7 @@
 const Address = require('../models/address')
 
 const createAddress = async (req, res) => {
-  const data = req.body.data
+  const data = req.body
   const { type, first_name, last_name, line_1, county, postcode, country } = data
   const customer_id = req.params.customerId
 
@@ -88,7 +88,7 @@ const getAddress = async (req, res) => {
 
 const updateAddress = async (req, res) => {
   const _id = req.params.addressId
-  const data = req.body.data
+  const data = req.body
   const { type, first_name, last_name, company_name, line_1, line_2, city, county, postcode, country, phone_number, instructions } = data
 
   if (!type) {

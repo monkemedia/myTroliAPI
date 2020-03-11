@@ -4,7 +4,7 @@ const errorHandler = require('../../utils/errorHandler')
 
 const createProduct = async (req, res) => {
   const customer_id = req.params.customerId
-  const data = req.body.data
+  const data = req.body
   const { type, name, slug, sku, stock, status, description, price, commodity_type } = data
 
   if (!type) {
@@ -154,7 +154,7 @@ const getProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const _id = req.params.productId
   const currentProductDetails = await Product.findOne({ _id })
-  const data = req.body.data
+  const data = req.body
   const { type, name, slug, sku, stock, status, description, relationships, price, commodity_type, updated_at, created_at } = data
 
   if (status && (status !== 'draft' && status !== 'live')) {

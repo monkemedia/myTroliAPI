@@ -1,7 +1,7 @@
 const Client = require('../models/client')
 
 const createClient = async (req, res) => {
-  const data = req.body.data
+  const data = req.body
   const { email, name, password, grant_type } = data
   const clientExists = await Client.findByEmail(email)
 
@@ -76,7 +76,7 @@ const getClient = async (req, res) => {
 const updateClient = async (req, res) => {
   const _id = req.params.clientId
   const currentClientDetails = await Client.findOne({ _id: req.params.clientId })
-  const { type, email, name, password } = req.body.data
+  const { type, email, name, password } = req.body
 
   if (!type) {
     return res.status(401).send({

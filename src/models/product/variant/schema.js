@@ -8,29 +8,23 @@ const productVariantSchema = new Schema({
   },
 
   name: {
-    type: Schema.Types.ObjectId,
-    ref: 'Variation'
+    type: String,
+    required: true
   },
 
-  is_priced: {
-    type: String,
-    default: false
-  },
-
-  has_stock: {
-    type: String,
-    default: false
-  },
+  // name: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: 'Variation'
+  // },
 
   product_id: {
     type: String,
     required: true
   },
 
-  options: [{
-    type: Schema.Types.ObjectId,
-    ref: 'ProductVariantOptions'
-  }]
+  values: {
+    type: String
+  }
 }, { versionKey: false })
 
 module.exports = productVariantSchema

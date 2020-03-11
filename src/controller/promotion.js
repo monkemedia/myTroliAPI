@@ -2,7 +2,7 @@ const errorHandler = require('../utils/errorHandler')
 const Promotion = require('../models/promotion')
 
 const createPromotion = async (req, res) => {
-  const data = req.body.data
+  const data = req.body
   const { type, name, description, promotion_type, enabled, start, end } = data
 
   if (!type) {
@@ -84,7 +84,7 @@ const getPromotion = async (req, res) => {
 const updatePromotion = async (req, res) => {
   const _id = req.params.promotionId
   const currentPromotionDetails = await Promotion.findOne({ _id })
-  const data = req.body.data
+  const data = req.body
   const { type, name, description, promotion_type, enabled, start, end } = data
 
   if (!type) {

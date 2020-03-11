@@ -80,7 +80,7 @@ const deleteFile = (req, res) => {
 }
 
 const storeFiles = async (req, res) => {
-  const files = req.body.data
+  const files = req.body
 
   const promises = files.map(async (id) => {
     return new Promise((resolve, reject) => {

@@ -2,7 +2,7 @@ const FileRelationship = require('../../../models/product/relationships/file')
 const Product = require('../../../models/product')
 
 const createFileRelationship = async (req, res) => {
-  const data = req.body.data
+  const data = req.body
   const _id = req.params.productId
 
   if (data.some(val => !val.type)) {
@@ -51,7 +51,7 @@ const createFileRelationship = async (req, res) => {
 
 const deleteFileRelationship = async (req, res) => {
   const productId = req.params.productId
-  const data = req.body.data
+  const data = req.body
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
