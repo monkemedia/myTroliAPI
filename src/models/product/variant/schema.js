@@ -14,6 +14,10 @@ const productVariantSchema = new Schema({
     type: Object,
     required: true
   },
+  stock: {
+    type: Number,
+    default: 0
+  },
   image_url: {
     type: String,
     required: true
