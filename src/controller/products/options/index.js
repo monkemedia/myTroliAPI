@@ -47,7 +47,7 @@ const createProductOption = async (req, res) => {
     product.options.push(savedProductOptions._id)
     product.save()
 
-    res.status(201).send({ data: savedProductOptions })
+    res.status(201).send(savedProductOptions)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -58,7 +58,7 @@ const getProductOptions = async (req, res) => {
     const productId = req.params.productId
     const productOptions = await ProductOption.findAllProductOptions(productId)
 
-    res.status(200).send({ data: productOptions })
+    res.status(200).send(productOptions)
   } catch (err) {
     res.status(400).send(err)
   }

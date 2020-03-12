@@ -1,11 +1,13 @@
 const ProductVariant = require('../../../models/product/variant/index.js')
+const ProductOption = require('../../../models/product/option/index.js')
 const Product = require('../../../models/product')
 
 const createProductVariant = async (req, res) => {
   const data = req.body
   const {
     type,
-    name
+    sku,
+    option_values
   } = data
   const product_id = req.params.productId
 
@@ -21,25 +23,48 @@ const createProductVariant = async (req, res) => {
     })
   }
 
-  if (!name) {
+  if (!sku) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Option values is required'
+    })
+  }
+
+  if (!option_values) {
+    return res.status(401).send({
+      message: 'SKU is required'
     })
   }
 
   try {
-    const productVariant = new ProductVariant({
+    const product = {
       ...data,
       product_id
+    }
+
+    const updateOptionValues = product.option_values.map(async option => {
+      const id = option.id
+      const optionId = option.option_id
+      const productOption = await ProductOption.findById(id)
+
+      return {
+        label: productOption.option_values.filter(val => {
+          return JSON.stringify(val._id) === JSON.stringify(optionId)
+        })[0].label,
+        option_display_name: productOption.display_name,
+        option_id: optionId,
+        id
+      }
     })
 
-    const savedProductVariant = await productVariant.save()
-    const product = await Product.findById(product_id)
+    const results = await Promise.all(updateOptionValues)
 
-    product.variants.push(savedProductVariant._id)
-    product.save()
+    product.option_values = results
 
-    res.status(201).send(productVariant)
+    const savedProductOption = new ProductVariant(product)
+
+    await savedProductOption.save()
+
+    res.status(201).send(savedProductOption)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -65,13 +90,10 @@ const getProductVariant = async (req, res) => {
 }
 
 const updateProductVariant = async (req, res) => {
+  const data = req.body
+  const { type } = data
+  const product_id = req.params.productId
   const variantId = req.params.variantId
-  const productId = req.params.productId
-  const currentProductVariantDetails = await ProductVariant.findOne({ variantId })
-  const {
-    type,
-    name
-  } = req.body
 
   if (!type) {
     return res.status(401).send({
@@ -85,27 +107,34 @@ const updateProductVariant = async (req, res) => {
     })
   }
 
-  if (!name) {
-    return res.status(401).send({
-      message: 'Name is required'
-    })
-  }
-
-  const data = {
-    type,
-    _id: variantId,
-    product_id: productId,
-    name: name || currentProductVariantDetails.name
-  }
-
   try {
-    await ProductVariant.updateProductVariant(data)
-    const product = await Product.findById(productId)
+    const product = {
+      ...data,
+      product_id
+    }
 
-    product.updated_at = new Date()
-    product.save()
+    const updateOptionValues = product.option_values.map(async option => {
+      const id = option.id
+      const optionId = option.option_id
+      const productOption = await ProductOption.findById(id)
 
-    res.status(200).send(data)
+      return {
+        label: productOption.option_values.filter(val => {
+          return JSON.stringify(val._id) === JSON.stringify(optionId)
+        })[0].label,
+        option_display_name: productOption.display_name,
+        option_id: optionId,
+        id
+      }
+    })
+
+    const results = await Promise.all(updateOptionValues)
+
+    product.option_values = results
+
+    await ProductVariant.updateProductVariant(variantId, product)
+
+    res.status(200).send(product)
   } catch (err) {
     res.status(400).send(err)
   }
