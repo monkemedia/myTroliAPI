@@ -1,6 +1,4 @@
 const ProductOption = require('../../../models/product/option/index.js')
-const Product = require('../../../models/product')
-const currencySymbol = require('currency-symbol-map')
 
 const createProductOption = async (req, res) => {
   const data = req.body
@@ -42,10 +40,6 @@ const createProductOption = async (req, res) => {
     })
 
     const savedProductOptions = await productOption.save()
-    const product = await Product.findById(product_id)
-
-    product.options.push(savedProductOptions._id)
-    product.save()
 
     res.status(201).send(savedProductOptions)
   } catch (err) {
@@ -100,9 +94,6 @@ const deleteProductOption = async (req, res) => {
   const productId = req.params.productId
   const optionId = req.params.optionId
   try {
-    const product = await Product.findById(productId)
-    await product.options.pull(optionId)
-    await product.save()
     await ProductOption.deleteProductOption(productId, optionId)
 
     res.status(200).send({

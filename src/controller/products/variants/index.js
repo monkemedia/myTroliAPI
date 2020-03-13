@@ -1,6 +1,5 @@
 const ProductVariant = require('../../../models/product/variant/index.js')
 const ProductOption = require('../../../models/product/option/index.js')
-const Product = require('../../../models/product')
 
 const createProductVariant = async (req, res) => {
   const data = req.body
@@ -142,20 +141,8 @@ const updateProductVariant = async (req, res) => {
 
 const deleteProductVariant = async (req, res) => {
   try {
-    const productId = req.params.productId
     const variantId = req.params.variantId
-    const product = await Product.findById(productId)
-    // const productVariant = await ProductVariant.findById(variantId)
 
-    // DELETE all related options
-    // if (productVariant.options.length > 0) {
-    //   productVariant.options.map(async (optionId) => {
-    //     await ProductVariantOption.deleteProductVariantOption(optionId)
-    //   })
-    // }
-
-    await product.variants.pull(variantId)
-    await product.save()
     await ProductVariant.deleteProductVariant(variantId)
 
     res.status(200).send({
