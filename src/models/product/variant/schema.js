@@ -20,11 +20,15 @@ const productVariantSchema = new Schema({
   },
   image_url: {
     type: String,
-    required: true
+    default: ''
+  },
+  sort_order: {
+    type: Number,
+    default: 0
   },
   sku: {
     type: String,
-    required: true
+    default: ''
   },
   product_id: {
     type: String,

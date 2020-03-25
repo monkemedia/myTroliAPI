@@ -68,6 +68,8 @@ const getProductOption = async (req, res) => {
 
 const updateProductOption = async (req, res) => {
   const { type } = req.body
+  const productId = req.params.productId
+  const optionId = req.params.optionId
 
   if (!type) {
     return res.status(401).send({
@@ -82,7 +84,7 @@ const updateProductOption = async (req, res) => {
   }
 
   try {
-    await ProductOption.updateProductOption(req.body)
+    await ProductOption.updateProductOption(productId, optionId, req.body)
 
     res.status(200).send(req.body)
   } catch (err) {

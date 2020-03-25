@@ -24,13 +24,13 @@ const createProductVariant = async (req, res) => {
 
   if (!sku) {
     return res.status(401).send({
-      message: 'Option values is required'
+      message: 'SKU is required'
     })
   }
 
   if (!option_values) {
     return res.status(401).send({
-      message: 'SKU is required'
+      message: 'Option values is required'
     })
   }
 

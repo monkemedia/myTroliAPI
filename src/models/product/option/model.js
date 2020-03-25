@@ -16,10 +16,11 @@ productOptionSchema.statics.findOption = async (productId, optionId) => {
 }
 
 // Update product option
-productOptionSchema.statics.updateProductOption = async (productOptionDetails) => {
-  const { _id, product_id } = productOptionDetails
-
-  const productOptions = await ProductOptions.updateOne({ _id, product_id }, productOptionDetails)
+productOptionSchema.statics.updateProductOption = async (productId, optionId, data) => {
+  const productOptions = await ProductOptions.updateOne({
+    _id: optionId,
+    product_id: productId
+  }, data)
   return productOptions
 }
 

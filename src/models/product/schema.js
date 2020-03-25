@@ -36,6 +36,20 @@ const productSchema = Schema({
     type: Object,
     required: true
   },
+  sale_price: {
+    type: Object,
+    default: 0
+  },
+  on_sale: {
+    amount: {
+      type: Number,
+      default: 0
+    },
+    currency: {
+      type: String,
+      default: 'GBP'
+    }
+  },
   commodity_type: {
     type: String,
     required: true
