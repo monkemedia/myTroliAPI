@@ -48,26 +48,10 @@ const productSchema = Schema({
     type: String,
     required: true
   },
-  meta: {
-    type: Object,
-    required: false
-  },
   categories: {
     type: Schema.Types.ObjectId,
     ref: 'ProductCategories'
   },
-  variants: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'ProductVariants'
-    }
-  ],
-  options: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'ProductOptions'
-    }
-  ],
   created_at: {
     type: Date,
     default: Date.now

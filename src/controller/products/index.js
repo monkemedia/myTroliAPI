@@ -186,7 +186,7 @@ const getProducts = async (req, res) => {
     } else {
       products = await Product.findAllProducts({ page, limit })
     }
-    res.status(200).send({ data: products.data, meta: products.meta })
+    res.status(200).send(products)
   } catch (err) {
     res.status(400).send(err)
   }
