@@ -4,15 +4,9 @@ const productCategorySchema = require('./schema')
 
 productCategorySchema.plugin(uniqueArrayPlugin)
 
-// Find all Product Categories
-productCategorySchema.statics.findAllProductCategories = async (productId) => {
-  const productCategories = await ProductCategory.find({ product_id: productId })
-  return productCategories
-}
-
 // Find Product Category
-productCategorySchema.statics.findProductCategory = async (id) => {
-  const productCategory = await ProductCategory.findOne({ _id: id })
+productCategorySchema.statics.findProductCategory = async (productId) => {
+  const productCategory = await ProductCategory.findOne({ product_id: productId })
   return productCategory
 }
 

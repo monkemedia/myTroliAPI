@@ -1,12 +1,11 @@
 const ProductCategories = require('../../../models/product/category')
-const Product = require('../../../models/product')
 
 const createProductCategories = async (req, res) => {
   const data = req.body
   const productId = req.params.productId
 
   // Lets see if product categories already exists
-  const productCategories = await ProductCategories.findAllProductCategories(productId)
+  const productCategories = await ProductCategories.findProductCategory(productId)
 
   if (productCategories && productCategories.length > 0) {
     return res.status(401).send({
@@ -14,13 +13,13 @@ const createProductCategories = async (req, res) => {
     })
   }
 
-  if (data.some(val => !val.type)) {
+  if (!data.type) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (data.some(val => val.type !== 'product-category')) {
+  if (data.type !== 'product-category') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -28,7 +27,7 @@ const createProductCategories = async (req, res) => {
 
   const payload = {
     product_id: productId,
-    categories: data
+    ...data
   }
 
   try {
@@ -41,10 +40,10 @@ const createProductCategories = async (req, res) => {
   }
 }
 
-const getProductCategories = async (req, res) => {
+const getProductCategory = async (req, res) => {
   try {
     const productId = req.params.productId
-    const productCategories = await ProductCategories.findAllProductCategories(productId)
+    const productCategories = await ProductCategories.findProductCategory(productId)
 
     res.status(200).send(productCategories)
   } catch (err) {
@@ -56,27 +55,22 @@ const updateProductCategories = async (req, res) => {
   const data = req.body
   const productId = req.params.productId
 
-  if (data.some(val => !val.type)) {
+  if (!data.type) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (data.some(val => val.type !== 'product-category')) {
+  if (data.type !== 'product-category') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
-  const payload = {
-    product_id: productId,
-    categories: data
-  }
-
   try {
-    await ProductCategories.updateProductCategory(productId, payload)
+    await ProductCategories.updateProductCategory(productId, data)
 
-    res.status(200).send(payload)
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -98,7 +92,7 @@ const deleteProductCategories = async (req, res) => {
 
 module.exports = {
   createProductCategories,
-  getProductCategories,
+  getProductCategory,
   deleteProductCategories,
   updateProductCategories
 }

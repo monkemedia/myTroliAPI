@@ -6,18 +6,14 @@ const productCategorySchema = new Schema({
     type: String,
     required: true
   },
-  categories: [{
-    _id: false,
-    type: {
-      type: String,
-      required: true
-    },
-    category_id: {
-      type: String,
-      required: true,
-      unique: true
-    }
-  }]
+  type: {
+    type: String,
+    required: true
+  },
+  categories: {
+    type: Array,
+    unique: true
+  }
 }, { versionKey: false })
 
 module.exports = productCategorySchema

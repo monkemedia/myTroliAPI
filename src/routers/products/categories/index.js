@@ -3,15 +3,15 @@ const router = express.Router()
 const auth = require('../../../middleware/auth')
 const {
   createProductCategories,
-  getProductCategories,
+  getProductCategory,
   updateProductCategories,
   deleteProductCategories
 } = require('../../../controller/products/categories')
 
 // Create Product Category
 router.post('/products/:productId/categories', auth, (req, res) => createProductCategories(req, res))
-// Get Product Categories
-router.get('/products/:productId/categories', auth, (req, res) => getProductCategories(req, res))
+// Get Product Category
+router.get('/products/:productId/categories', auth, (req, res) => getProductCategory(req, res))
 // Update Product Category
 router.put('/products/:productId/categories', auth, (req, res) => updateProductCategories(req, res))
 // Delete Product Category
