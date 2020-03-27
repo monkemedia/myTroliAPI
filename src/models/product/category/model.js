@@ -4,34 +4,27 @@ const productCategorySchema = require('./schema')
 
 productCategorySchema.plugin(uniqueArrayPlugin)
 
-// Get all Categories
-// productCategorySchema.statics.findAllCategories = async () => {
-//   const categories = await Category.find({})
-
-//   return categories
-// }
-
-// Find all category relationships by category id
-productCategorySchema.statics.findAllByCategoryIds = async (id) => {
-  const productCategory = await ProductCategory.find({ 'data.category_id': id })
-  return productCategory
+// Find all Product Categories
+productCategorySchema.statics.findAllProductCategories = async (productId) => {
+  const productCategories = await ProductCategory.find({ product_id: productId })
+  return productCategories
 }
 
-// Find productCategory by id
-productCategorySchema.statics.findCategory = async (id) => {
+// Find Product Category
+productCategorySchema.statics.findProductCategory = async (id) => {
   const productCategory = await ProductCategory.findOne({ _id: id })
   return productCategory
 }
 
-// Delete productCategory
-productCategorySchema.statics.deleteCategory = async (categoryId) => {
-  const productCategory = await ProductCategory.deleteOne({ _id: categoryId })
+// Update Product Categories
+productCategorySchema.statics.updateProductCategory = async (productId, data) => {
+  const productCategory = await ProductCategory.updateOne({ product_id: productId }, data)
   return productCategory
 }
 
-// Update productCategory
-productCategorySchema.statics.updateCategory = async ({ _id, data }) => {
-  const productCategory = await ProductCategory.updateOne({ _id }, { data })
+// Delete Product Categories
+productCategorySchema.statics.deleteProductCategory = async (productId) => {
+  const productCategory = await ProductCategory.deleteOne({ product_id: productId })
   return productCategory
 }
 

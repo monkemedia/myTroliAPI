@@ -48,10 +48,6 @@ const productSchema = Schema({
     type: String,
     required: true
   },
-  categories: {
-    type: Schema.Types.ObjectId,
-    ref: 'ProductCategories'
-  },
   created_at: {
     type: Date,
     default: Date.now

@@ -3,7 +3,16 @@ const Product = require('../../../models/product')
 
 const createProductCategories = async (req, res) => {
   const data = req.body
-  const _id = req.params.productId
+  const productId = req.params.productId
+
+  // Lets see if product categories already exists
+  const productCategories = await ProductCategories.findAllProductCategories(productId)
+
+  if (productCategories && productCategories.length > 0) {
+    return res.status(401).send({
+      message: 'There is already a Product Category'
+    })
+  }
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
@@ -17,15 +26,57 @@ const createProductCategories = async (req, res) => {
     })
   }
 
-  try {
-    const productCategories = new ProductCategories({ data })
-    const savedProductCategories = await productCategories.save()
-    const product = await Product.findById(_id)
+  const payload = {
+    product_id: productId,
+    categories: data
+  }
 
-    product.categories = savedProductCategories._id
-    product.updated_at = new Date()
-    product.save()
+  try {
+    const productCategories = new ProductCategories(payload)
+    const savedProductCategories = await productCategories.save()
+
     res.status(201).send(savedProductCategories)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
+
+const getProductCategories = async (req, res) => {
+  try {
+    const productId = req.params.productId
+    const productCategories = await ProductCategories.findAllProductCategories(productId)
+
+    res.status(200).send(productCategories)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
+
+const updateProductCategories = async (req, res) => {
+  const data = req.body
+  const productId = req.params.productId
+
+  if (data.some(val => !val.type)) {
+    return res.status(401).send({
+      message: 'Type is required'
+    })
+  }
+
+  if (data.some(val => val.type !== 'product-category')) {
+    return res.status(401).send({
+      message: 'Correct Type is required'
+    })
+  }
+
+  const payload = {
+    product_id: productId,
+    categories: data
+  }
+
+  try {
+    await ProductCategories.updateProductCategory(productId, payload)
+
+    res.status(200).send(payload)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -35,54 +86,11 @@ const deleteProductCategories = async (req, res) => {
   const productId = req.params.productId
 
   try {
-    const product = await Product.findById(productId)
-    const categoryId = product.categories
-    await ProductCategories.deleteCategory(categoryId)
-
-    product.categories = null
-    product.updated_at = new Date()
-    product.save()
+    await ProductCategories.deleteProductCategory(productId)
 
     res.status(200).send({
-      message: 'Category relationship successfully deleted'
+      message: 'Product category successfully deleted'
     })
-  } catch (err) {
-    res.status(400).send(err)
-  }
-}
-
-const updateProductCategories = async (req, res) => {
-  const data = req.body
-
-  if (data.some(val => !val.type)) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (data.some(val => val.type !== 'product-category')) {
-    return res.status(401).send({
-      message: 'Correct Type is required'
-    })
-  }
-
-  if (data.some(val => !val.category_id)) {
-    return res.status(401).send({
-      message: 'Category ID is required'
-    })
-  }
-
-  try {
-    const product_id = req.params.productId
-    const product = await Product.findById(product_id)
-    const relationshipId = product.categories
-
-    await ProductCategories.updateCategory({ _id: relationshipId, data })
-
-    product.updated_at = new Date()
-    product.save()
-
-    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -90,6 +98,7 @@ const updateProductCategories = async (req, res) => {
 
 module.exports = {
   createProductCategories,
+  getProductCategories,
   deleteProductCategories,
   updateProductCategories
 }
