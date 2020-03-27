@@ -309,7 +309,7 @@ const updateProduct = async (req, res) => {
         amount: (sale_price && !isNaN(sale_price.amount)) ? sale_price.amount : currentProductDetails.sale_price.amount,
         currency: (sale_price && sale_price.currency) ? sale_price.currency : currentProductDetails.sale_price.currency
       },
-      on_sale: on_sale || currentProductDetails.on_sale,
+      on_sale: on_sale,
       commodity_type: commodity_type || currentProductDetails.commodity_type,
       updated_at: updated_at || currentProductDetails.updated_at,
       created_at: created_at || currentProductDetails.created_at

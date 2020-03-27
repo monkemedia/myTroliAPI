@@ -38,17 +38,11 @@ const productSchema = Schema({
   },
   sale_price: {
     type: Object,
-    default: 0
+    required: false
   },
   on_sale: {
-    amount: {
-      type: Number,
-      default: 0
-    },
-    currency: {
-      type: String,
-      default: 'GBP'
-    }
+    type: Boolean,
+    default: false
   },
   commodity_type: {
     type: String,
