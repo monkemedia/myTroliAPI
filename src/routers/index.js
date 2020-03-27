@@ -9,7 +9,7 @@ const variations = require('./variations.js')
 const productVariants = require('./products/variants/index.js')
 const productOptions = require('./products/options/index.js')
 const productCategories = require('./products/categories/index.js')
-const productsFileRelationships = require('./products/relationships/files.js')
+const productImages = require('./products/images/index.js')
 
 const router = Router()
 
@@ -24,7 +24,7 @@ router.use(
   productVariants,
   productOptions,
   productCategories,
-  productsFileRelationships
+  productImages
 )
 
 module.exports = router

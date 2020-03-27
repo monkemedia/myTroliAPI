@@ -52,14 +52,6 @@ const productSchema = Schema({
     type: Object,
     required: false
   },
-  relationships: {
-    files: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'ProductFileRelationship'
-      }
-    ]
-  },
   categories: {
     type: Schema.Types.ObjectId,
     ref: 'ProductCategories'
