@@ -44,10 +44,31 @@ const createProductImage = async (req, res) => {
 }
 
 const getProductImages = async (req, res) => {
+  const query = req.query
+  const queryObj = {}
+
+  // Queries with 'true' or 'false' need to be converted into Booleans
+  Object.entries(query).forEach(([key, value]) => {
+    let val
+    if (value === 'true') {
+      val = true
+    } else if (value === 'false') {
+      val = false
+    } else {
+      val = value
+    }
+    queryObj[key] = val
+  })
+
   try {
     const productId = req.params.productId
-    const productImages = await ProductImage.findAllProductImages(productId)
+    let productImages
 
+    if (query) {
+      productImages = await ProductImage.findProductImagesByQuery(productId, queryObj)
+    } else {
+      productImages = await ProductImage.findAllProductImages(productId)
+    }
     res.status(200).send(productImages)
   } catch (err) {
     res.status(400).send(err)

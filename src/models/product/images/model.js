@@ -10,6 +10,15 @@ productImageSchema.statics.findAllProductImages = async (productId) => {
   return productImages
 }
 
+// Get product images by query
+productImageSchema.statics.findProductImagesByQuery = async (productId, query) => {
+  const productImages = await ProductImage.find({
+    product_id: productId,
+    ...query
+  })
+  return productImages
+}
+
 // Get a product option
 productImageSchema.statics.findOption = async (productId, imageId) => {
   const productImage = await ProductImage.findOne({ product_id: productId, _id: imageId })

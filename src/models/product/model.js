@@ -52,7 +52,7 @@ productSchema.statics.findAllProducts = async ({ page, limit }) => {
 }
 
 // Search products by Name or SKU
-productSchema.statics.search = async ({ page, query }) => {
+productSchema.statics.search = async ({ query }) => {
   const products = await Product.find({
     $or: [
       { name: { $regex: query, $options: 'i' } },
