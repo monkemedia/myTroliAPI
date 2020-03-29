@@ -1,7 +1,7 @@
 {
-  "name": "troli-dashboard-api",
+  "name": "my-troli-api",
   "version": "1.0.0",
-  "description": "An API for Troli",
+  "description": "My Troli API",
   "scripts": {
     "test": "npm run test",
     "start": "env-cmd -f ./.env nodemon src/app.js"

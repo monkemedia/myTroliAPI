@@ -1,7 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../middleware/auth')
-const { createClient, getClient, updateClient, deleteClient } = require('../controller/client')
+const {
+  createClient,
+  getClient,
+  updateClient,
+  deleteClient
+} = require('../controller/client')
 
 // Create client
 router.post('/client', (req, res) => createClient(req, res))
