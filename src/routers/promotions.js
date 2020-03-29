@@ -1,11 +1,17 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../middleware/auth')
-const { createPromotion, getPromotions, getPromotion, updatePromotion, deletePromotion } = require('../controller/promotion')
+const {
+  createPromotion,
+  getPromotions,
+  getPromotion,
+  updatePromotion,
+  deletePromotion
+} = require('../controller/promotion')
 
-// Create a new Promotion
+// Create promotion
 router.post('/promotions', auth, (req, res) => createPromotion(req, res))
-// Get all promotions
+// Get promotions
 router.get('/promotions', auth, (req, res) => getPromotions(req, res))
 // Get promotion
 router.get('/promotions/:promotionId', auth, (req, res) => getPromotion(req, res))

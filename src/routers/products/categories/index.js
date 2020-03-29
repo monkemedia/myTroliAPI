@@ -8,13 +8,13 @@ const {
   deleteProductCategories
 } = require('../../../controller/products/categories')
 
-// Create Product Category
+// Create product categories
 router.post('/products/:productId/categories', auth, (req, res) => createProductCategories(req, res))
-// Get Product Category
+// Get product category
 router.get('/products/:productId/categories', auth, (req, res) => getProductCategory(req, res))
-// Update Product Category
+// Update product category
 router.put('/products/:productId/categories', auth, (req, res) => updateProductCategories(req, res))
-// Delete Product Category
+// Delete product categories
 router.delete('/products/:productId/categories', auth, (req, res) => deleteProductCategories(req, res))
 
 module.exports = router

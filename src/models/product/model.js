@@ -31,8 +31,8 @@ const productSchema = require('./schema')
 // })
 
 // Get all products
-productSchema.statics.findAllProducts = async ({ page, limit }) => {
-  const products = await Product
+productSchema.statics.findProducts = async ({ page, limit }) => {
+  const products = await Product.find({}).sort('-created_at').skip((page - 1) * limit).limit(limit)
     .find({}).sort('-created_at')
     .skip((page - 1) * limit)
     .limit(limit)
@@ -52,7 +52,7 @@ productSchema.statics.findAllProducts = async ({ page, limit }) => {
 }
 
 // Search products by Name or SKU
-productSchema.statics.search = async ({ query }) => {
+productSchema.statics.search = async ({ page, query }) => {
   const products = await Product.find({
     $or: [
       { name: { $regex: query, $options: 'i' } },
@@ -63,8 +63,8 @@ productSchema.statics.search = async ({ query }) => {
   return products
 }
 
-// Get product by product id
-productSchema.statics.findById = async (_id) => {
+// Get product
+productSchema.statics.findProduct = async (_id) => {
   const product = await Product.findOne({ _id })
   return product
 }

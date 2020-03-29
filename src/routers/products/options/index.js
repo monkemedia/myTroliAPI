@@ -1,11 +1,17 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../../../middleware/auth')
-const { createProductOption, getProductOptions, getProductOption, updateProductOption, deleteProductOption } = require('../../../controller/products/options/index.js')
+const {
+  createProductOption,
+  getProductOptions,
+  getProductOption,
+  updateProductOption,
+  deleteProductOption
+} = require('../../../controller/products/options/index.js')
 
-// Create a new variant option
+// Create variant option
 router.post('/products/:productId/options', auth, (req, res) => createProductOption(req, res))
-// Get all variant options
+// Get variant options
 router.get('/products/:productId/options', auth, (req, res) => getProductOptions(req, res))
 // Get variant option
 router.get('/products/:productId/options/:optionId', auth, (req, res) => getProductOption(req, res))

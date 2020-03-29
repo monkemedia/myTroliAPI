@@ -1,21 +1,21 @@
 {
   "name": "my-troli-api",
   "version": "1.0.0",
-  "description": "An API for Troli",
+  "description": "My Troli API",
   "scripts": {
     "test": "npm run test",
     "start": "env-cmd -f ./.env nodemon src/app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/monkemedia/ecommerce-api.git"
+    "url": "git+https://github.com/monkemedia/myTrolAPI.git"
   },
   "author": "monkemedia",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/monkemedia/ecommerce-api/issues"
+    "url": "https://github.com/monkemedia/myTrolAPI/issues"
   },
-  "homepage": "https://github.com/monkemedia/ecommerce-api#readme",
+  "homepage": "https://github.com/monkemedia/myTrolAPI#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",

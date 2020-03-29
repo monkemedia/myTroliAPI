@@ -1,8 +1,16 @@
-const Address = require('../models/address')
+const CustomerAddress = require('../../../models/customer/address')
 
-const createAddress = async (req, res) => {
+const createCustomerAddress = async (req, res) => {
   const data = req.body
-  const { type, first_name, last_name, line_1, county, postcode, country } = data
+  const {
+    type,
+    first_name,
+    last_name,
+    line_1,
+    county,
+    postcode,
+    country
+  } = data
   const customer_id = req.params.customerId
 
   if (!type) {
@@ -11,7 +19,7 @@ const createAddress = async (req, res) => {
     })
   }
 
-  if (type && type !== 'address') {
+  if (type && type !== 'customer-address') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -54,42 +62,55 @@ const createAddress = async (req, res) => {
   }
 
   try {
-    const addresses = new Address({ ...data, customer_id })
+    const customerAddresses = new CustomerAddress({ ...data, customer_id })
 
-    await addresses.save()
+    await customerAddresses.save()
 
-    res.status(201).send(addresses)
+    res.status(201).send(customerAddresses)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
-const getAddresses = async (req, res) => {
+const getCustomerAddresses = async (req, res) => {
   try {
     const customer_id = req.params.customerId
-    const addresses = await Address.findAllAddresses(customer_id)
+    const customerAddresses = await CustomerAddress.findCustomerAddresses(customer_id)
 
-    res.status(200).send(addresses)
+    res.status(200).send(customerAddresses)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
-const getAddress = async (req, res) => {
+const getCustomerAddress = async (req, res) => {
   try {
     const address_id = req.params.addressId
-    const addresses = await Address.findAddress(address_id)
+    const customerAddresses = await CustomerAddress.findCustomerAddress(address_id)
 
-    res.status(200).send(addresses)
+    res.status(200).send(customerAddresses)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
-const updateAddress = async (req, res) => {
+const updateCustomerAddress = async (req, res) => {
   const _id = req.params.addressId
   const data = req.body
-  const { type, first_name, last_name, company_name, line_1, line_2, city, county, postcode, country, phone_number, instructions } = data
+  const {
+    type,
+    first_name,
+    last_name,
+    company_name,
+    line_1,
+    line_2,
+    city,
+    county,
+    postcode,
+    country,
+    phone_number,
+    instructions
+  } = data
 
   if (!type) {
     return res.status(401).send({
@@ -97,7 +118,7 @@ const updateAddress = async (req, res) => {
     })
   }
 
-  if (type && type !== 'address') {
+  if (type && type !== 'customer-address') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
@@ -105,7 +126,7 @@ const updateAddress = async (req, res) => {
 
   try {
     const address_id = req.params.addressId
-    const currentAddress = await Address.findAddress(address_id)
+    const currentAddress = await CustomerAddress.findCustomerAddress(address_id)
 
     const data = {
       type,
@@ -124,7 +145,7 @@ const updateAddress = async (req, res) => {
       default: req.body.default || currentAddress.default
     }
 
-    await Address.updateAddress(data)
+    await CustomerAddress.updateCustomerAddress(data)
 
     res.status(200).send(data)
   } catch (err) {
@@ -132,13 +153,13 @@ const updateAddress = async (req, res) => {
   }
 }
 
-const deleteAddress = async (req, res) => {
+const deleteCustomerAddress = async (req, res) => {
   try {
     const address_id = req.params.addressId
-    await Address.deleteAddress(address_id)
+    await CustomerAddress.deleteCustomerAddress(address_id)
 
     res.status(200).send({
-      message: 'Address successfully deleted'
+      message: 'Customer Address successfully deleted'
     })
   } catch (err) {
     res.status(400).send(err)
@@ -146,9 +167,9 @@ const deleteAddress = async (req, res) => {
 }
 
 module.exports = {
-  createAddress,
-  getAddresses,
-  getAddress,
-  updateAddress,
-  deleteAddress
+  createCustomerAddress,
+  getCustomerAddresses,
+  getCustomerAddress,
+  updateCustomerAddress,
+  deleteCustomerAddress
 }

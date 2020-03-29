@@ -14,7 +14,7 @@ customerSchema.pre('save', async function (next) {
   next()
 })
 
-// Genrate an auth token for customer
+// Generate an auth token for customer
 customerSchema.methods.generateAccessToken = async function () {
   const customer = this
   const accessToken = jwt.sign({
@@ -24,8 +24,8 @@ customerSchema.methods.generateAccessToken = async function () {
   return accessToken
 }
 
-// Get all customers
-customerSchema.statics.findAllCustomers = async () => {
+// Get customers
+customerSchema.statics.findCustomers = async () => {
   const customers = await Customer.find({})
 
   return customers

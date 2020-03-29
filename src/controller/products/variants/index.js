@@ -43,7 +43,7 @@ const createProductVariant = async (req, res) => {
     const updateOptionValues = product.option_values.map(async option => {
       const id = option.id
       const optionId = option.option_id
-      const productOption = await ProductOption.findById(id)
+      const productOption = await ProductOption.findProductOption(id)
 
       return {
         label: productOption.option_values.filter(val => {
@@ -72,7 +72,7 @@ const createProductVariant = async (req, res) => {
 const getProductVariants = async (req, res) => {
   try {
     const productId = req.params.productId
-    const productVariants = await ProductVariant.findAllProductVariants(productId)
+    const productVariants = await ProductVariant.findProductVariants(productId)
 
     res.status(200).send(productVariants)
   } catch (err) {
@@ -115,7 +115,7 @@ const updateProductVariant = async (req, res) => {
     const updateOptionValues = product.option_values.map(async option => {
       const id = option.id
       const optionId = option.option_id
-      const productOption = await ProductOption.findById(id)
+      const productOption = await ProductOption.findProductOption(id)
 
       return {
         label: productOption.option_values.filter(val => {

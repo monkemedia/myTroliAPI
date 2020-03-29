@@ -66,7 +66,7 @@ const createPromotion = async (req, res) => {
 
 const getPromotions = async (req, res) => {
   try {
-    const promotions = await Promotion.findAllPromotions()
+    const promotions = await Promotion.findPromotions()
 
     res.status(200).send(promotions)
   } catch (err) {
