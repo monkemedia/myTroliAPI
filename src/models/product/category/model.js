@@ -11,20 +11,20 @@ productCategorySchema.statics.findProductCategories = async (id) => {
 }
 
 // Find product category
-productCategorySchema.statics.findProductCategory = async (id) => {
-  const productCategory = await ProductCategory.findOne({ _id: id })
+productCategorySchema.statics.findProductCategory = async (productId) => {
+  const productCategory = await ProductCategory.findOne({ product_id: productId })
   return productCategory
 }
 
-// Delete productCategory
-productCategorySchema.statics.deleteProductCategory = async (categoryId) => {
-  const productCategory = await ProductCategory.deleteOne({ _id: categoryId })
+// Update product categories
+productCategorySchema.statics.updateProductCategory = async (productId, data) => {
+  const productCategory = await ProductCategory.updateOne({ product_id: productId }, data)
   return productCategory
 }
 
-// Update productCategory
-productCategorySchema.statics.updateProductCategory = async ({ _id, data }) => {
-  const productCategory = await ProductCategory.updateOne({ _id }, { data })
+// Delete product categories
+productCategorySchema.statics.deleteProductCategory = async (productId) => {
+  const productCategory = await ProductCategory.deleteOne({ product_id: productId })
   return productCategory
 }
 

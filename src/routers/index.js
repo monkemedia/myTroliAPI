@@ -9,6 +9,7 @@ const variations = require('./variations.js')
 const productVariants = require('./products/variants/index.js')
 const productOptions = require('./products/options/index.js')
 const productCategories = require('./products/categories/index.js')
+const productImages = require('./products/images/index.js')
 
 const router = Router()
 
@@ -22,7 +23,8 @@ router.use(
   variations,
   productVariants,
   productOptions,
-  productCategories
+  productCategories,
+  productImages
 )
 
 module.exports = router

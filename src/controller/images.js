@@ -3,13 +3,13 @@ const uploadcare = require('uploadcare')(process.env.UPLOADCARE_PUBLIC_KEY, proc
 const fs = require('fs')
 const errorHandler = require('../utils/errorHandler')
 
-const uploadFile = (req, res) => {
-  const file = req.file
+const uploadImage = (req, res) => {
+  const image = req.file
   const type = req.body.type
 
-  if (!file) {
+  if (!image) {
     return res.status(401).send({
-      message: 'File is required'
+      message: 'Image is required'
     })
   }
 
@@ -19,26 +19,26 @@ const uploadFile = (req, res) => {
     })
   }
 
-  if (type && type !== 'file') {
+  if (type && type !== 'image') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
   // Upload image to uploadcare
-  uploadcare.file.upload(fs.createReadStream(file.path), (error, response) => {
+  uploadcare.file.upload(fs.createReadStream(image.path), (error, response) => {
     if (error) {
       return res.status(401).send(errorHandler(401, error))
     }
 
-    // Get file data
+    // Get image data
     uploadcare.files.info(response.file, (err, info) => {
       if (err) {
         return res.status(401).send(errorHandler(401, error))
       }
 
-      // Remove file from upload directory
-      fs.unlink(file.path, (er) => {
+      // Remove image from upload directory
+      fs.unlink(image.path, (er) => {
         if (er) {
           return res.status(401).send(errorHandler(401, er))
         }
@@ -48,7 +48,7 @@ const uploadFile = (req, res) => {
   })
 }
 
-const getFiles = (req, res) => {
+const getImages = (req, res) => {
   uploadcare.files.list({ page: 1, limit: 100 }, (err, info) => {
     if (err) {
       return res.status(401).send(errorHandler(401, err))
@@ -57,10 +57,10 @@ const getFiles = (req, res) => {
   })
 }
 
-const getFile = (req, res) => {
-  const file = req.params.fileId
+const getImage = (req, res) => {
+  const image = req.params.imageId
 
-  uploadcare.files.info(file, (err, info) => {
+  uploadcare.files.info(image, (err, info) => {
     if (err) {
       return res.status(401).send(errorHandler(401, err))
     }
@@ -68,21 +68,21 @@ const getFile = (req, res) => {
   })
 }
 
-const deleteFile = (req, res) => {
-  const file = req.params.fileId
+const deleteImage = (req, res) => {
+  const image = req.params.imageId
 
-  uploadcare.files.remove(file, (err, info) => {
+  uploadcare.files.remove(image, (err, info) => {
     if (err) {
       return res.status(401).send(errorHandler(401, err))
     }
-    return res.status(201).send('File has been deleted')
+    return res.status(201).send('Image has been deleted')
   })
 }
 
-const storeFiles = async (req, res) => {
-  const files = req.body
+const storeImages = async (req, res) => {
+  const images = req.body
 
-  const promises = files.map(async (id) => {
+  const promises = images.map(async (id) => {
     return new Promise((resolve, reject) => {
       return uploadcare.files.store(id, (err, info) => {
         if (err) {
@@ -102,9 +102,9 @@ const storeFiles = async (req, res) => {
 }
 
 module.exports = {
-  uploadFile,
-  getFiles,
-  getFile,
-  deleteFile,
-  storeFiles
+  uploadImage,
+  getImages,
+  getImage,
+  deleteImage,
+  storeImages
 }

@@ -1,31 +1,76 @@
 const ProductCategories = require('../../../models/product/category')
-const Product = require('../../../models/product')
 
 const createProductCategories = async (req, res) => {
   const data = req.body
-  const _id = req.params.productId
+  const productId = req.params.productId
 
-  if (data.some(val => !val.type)) {
+  // Lets see if product categories already exists
+  const productCategories = await ProductCategories.findProductCategory(productId)
+
+  if (productCategories && productCategories.length > 0) {
+    return res.status(401).send({
+      message: 'There is already a Product Category'
+    })
+  }
+
+  if (!data.type) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (data.some(val => val.type !== 'product-category')) {
+  if (data.type !== 'product-category') {
+    return res.status(401).send({
+      message: 'Correct Type is required'
+    })
+  }
+
+  const payload = {
+    product_id: productId,
+    ...data
+  }
+
+  try {
+    const productCategories = new ProductCategories(payload)
+    const savedProductCategories = await productCategories.save()
+
+    res.status(201).send(savedProductCategories)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
+
+const getProductCategory = async (req, res) => {
+  try {
+    const productId = req.params.productId
+    const productCategories = await ProductCategories.findProductCategory(productId)
+
+    res.status(200).send(productCategories)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
+
+const updateProductCategories = async (req, res) => {
+  const data = req.body
+  const productId = req.params.productId
+
+  if (!data.type) {
+    return res.status(401).send({
+      message: 'Type is required'
+    })
+  }
+
+  if (data.type !== 'product-category') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
   try {
-    const productCategories = new ProductCategories({ data })
-    const savedProductCategories = await productCategories.save()
-    const product = await Product.findProduct(_id)
+    await ProductCategories.updateProductCategory(productId, data)
 
-    product.categories = savedProductCategories._id
-    product.updated_at = new Date()
-    product.save()
-    res.status(201).send(savedProductCategories)
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -35,54 +80,11 @@ const deleteProductCategories = async (req, res) => {
   const productId = req.params.productId
 
   try {
-    const product = await Product.findProduct(productId)
-    const categoryId = product.categories
-    await ProductCategories.deleteProductCategory(categoryId)
-
-    product.categories = null
-    product.updated_at = new Date()
-    product.save()
+    await ProductCategories.deleteProductCategory(productId)
 
     res.status(200).send({
-      message: 'Category relationship successfully deleted'
+      message: 'Product category successfully deleted'
     })
-  } catch (err) {
-    res.status(400).send(err)
-  }
-}
-
-const updateProductCategories = async (req, res) => {
-  const data = req.body
-
-  if (data.some(val => !val.type)) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (data.some(val => val.type !== 'product-category')) {
-    return res.status(401).send({
-      message: 'Correct Type is required'
-    })
-  }
-
-  if (data.some(val => !val.category_id)) {
-    return res.status(401).send({
-      message: 'Category ID is required'
-    })
-  }
-
-  try {
-    const product_id = req.params.productId
-    const product = await Product.findProduct(product_id)
-    const relationshipId = product.categories
-
-    await ProductCategories.updateProductCategory({ _id: relationshipId, data })
-
-    product.updated_at = new Date()
-    product.save()
-
-    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -90,6 +92,7 @@ const updateProductCategories = async (req, res) => {
 
 module.exports = {
   createProductCategories,
+  getProductCategory,
   deleteProductCategories,
   updateProductCategories
 }

@@ -186,7 +186,7 @@ const getProducts = async (req, res) => {
     } else {
       products = await Product.findProducts({ page, limit })
     }
-    res.status(200).send({ data: products.data, meta: products.meta })
+    res.status(200).send(products)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -211,7 +211,6 @@ const updateProduct = async (req, res) => {
     stock,
     status,
     description,
-    relationships,
     price,
     sale_price,
     on_sale,
@@ -296,11 +295,6 @@ const updateProduct = async (req, res) => {
       stock: !isNaN(stock) ? stock : currentProductDetails.stock,
       status: status || currentProductDetails.status,
       description: description || currentProductDetails.description,
-      categories: currentProductDetails.categories,
-      variants: currentProductDetails.variants,
-      relationships: {
-        files: (relationships && relationships.files) || currentProductDetails.relationships.files
-      },
       price: {
         amount: (price && !isNaN(price.amount)) ? price.amount : currentProductDetails.price.amount,
         currency: (price && price.currency) ? price.currency : currentProductDetails.price.currency
