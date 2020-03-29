@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const productVariantSchema = require('./schema')
 
-// Get all product variants
-productVariantSchema.statics.findAllProductVariants = async (productId) => {
+// Get product variants
+productVariantSchema.statics.findProductVariants = async (productId) => {
   const productVariants = await ProductVariants.find({ product_id: productId }).sort({ sort_order: 1 })
 
   return productVariants
