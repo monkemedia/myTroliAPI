@@ -23,7 +23,7 @@ router.use(
   variations,
   productVariants,
   productOptions,
-  productCategories
+  productCategories,
   productImages
 )
 
