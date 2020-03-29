@@ -1,4 +1,4 @@
-const CustomerAddress = require('../../../models/customers/address')
+const CustomerAddress = require('../../../models/customer/address')
 
 const createCustomerAddress = async (req, res) => {
   const data = req.body

@@ -1,13 +1,13 @@
 const express = require('express')
 const router = express.Router()
-const auth = require('../middleware/auth')
+const auth = require('../../middleware/auth')
 const {
   createCustomer,
   getCustomers,
   getCustomer,
   updateCustomer,
   deleteCustomer
-} = require('../controller/customers')
+} = require('../../controller/customers')
 
 // Create customer
 router.post('/customers', (req, res) => createCustomer(req, res))
