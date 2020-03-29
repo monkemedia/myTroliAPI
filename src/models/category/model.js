@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const categorySchema = require('./schema')
 
-// Get all Categories
-categorySchema.statics.findAllCategories = async () => {
+// Get Categories
+categorySchema.statics.findCategories = async () => {
   const categories = await Category.find({})
 
   return categories

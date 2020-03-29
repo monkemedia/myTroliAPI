@@ -184,7 +184,7 @@ const getProducts = async (req, res) => {
     if (query) {
       products = await Product.search({ page, query })
     } else {
-      products = await Product.findAllProducts({ page, limit })
+      products = await Product.findProducts({ page, limit })
     }
     res.status(200).send({ data: products.data, meta: products.meta })
   } catch (err) {

@@ -9,9 +9,9 @@ const {
   deleteVariation
 } = require('../controller/variations.js')
 
-// Create a new variation
+// Create variation
 router.post('/variations', auth, (req, res) => createVariation(req, res))
-// Get all variation
+// Get variations
 router.get('/variations', auth, (req, res) => getVariations(req, res))
 // Get variation
 router.get('/variations/:variationId', auth, (req, res) => getVariation(req, res))

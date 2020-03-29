@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 const productOptionSchema = require('./schema')
 
 // Get all product options
-productOptionSchema.statics.findAllProductOptions = async (productId) => {
+productOptionSchema.statics.findProductOptions = async (productId) => {
   const productOptions = await ProductOptions.find({ product_id: productId })
 
   return productOptions
 }
 
 // Get a product option
-productOptionSchema.statics.findOption = async (productId, optionId) => {
+productOptionSchema.statics.findProductOption = async (productId, optionId) => {
   const productOptions = await ProductOptions.findOne({ product_id: productId, _id: optionId })
 
   return productOptions

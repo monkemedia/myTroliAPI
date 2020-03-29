@@ -50,7 +50,7 @@ const createProductOption = async (req, res) => {
 const getProductOptions = async (req, res) => {
   try {
     const productId = req.params.productId
-    const productOptions = await ProductOption.findAllProductOptions(productId)
+    const productOptions = await ProductOption.findProductOptions(productId)
 
     res.status(200).send(productOptions)
   } catch (err) {
@@ -61,7 +61,7 @@ const getProductOptions = async (req, res) => {
 const getProductOption = async (req, res) => {
   const productId = req.params.productId
   const optionId = req.params.optionId
-  const productOption = await ProductOption.findOption(productId, optionId)
+  const productOption = await ProductOption.findProductOption(productId, optionId)
 
   res.status(200).send(productOption)
 }

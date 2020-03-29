@@ -38,7 +38,7 @@ const createVariation = async (req, res) => {
 
 const getVariations = async (req, res) => {
   try {
-    const variation = await Variation.findAllVariations()
+    const variation = await Variation.findVariations()
 
     res.status(200).send(variation)
   } catch (err) {

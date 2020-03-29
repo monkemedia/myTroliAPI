@@ -63,7 +63,7 @@ const createCustomer = async (req, res) => {
 
 const getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.findAllCustomers()
+    const customers = await Customer.findCustomers()
 
     const newCustomers = customers.map(customer => Object.assign(customer, {
       password: !!customer.password

@@ -1,3 +1,3 @@
-const ProductVariantOption = require('./model')
+const ProductOption = require('./model')
 
-module.exports = ProductVariantOption
+module.exports = ProductOption

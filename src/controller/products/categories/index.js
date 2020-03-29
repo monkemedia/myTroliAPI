@@ -20,7 +20,7 @@ const createProductCategories = async (req, res) => {
   try {
     const productCategories = new ProductCategories({ data })
     const savedProductCategories = await productCategories.save()
-    const product = await Product.findById(_id)
+    const product = await Product.findProduct(_id)
 
     product.categories = savedProductCategories._id
     product.updated_at = new Date()
@@ -35,9 +35,9 @@ const deleteProductCategories = async (req, res) => {
   const productId = req.params.productId
 
   try {
-    const product = await Product.findById(productId)
+    const product = await Product.findProduct(productId)
     const categoryId = product.categories
-    await ProductCategories.deleteCategory(categoryId)
+    await ProductCategories.deleteProductCategory(categoryId)
 
     product.categories = null
     product.updated_at = new Date()
@@ -74,10 +74,10 @@ const updateProductCategories = async (req, res) => {
 
   try {
     const product_id = req.params.productId
-    const product = await Product.findById(product_id)
+    const product = await Product.findProduct(product_id)
     const relationshipId = product.categories
 
-    await ProductCategories.updateCategory({ _id: relationshipId, data })
+    await ProductCategories.updateProductCategory({ _id: relationshipId, data })
 
     product.updated_at = new Date()
     product.save()

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const addressSchema = new Schema({
+const customerAddressSchema = new Schema({
   customer_id: {
     type: String,
     required: true
@@ -57,4 +57,4 @@ const addressSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = addressSchema
+module.exports = customerAddressSchema

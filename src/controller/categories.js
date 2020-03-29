@@ -48,7 +48,7 @@ const createCategory = async (req, res) => {
 
 const getCategories = async (req, res) => {
   try {
-    const categories = await Category.findAllCategories()
+    const categories = await Category.findCategories()
 
     res.status(200).send(categories)
   } catch (err) {
@@ -106,7 +106,7 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   try {
     // Delete any relationships first
-    const relationships = await ProductCategories.findAllByCategoryIds(req.params.categoryId)
+    const relationships = await ProductCategories.findProductCategories(req.params.categoryId)
     relationships.map(async relationship => {
       await ProductCategories.deleteCategory(relationship._id)
     })

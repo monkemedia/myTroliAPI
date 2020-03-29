@@ -32,7 +32,7 @@ const createFileRelationship = async (req, res) => {
     })
 
     const savedFileRelationship = await Promise.all(relationshipPromise)
-    const product = await Product.findById(_id)
+    const product = await Product.findProduct(_id)
 
     const productPromise = savedFileRelationship.map(async obj => {
       product.relationships.files.push(obj)
@@ -72,7 +72,7 @@ const deleteFileRelationship = async (req, res) => {
   }
 
   try {
-    const product = await Product.findById(productId)
+    const product = await Product.findProduct(productId)
 
     await data.map(async obj => {
       await FileRelationship.deleteFile(obj.file_id)

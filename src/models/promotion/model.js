@@ -2,13 +2,13 @@ const mongoose = require('mongoose')
 const promotionSchema = require('./schema')
 
 // Get all promotions
-promotionSchema.statics.findAllPromotions = async (page, limit) => {
+promotionSchema.statics.findPromotions = async (page, limit) => {
   const promotions = await Promotion.find({})
   return promotions
 }
 
-// Get promotion by promotion id
-promotionSchema.statics.findAddress = async (promotionId) => {
+// Get promotion
+promotionSchema.statics.findPromotion = async (promotionId) => {
   const promotion = await Promotion.findOne({ _id: promotionId })
   return promotion
 }
