@@ -35,7 +35,7 @@ productImageSchema.statics.updateProductImage = async (productId, imageId, data)
 }
 
 // Delete file
-productImageSchema.statics.deleteFile = async (_id) => {
+productImageSchema.statics.deleteImage = async (_id) => {
   const image = await ProductImage.deleteOne({ _id })
   return image
 }

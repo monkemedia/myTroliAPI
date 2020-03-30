@@ -126,7 +126,7 @@ const deleteProductImage = async (req, res) => {
 
   try {
     const promise = await data.map(async obj => {
-      await ProductImage.deleteFile(obj.image_id)
+      await ProductImage.deleteImage(obj.image_id)
     })
 
     await Promise.all(promise)

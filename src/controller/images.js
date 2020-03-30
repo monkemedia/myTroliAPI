@@ -75,7 +75,7 @@ const deleteImage = (req, res) => {
     if (err) {
       return res.status(401).send(errorHandler(401, err))
     }
-    return res.status(201).send('Image has been deleted')
+    return res.status(201).send({ message: 'Image has been deleted' })
   })
 }
 
