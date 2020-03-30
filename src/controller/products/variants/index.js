@@ -8,7 +8,7 @@ const createProductVariant = async (req, res) => {
     sku,
     option_values
   } = data
-  const product_id = req.params.productId
+  const productId = req.params.productId
 
   if (!type) {
     return res.status(401).send({
@@ -37,18 +37,19 @@ const createProductVariant = async (req, res) => {
   try {
     const product = {
       ...data,
-      product_id
+      product_id: productId
     }
 
-    const updateOptionValues = product.option_values.map(async option => {
+    const updateOptionValues = await product.option_values.map(async option => {
       const id = option.id
       const optionId = option.option_id
-      const productOption = await ProductOption.findProductOption(id)
+      const productOption = await ProductOption.findProductOption(productId, id)
+      const label = await productOption.option_values.filter(val => {
+        return JSON.stringify(val._id) === JSON.stringify(optionId)
+      })[0].label
 
       return {
-        label: productOption.option_values.filter(val => {
-          return JSON.stringify(val._id) === JSON.stringify(optionId)
-        })[0].label,
+        label,
         option_display_name: productOption.display_name,
         option_id: optionId,
         id
@@ -91,7 +92,7 @@ const getProductVariant = async (req, res) => {
 const updateProductVariant = async (req, res) => {
   const data = req.body
   const { type } = data
-  const product_id = req.params.productId
+  const productId = req.params.productId
   const variantId = req.params.variantId
 
   if (!type) {
@@ -109,18 +110,19 @@ const updateProductVariant = async (req, res) => {
   try {
     const product = {
       ...data,
-      product_id
+      product_id: productId
     }
 
-    const updateOptionValues = product.option_values.map(async option => {
+    const updateOptionValues = await product.option_values.map(async option => {
       const id = option.id
       const optionId = option.option_id
-      const productOption = await ProductOption.findProductOption(id)
+      const productOption = await ProductOption.findProductOption(productId, id)
+      const label = productOption.option_values.filter(val => {
+        return JSON.stringify(val._id) === JSON.stringify(optionId)
+      })[0].label
 
       return {
-        label: productOption.option_values.filter(val => {
-          return JSON.stringify(val._id) === JSON.stringify(optionId)
-        })[0].label,
+        label,
         option_display_name: productOption.display_name,
         option_id: optionId,
         id
