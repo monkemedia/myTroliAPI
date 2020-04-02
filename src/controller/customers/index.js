@@ -47,15 +47,7 @@ const createCustomer = async (req, res) => {
 
     await customer.save()
 
-    const { _id } = customer
-
-    res.status(201).send({
-      type,
-      _id,
-      name,
-      email,
-      password: !!password
-    })
+    res.status(201).send(customer)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -65,29 +57,22 @@ const getCustomers = async (req, res) => {
   try {
     const customers = await Customer.findCustomers()
 
-    const newCustomers = customers.map(customer => Object.assign(customer, {
-      password: !!customer.password
-    }))
-
-    res.status(200).send([...newCustomers])
+    res.status(200).send(customers)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
 const getCustomer = async (req, res) => {
-  const customer = await Customer.findOne({ _id: req.params.customerId })
-  const customerClone = Object.assign(customer, {
-    password: !!customer.password
-  })
+  const customer = await Customer.findOne({ _id: req.params.customerId }).select('-password')
 
-  res.status(200).send(customerClone)
+  res.status(200).send(customer)
 }
 
 const updateCustomer = async (req, res) => {
-  const _id = req.params.customerId
-  const currentCustomerDetails = await Customer.findOne({ _id: req.params.customerId })
-  const { type, name, email, password } = req.body
+  const customerId = req.params.customerId
+  const data = req.body
+  const { type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -101,17 +86,9 @@ const updateCustomer = async (req, res) => {
     })
   }
 
-  const data = {
-    type,
-    _id,
-    name: name || currentCustomerDetails.name,
-    email: email || currentCustomerDetails.email,
-    password: password || currentCustomerDetails.password
-  }
-
   try {
-    await Customer.updateCustomer(data)
-
+    await Customer.updateCustomer(customerId, data)
+    delete data.password
     res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)

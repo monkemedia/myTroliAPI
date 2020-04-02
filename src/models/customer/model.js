@@ -26,21 +26,21 @@ customerSchema.methods.generateAccessToken = async function () {
 
 // Get customers
 customerSchema.statics.findCustomers = async () => {
-  const customers = await Customer.find({})
+  const customers = await Customer.find({}).select('-password')
 
   return customers
 }
 
 // Search for a customer by email address
 customerSchema.statics.findByEmail = async (email) => {
-  const customer = await Customer.findOne({ email })
+  const customer = await Customer.findOne({ email }).select('-password')
 
   return customer
 }
 
 // Search for a customer by email and password
 customerSchema.statics.findByCredentials = async (email, password) => {
-  const customer = await Customer.findOne({ email })
+  const customer = await Customer.findOne({ email }).select('-password')
 
   if (!customer) {
     throw errorHandler(422, 'Customer does\'t exists')
@@ -56,12 +56,19 @@ customerSchema.statics.findByCredentials = async (email, password) => {
 }
 
 // Update customer
-customerSchema.statics.updateCustomer = async (customerDetails) => {
-  const { _id, name, email } = customerDetails
+customerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
+  const { name, email } = customerDetails
   let { password } = customerDetails
+  const savedPassword = await Customer.findOne({ _id: customerId }).select('password')
+  console.log('saved', savedPassword)
 
-  password = await bcrypt.hash(password, 8)
-  const customer = await Customer.updateOne({ _id }, { name, email, password })
+  if (!password) {
+    password = savedPassword.password
+  } else {
+    password = await bcrypt.hash(password, 8)
+  }
+
+  const customer = await Customer.updateOne({ _id: customerId }, { name, email, password })
   return customer
 }
 
