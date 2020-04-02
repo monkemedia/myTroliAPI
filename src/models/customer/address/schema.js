@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const customerAddressSchema = new Schema({
+  type: {
+    type: String,
+    required: true
+  },
   customer_id: {
     type: String,
     required: true
@@ -29,10 +33,6 @@ const customerAddressSchema = new Schema({
   city: {
     type: String,
     required: false
-  },
-  county: {
-    type: String,
-    required: true
   },
   postcode: {
     type: String,

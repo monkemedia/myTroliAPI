@@ -6,8 +6,9 @@ const createCustomerAddress = async (req, res) => {
     type,
     first_name,
     last_name,
+    phone_number,
     line_1,
-    county,
+    city,
     postcode,
     country
   } = data
@@ -22,6 +23,12 @@ const createCustomerAddress = async (req, res) => {
   if (type && type !== 'customer-address') {
     return res.status(401).send({
       message: 'Correct Type is required'
+    })
+  }
+
+  if (!phone_number) {
+    return res.status(401).send({
+      message: 'Phone number is required'
     })
   }
 
@@ -43,9 +50,9 @@ const createCustomerAddress = async (req, res) => {
     })
   }
 
-  if (!county) {
+  if (!city) {
     return res.status(401).send({
-      message: 'County is required'
+      message: 'City is required'
     })
   }
 
@@ -95,22 +102,9 @@ const getCustomerAddress = async (req, res) => {
 }
 
 const updateCustomerAddress = async (req, res) => {
-  const _id = req.params.addressId
   const data = req.body
-  const {
-    type,
-    first_name,
-    last_name,
-    company_name,
-    line_1,
-    line_2,
-    city,
-    county,
-    postcode,
-    country,
-    phone_number,
-    instructions
-  } = data
+  const addressId = req.params.addressId
+  const { type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -125,27 +119,7 @@ const updateCustomerAddress = async (req, res) => {
   }
 
   try {
-    const address_id = req.params.addressId
-    const currentAddress = await CustomerAddress.findCustomerAddress(address_id)
-
-    const data = {
-      type,
-      _id,
-      first_name: first_name || currentAddress.first_name,
-      last_name: last_name || currentAddress.last_name,
-      company_name: company_name || currentAddress.company_name,
-      line_1: line_1 || currentAddress.line_1,
-      line_2: line_2 || currentAddress.line_2,
-      city: city || currentAddress.city,
-      county: county || currentAddress.county,
-      postcode: postcode || currentAddress.postcode,
-      country: country || currentAddress.country,
-      phone_number: phone_number || currentAddress.phone_number,
-      instructions: instructions || currentAddress.instructions,
-      default: req.body.default || currentAddress.default
-    }
-
-    await CustomerAddress.updateCustomerAddress(data)
+    await CustomerAddress.updateCustomerAddress(addressId, data)
 
     res.status(200).send(data)
   } catch (err) {
