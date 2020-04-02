@@ -10,7 +10,7 @@ const createCustomerAddress = async (req, res) => {
     line_1,
     city,
     postcode,
-    country
+    country_code
   } = data
   const customer_id = req.params.customerId
 
@@ -62,9 +62,9 @@ const createCustomerAddress = async (req, res) => {
     })
   }
 
-  if (!country) {
+  if (!country_code) {
     return res.status(401).send({
-      message: 'Country is required'
+      message: 'Country code is required'
     })
   }
 

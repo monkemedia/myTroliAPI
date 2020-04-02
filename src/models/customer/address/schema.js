@@ -38,7 +38,7 @@ const customerAddressSchema = new Schema({
     type: String,
     required: true
   },
-  country: {
+  country_code: {
     type: String,
     required: true
   },
