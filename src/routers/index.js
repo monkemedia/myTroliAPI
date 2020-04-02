@@ -2,6 +2,7 @@ const { Router } = require('express')
 const client = require('./client.js')
 const customers = require('./customers/index.js')
 const customerAddresses = require('./customers/addresses/index.js')
+const countries = require('./countries.js')
 const products = require('./products/index.js')
 const promotions = require('./promotions.js')
 const categories = require('./categories.js')
@@ -17,6 +18,7 @@ router.use(
   client,
   customers,
   customerAddresses,
+  countries,
   products,
   promotions,
   categories,
