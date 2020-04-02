@@ -8,10 +8,13 @@ const customerSchema = new Schema({
     type: String,
     required: true
   },
-  name: {
+  first_name: {
     type: String,
-    required: true,
-    trim: true
+    required: true
+  },
+  last_name: {
+    type: String,
+    required: true
   },
   email: {
     type: String,
