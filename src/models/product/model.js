@@ -32,7 +32,7 @@ const productSchema = require('./schema')
 
 // Get all products
 productSchema.statics.findProducts = async ({ page, limit }) => {
-  const products = await Product.find({}).sort('-created_at').skip((page - 1) * limit).limit(limit)
+  const products = await Product
     .find({}).sort('-created_at')
     .skip((page - 1) * limit)
     .limit(limit)
