@@ -1,4 +1,5 @@
 const ProductImage = require('../../../models/product/images')
+const Product = require('../../../models/product')
 
 const createProductImage = async (req, res) => {
   const data = req.body
@@ -36,6 +37,14 @@ const createProductImage = async (req, res) => {
       return save
     })
     const savedProductImage = await Promise.all(promise)
+
+    const product = await Product.findById(productId)
+
+    savedProductImage.map(spi => {
+      product.images.push(spi)
+    })
+
+    await product.save()
 
     res.status(201).send(savedProductImage)
   } catch (err) {
@@ -84,7 +93,8 @@ const getProductImage = async (req, res) => {
 }
 
 const updateProductImage = async (req, res) => {
-  const { type } = req.body
+  const data = req.body
+  const { type } = data
   const productId = req.params.productId
   const imageId = req.params.imageId
 
@@ -101,9 +111,9 @@ const updateProductImage = async (req, res) => {
   }
 
   try {
-    await ProductImage.updateProductImage(productId, imageId, req.body)
+    await ProductImage.updateProductImage(productId, imageId, data)
 
-    res.status(200).send(req.body)
+    res.status(200).send(data)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -111,6 +121,7 @@ const updateProductImage = async (req, res) => {
 
 const deleteProductImage = async (req, res) => {
   const data = req.body
+  const productId = req.params.productId
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
@@ -125,11 +136,16 @@ const deleteProductImage = async (req, res) => {
   }
 
   try {
+    const product = await Product.findById(productId)
     const promise = await data.map(async obj => {
+      console.log('delete', obj)
       await ProductImage.deleteImage(obj.image_id)
+      await product.images.pull(obj.image_id)
     })
 
     await Promise.all(promise)
+
+    product.save()
 
     res.status(200).send({
       message: 'Product image successfully deleted'

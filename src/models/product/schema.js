@@ -48,6 +48,12 @@ const productSchema = Schema({
     type: String,
     required: true
   },
+  images: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductImage'
+    }
+  ],
   created_at: {
     type: Date,
     default: Date.now

@@ -60,7 +60,6 @@ customerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
   const { first_name, last_name, email } = customerDetails
   let { password } = customerDetails
   const savedPassword = await Customer.findOne({ _id: customerId }).select('password')
-  console.log('saved', savedPassword)
 
   if (!password) {
     password = savedPassword.password

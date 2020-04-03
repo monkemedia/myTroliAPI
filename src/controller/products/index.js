@@ -194,7 +194,7 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const _id = req.params.productId
-  const product = await Product.findById({ _id })
+  const product = await Product.findById({ _id }).populate('images')
 
   res.status(200).send(product)
 }
