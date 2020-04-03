@@ -63,7 +63,7 @@ const getOrderStatus = async (req, res) => {
 
 const updateOrderStatus = async (req, res) => {
   const data = req.body
-  const statusOrderId = req.params.orderStatusId
+  const orderStatusId = req.params.orderStatusId
   const { type, status_id, name, value } = data
 
   if (!type) {
@@ -97,7 +97,7 @@ const updateOrderStatus = async (req, res) => {
   }
 
   try {
-    await OrderStatus.updateOrderStatus(statusOrderId, data)
+    await OrderStatus.updateOrderStatus(orderStatusId, data)
     const orderStatus = await OrderStatus.findOne({ status_id: orderStatusId })
 
     res.status(200).send(orderStatus)

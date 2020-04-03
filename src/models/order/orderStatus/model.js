@@ -10,7 +10,7 @@ orderStatusSchema.statics.findOrderStatuses = async () => {
 
 // Update order status
 orderStatusSchema.statics.updateOrderStatus = async (statusOrderId, orderStatusDetails) => {
-  const orderStatus = await OrderStatus.findOneAndUpdate({ status_id: statusOrderId }, orderStatusDetails)
+  const orderStatus = await OrderStatus.updateOne({ status_id: statusOrderId }, orderStatusDetails)
   return orderStatus
 }
 
