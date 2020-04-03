@@ -11,6 +11,8 @@ const productVariants = require('./products/variants/index.js')
 const productOptions = require('./products/options/index.js')
 const productCategories = require('./products/categories/index.js')
 const productImages = require('./products/images/index.js')
+const orders = require('./orders/index.js')
+const orderStatus = require('./orders/orderStatus/index.js')
 
 const router = Router()
 
@@ -26,7 +28,9 @@ router.use(
   productVariants,
   productOptions,
   productCategories,
-  productImages
+  productImages,
+  orders,
+  orderStatus
 )
 
 module.exports = router
