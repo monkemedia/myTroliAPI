@@ -67,69 +67,49 @@ const getOrder = async (req, res) => {
   res.status(200).send(order)
 }
 
-// const updateCategory = async (req, res) => {
-//   const _id = req.params.categoryId
-//   const currentCategoryDetails = await Category.findOne({ _id })
-//   const { type, name, slug, description, status } = req.body
+const updateOrder = async (req, res) => {
+  const orderId = req.params.orderId
+  const data = req.body
+  const { type } = data
 
-//   if (!type) {
-//     return res.status(401).send({
-//       message: 'Type is required'
-//     })
-//   }
+  if (!type) {
+    return res.status(401).send({
+      message: 'Type is required'
+    })
+  }
 
-//   if (type && type !== 'categories') {
-//     return res.status(401).send({
-//       message: 'Correct Type is required'
-//     })
-//   }
+  if (type && type !== 'order') {
+    return res.status(401).send({
+      message: 'Correct Type is required'
+    })
+  }
 
-//   if (status && (status !== 'draft' && status !== 'live')) {
-//     return res.status(401).send({
-//       message: 'Correct Status is required'
-//     })
-//   }
+  try {
+    await Order.updateOrder(orderId, data)
 
-//   const data = {
-//     type,
-//     _id,
-//     name: name || currentCategoryDetails.name,
-//     slug: slug || currentCategoryDetails.slug,
-//     description: description || currentCategoryDetails.description,
-//     status: status || currentCategoryDetails.status
-//   }
+    res.status(200).send(data)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
 
-//   try {
-//     await Category.updateCategory(data)
+const deleteOrder = async (req, res) => {
+  const orderId = req.params.orderId
+  try {
+    await Order.deleteOrder(orderId)
 
-//     res.status(200).send(data)
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
-
-// const deleteCategory = async (req, res) => {
-//   try {
-//     // Delete any relationships first
-//     const relationships = await ProductCategories.findProductCategories(req.params.categoryId)
-//     relationships.map(async relationship => {
-//       await ProductCategories.deleteCategory(relationship._id)
-//     })
-
-//     await Category.deleteCategory(req.params.categoryId)
-
-//     res.status(200).send({
-//       message: 'Category successfully deleted'
-//     })
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
+    res.status(200).send({
+      message: 'Order successfully deleted'
+    })
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
 
 module.exports = {
   createOrder,
   getOrders,
-  getOrder
-  // updateCategory,
-  // deleteCategory
+  getOrder,
+  updateOrder,
+  deleteOrder
 }

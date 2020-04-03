@@ -40,10 +40,8 @@ orderSchema.statics.findOrders = async () => {
 }
 
 // Update order
-orderSchema.statics.updateOrder = async (orderDetails) => {
-  const { _id } = orderDetails
-
-  const order = await Order.updateOne({ _id }, orderDetails)
+orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
+  const order = await Order.updateOne({ _id: orderId }, orderDetails)
   return order
 }
 

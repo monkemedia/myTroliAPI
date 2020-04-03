@@ -14,6 +14,10 @@ const orderSchema = new Schema({
     type: String,
     default: 'Pending'
   },
+  status_id: {
+    type: Number,
+    default: 1
+  },
   discount_amount: {
     type: Number,
     default: 0
