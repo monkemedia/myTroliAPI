@@ -75,17 +75,16 @@ const getPromotions = async (req, res) => {
 }
 
 const getPromotion = async (req, res) => {
-  const _id = req.params.promotionId
-  const promotion = await Promotion.findOne({ _id })
+  const promotionId = req.params.promotionId
+  const promotion = await Promotion.findOne({ _id: promotionId })
 
   res.status(200).send(promotion)
 }
 
 const updatePromotion = async (req, res) => {
-  const _id = req.params.promotionId
-  const currentPromotionDetails = await Promotion.findOne({ _id })
+  const promotionId = req.params.promotionId
   const data = req.body
-  const { type, name, description, promotion_type, enabled, start, end } = data
+  const { type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -99,57 +98,11 @@ const updatePromotion = async (req, res) => {
     })
   }
 
-  if (!name) {
-    return res.status(401).send({
-      message: 'Name is required'
-    })
-  }
-
-  if (!description) {
-    return res.status(401).send({
-      message: 'Description is required'
-    })
-  }
-
-  if (!promotion_type) {
-    return res.status(401).send({
-      message: 'Promotion type is required'
-    })
-  }
-
-  if (!enabled) {
-    return res.status(401).send({
-      message: 'Enabled is required'
-    })
-  }
-
-  if (!start) {
-    return res.status(401).send({
-      message: 'Start date is required'
-    })
-  }
-
-  if (!end) {
-    return res.status(401).send({
-      message: 'End date is required'
-    })
-  }
-
   try {
-    const data = {
-      type,
-      _id,
-      name: name || currentPromotionDetails.name,
-      description: description || currentPromotionDetails.description,
-      promotion_type: promotion_type || currentPromotionDetails.promotion_type,
-      enabled: enabled || currentPromotionDetails.enabled,
-      start: start || currentPromotionDetails.start,
-      end: end || currentPromotionDetails.end
-    }
+    await Promotion.updatePromotion(promotionId, data)
+    const promotion = await Promotion.findOne({ _id: promotionId })
 
-    await Promotion.updatePromotion(data)
-
-    res.status(200).send(data)
+    res.status(200).send(promotion)
   } catch (err) {
     res.status(400).send(err)
   }

@@ -72,19 +72,18 @@ productSchema.statics.findProduct = async (_id) => {
 }
 
 // Update product
-productSchema.statics.updateProduct = async (productDetails) => {
-  const { _id } = productDetails
+productSchema.statics.updateProduct = async (productId, productDetails) => {
   productDetails.updated_at = new Date()
   const data = {
     ...productDetails
   }
 
-  await Product.updateOne({ _id }, data).populate('images')
+  await Product.updateOne({ _id: productId }, data).populate('images')
 }
 
 // Delete product by id
-productSchema.statics.deleteProduct = async (_id) => {
-  const product = await Product.deleteOne({ _id })
+productSchema.statics.deleteProduct = async (productId) => {
+  const product = await Product.deleteOne({ _id: productId })
   return product
 }
 

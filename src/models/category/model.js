@@ -9,10 +9,8 @@ categorySchema.statics.findCategories = async () => {
 }
 
 // Update category
-categorySchema.statics.updateCategory = async (categoryDetails) => {
-  const { _id } = categoryDetails
-
-  const category = await Category.updateOne({ _id }, categoryDetails)
+categorySchema.statics.updateCategory = async (categoryId, categoryDetails) => {
+  const category = await Category.updateOne({ _id: categoryId }, categoryDetails)
   return category
 }
 

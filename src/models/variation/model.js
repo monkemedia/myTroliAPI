@@ -9,10 +9,8 @@ variationSchema.statics.findVariations = async () => {
 }
 
 // Update Variation
-variationSchema.statics.updateVariation = async (variationDetails) => {
-  const { _id } = variationDetails
-
-  const variation = await Variation.updateOne({ _id }, variationDetails)
+variationSchema.statics.updateVariation = async (variationId, variationDetails) => {
+  const variation = await Variation.updateOne({ _id: variationId }, variationDetails)
   return variation
 }
 

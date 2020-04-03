@@ -74,9 +74,9 @@ const getClient = async (req, res) => {
 }
 
 const updateClient = async (req, res) => {
-  const _id = req.params.clientId
-  const currentClientDetails = await Client.findOne({ _id: req.params.clientId })
-  const { type, email, name, password } = req.body
+  const clientId = req.params.clientId
+  const data = req.body
+  const { type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -90,26 +90,12 @@ const updateClient = async (req, res) => {
     })
   }
 
-  const data = {
-    type,
-    _id,
-    email: email || currentClientDetails.email,
-    name: name || currentClientDetails.name,
-    password: password || currentClientDetails.password
-  }
-
   try {
-    await Client.updateClient(data)
+    await Client.updateClient(clientId, data)
+    const client = await Client.findOne({ _id: clientId })
+      .select('-reset_token -refresh_token')
 
-    res.status(200).send({
-      data: {
-        type: data.type,
-        _id: data._id,
-        email: data.email,
-        name: data.name,
-        password: `${!!data.password}`
-      }
-    })
+    res.status(200).send(client)
   } catch (err) {
     res.status(400).send(err)
   }
