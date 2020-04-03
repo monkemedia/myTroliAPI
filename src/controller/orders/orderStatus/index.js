@@ -98,8 +98,9 @@ const updateOrderStatus = async (req, res) => {
 
   try {
     await OrderStatus.updateOrderStatus(statusOrderId, data)
+    const orderStatus = await OrderStatus.findOne({ status_id: orderStatusId })
 
-    res.status(200).send(data)
+    res.status(200).send(orderStatus)
   } catch (err) {
     res.status(400).send(err)
   }
