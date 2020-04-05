@@ -53,9 +53,9 @@ const getVariation = async (req, res) => {
 }
 
 const updateVariation = async (req, res) => {
-  const _id = req.params.variationId
-  const currentVariationDetails = await Variation.findOne({ _id })
-  const { type, value } = req.body
+  const variationId = req.params.variationId
+  const data = req.body
+  const { type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -69,16 +69,11 @@ const updateVariation = async (req, res) => {
     })
   }
 
-  const data = {
-    type,
-    _id,
-    value: value || currentVariationDetails.value
-  }
-
   try {
-    await Variation.updateVariation(data)
+    await Variation.updateVariation(variationId, data)
+    const variation = await Variation.findOne({ _id: variationId })
 
-    res.status(200).send(data)
+    res.status(200).send(variation)
   } catch (err) {
     res.status(400).send(err)
   }

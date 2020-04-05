@@ -112,8 +112,9 @@ const updateProductImage = async (req, res) => {
 
   try {
     await ProductImage.updateProductImage(productId, imageId, data)
+    const productImage = await ProductImage.findOption(productId, imageId)
 
-    res.status(200).send(data)
+    res.status(200).send(productImage)
   } catch (err) {
     res.status(400).send(err)
   }

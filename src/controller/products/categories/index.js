@@ -69,8 +69,9 @@ const updateProductCategories = async (req, res) => {
 
   try {
     await ProductCategories.updateProductCategory(productId, data)
+    const productCategories = await ProductCategories.findProductCategory(productId)
 
-    res.status(200).send(data)
+    res.status(200).send(productCategories)
   } catch (err) {
     res.status(400).send(err)
   }

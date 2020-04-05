@@ -63,9 +63,9 @@ const getCategory = async (req, res) => {
 }
 
 const updateCategory = async (req, res) => {
-  const _id = req.params.categoryId
-  const currentCategoryDetails = await Category.findOne({ _id })
-  const { type, name, slug, description, status } = req.body
+  const categoryId = req.params.categoryId
+  const data = req.body
+  const { type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -79,25 +79,11 @@ const updateCategory = async (req, res) => {
     })
   }
 
-  if (status && (status !== 'draft' && status !== 'live')) {
-    return res.status(401).send({
-      message: 'Correct Status is required'
-    })
-  }
-
-  const data = {
-    type,
-    _id,
-    name: name || currentCategoryDetails.name,
-    slug: slug || currentCategoryDetails.slug,
-    description: description || currentCategoryDetails.description,
-    status: status || currentCategoryDetails.status
-  }
-
   try {
-    await Category.updateCategory(data)
+    await Category.updateCategory(categoryId, data)
+    const category = await Category.findOne({ _id: categoryId })
 
-    res.status(200).send(data)
+    res.status(200).send(category)
   } catch (err) {
     res.status(400).send(err)
   }
