@@ -53,7 +53,16 @@ const createOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
-    const orders = await Order.findOrders()
+    const query = req.query.query
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 20
+    let orders
+
+    if (query) {
+      orders = await Order.search({ page, query })
+    } else {
+      orders = await Order.findOrders({ page, limit })
+    }
 
     res.status(200).send(orders)
   } catch (err) {
@@ -62,7 +71,7 @@ const getOrders = async (req, res) => {
 }
 
 const getOrder = async (req, res) => {
-  const order = await Order.findOne({ _id: req.params.orderId })
+  const order = await Order.findOne({ id: req.params.orderId })
 
   res.status(200).send(order)
 }
@@ -86,7 +95,7 @@ const updateOrder = async (req, res) => {
 
   try {
     await Order.updateOrder(orderId, data)
-    const order = await Order.findOne({ _id: orderId })
+    const order = await Order.findOne({ id: orderId })
 
     res.status(200).send(order)
   } catch (err) {

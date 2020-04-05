@@ -1,6 +1,12 @@
 const mongoose = require('mongoose')
 const orderSchema = require('./schema')
 const Product = require('../product/index.js')
+const AutoIncrement = require('mongoose-sequence')(mongoose)
+
+orderSchema.plugin(AutoIncrement, {
+  inc_field: 'id',
+  start_seq: 100
+})
 
 async function stockCheckMethod (order) {
   const promise = await order.products.map(async (orderProduct) => {
@@ -33,8 +39,36 @@ orderSchema.pre('save', async function (next) {
 })
 
 // Get orders
-orderSchema.statics.findOrders = async () => {
-  const orders = await Order.find({})
+orderSchema.statics.findOrders = async ({ page, limit }) => {
+  const orders = await Order
+    .find({})
+    .sort('-date_created')
+    .skip((page - 1) * limit)
+    .limit(limit)
+
+  const total = await Order.countDocuments()
+  return {
+    data: orders,
+    meta: {
+      pagination: {
+        current: page,
+        total: orders.length
+      },
+      results: {
+        total
+      }
+    }
+  }
+}
+
+// Search orders by Name or SKU
+orderSchema.statics.search = async ({ page, query }) => {
+  const orders = await Order.find({
+    $or: [
+      { name: { $regex: query, $options: 'i' } },
+      { sku: { $regex: query, $options: 'i' } }
+    ]
+  })
 
   return orders
 }
