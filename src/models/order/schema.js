@@ -34,6 +34,10 @@ const orderSchema = new Schema({
     type: Number,
     default: 0
   },
+  currency_code: {
+    type: String,
+    default: 'GBP'
+  },
   payment_method: {
     type: String,
     default: 0
