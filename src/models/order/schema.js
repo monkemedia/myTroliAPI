@@ -10,10 +10,6 @@ const orderSchema = new Schema({
     type: Schema.Types.Mixed,
     default: 0
   },
-  status: {
-    type: String,
-    default: 'Pending'
-  },
   status_id: {
     type: Number,
     default: 1

@@ -75,13 +75,13 @@ orderSchema.statics.search = async ({ page, query }) => {
 
 // Update order
 orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
-  const order = await Order.updateOne({ _id: orderId }, orderDetails)
+  const order = await Order.updateOne({ id: orderId }, orderDetails)
   return order
 }
 
 // Delete order
 orderSchema.statics.deleteOrder = async (orderId) => {
-  const order = await Order.deleteOne({ _id: orderId })
+  const order = await Order.deleteOne({ id: orderId })
   return order
 }
 
