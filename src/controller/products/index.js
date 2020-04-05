@@ -200,30 +200,9 @@ const getProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
-  const _id = req.params.productId
-  const currentProductDetails = await Product.findOne({ _id })
+  const productId = req.params.productId
   const data = req.body
-  const {
-    type,
-    name,
-    slug,
-    sku,
-    stock,
-    status,
-    description,
-    price,
-    sale_price,
-    on_sale,
-    commodity_type,
-    updated_at,
-    created_at
-  } = data
-
-  if (status && (status !== 'draft' && status !== 'live')) {
-    return res.status(401).send({
-      message: 'Status must be either `draft` or `live`'
-    })
-  }
+  const { type } = data
 
   if (!type) {
     return res.status(401).send({
@@ -231,83 +210,15 @@ const updateProduct = async (req, res) => {
     })
   }
 
-  if (!isNaN(stock) && typeof stock !== 'number') {
+  if (type && type !== 'product') {
     return res.status(401).send({
-      message: 'Stock requires a number'
-    })
-  }
-
-  if (price && typeof price !== 'object') {
-    return res.status(401).send({
-      message: 'Price requires an object'
-    })
-  }
-
-  if (price && !isNaN(price.amount) && typeof price.amount !== 'number') {
-    return res.status(401).send({
-      message: 'Price amount requires a number'
-    })
-  }
-
-  if (price && price.currency && !currencySymbol(price.currency)) {
-    return res.status(401).send({
-      message: 'Price currency is not a 3 letter ISO'
-    })
-  }
-
-  if (sale_price && typeof sale_price !== 'object') {
-    return res.status(401).send({
-      message: 'Sale price requires an object'
-    })
-  }
-
-  if (sale_price && !isNaN(sale_price.amount) && typeof sale_price.amount !== 'number') {
-    return res.status(401).send({
-      message: 'Sale price amount requires a number'
-    })
-  }
-
-  if (sale_price && sale_price.currency && !currencySymbol(sale_price.currency)) {
-    return res.status(401).send({
-      message: 'Sale price currency is not a 3 letter ISO'
-    })
-  }
-
-  if (on_sale && typeof on_sale !== 'boolean') {
-    return res.status(401).send({
-      message: 'On sale requires a boolean'
-    })
-  }
-
-  if (commodity_type && (commodity_type !== 'physical' && commodity_type !== 'digital')) {
-    return res.status(401).send({
-      message: 'Commodity Type should be either physical or digital types'
+      message: 'Correct Type is required'
     })
   }
 
   try {
-    const product = await Product.updateProduct({
-      type,
-      _id,
-      name: name || currentProductDetails.name,
-      slug: slug || currentProductDetails.slug,
-      sku: sku || currentProductDetails.sku,
-      stock: !isNaN(stock) ? stock : currentProductDetails.stock,
-      status: status || currentProductDetails.status,
-      description: description || currentProductDetails.description,
-      price: {
-        amount: (price && !isNaN(price.amount)) ? price.amount : currentProductDetails.price.amount,
-        currency: (price && price.currency) ? price.currency : currentProductDetails.price.currency
-      },
-      sale_price: {
-        amount: (sale_price && !isNaN(sale_price.amount)) ? sale_price.amount : currentProductDetails.sale_price.amount,
-        currency: (sale_price && sale_price.currency) ? sale_price.currency : currentProductDetails.sale_price.currency
-      },
-      on_sale: on_sale,
-      commodity_type: commodity_type || currentProductDetails.commodity_type,
-      updated_at: updated_at || currentProductDetails.updated_at,
-      created_at: created_at || currentProductDetails.created_at
-    })
+    await Product.updateProduct(productId, data)
+    const product = await Product.findById({ _id: productId }).populate('images')
 
     res.status(200).send(product)
   } catch (err) {

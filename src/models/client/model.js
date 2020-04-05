@@ -74,12 +74,12 @@ clientSchema.statics.updateClient = async (clientDetails) => {
 }
 
 // Update password
-clientSchema.statics.updatePassword = async (details) => {
-  const { _id, password } = details
+clientSchema.statics.updatePassword = async (clientId, details) => {
+  const { password } = details
 
   const hashedPassword = await bcrypt.hash(password, 8)
 
-  const client = await Client.updateOne({ _id }, { password: hashedPassword, reset_token: null })
+  const client = await Client.updateOne({ _id: clientId }, { password: hashedPassword, reset_token: null })
   return client
 }
 

@@ -81,8 +81,8 @@ const createCustomerAddress = async (req, res) => {
 
 const getCustomerAddresses = async (req, res) => {
   try {
-    const customer_id = req.params.customerId
-    const customerAddresses = await CustomerAddress.findCustomerAddresses(customer_id)
+    const customerId = req.params.customerId
+    const customerAddresses = await CustomerAddress.findCustomerAddresses(customerId)
 
     res.status(200).send(customerAddresses)
   } catch (err) {
@@ -92,18 +92,18 @@ const getCustomerAddresses = async (req, res) => {
 
 const getCustomerAddress = async (req, res) => {
   try {
-    const address_id = req.params.addressId
-    const customerAddresses = await CustomerAddress.findCustomerAddress(address_id)
+    const addressId = req.params.addressId
+    const customerAddress = await CustomerAddress.findCustomerAddress(addressId)
 
-    res.status(200).send(customerAddresses)
+    res.status(200).send(customerAddress)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
 const updateCustomerAddress = async (req, res) => {
-  const data = req.body
   const addressId = req.params.addressId
+  const data = req.body
   const { type } = data
 
   if (!type) {
@@ -120,8 +120,9 @@ const updateCustomerAddress = async (req, res) => {
 
   try {
     await CustomerAddress.updateCustomerAddress(addressId, data)
+    const customerAddress = await CustomerAddress.findCustomerAddress(addressId)
 
-    res.status(200).send(data)
+    res.status(200).send(customerAddress)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -129,8 +130,8 @@ const updateCustomerAddress = async (req, res) => {
 
 const deleteCustomerAddress = async (req, res) => {
   try {
-    const address_id = req.params.addressId
-    await CustomerAddress.deleteCustomerAddress(address_id)
+    const addressId = req.params.addressId
+    await CustomerAddress.deleteCustomerAddress(addressId)
 
     res.status(200).send({
       message: 'Customer Address successfully deleted'

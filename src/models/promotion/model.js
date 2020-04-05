@@ -14,10 +14,8 @@ promotionSchema.statics.findPromotion = async (promotionId) => {
 }
 
 // Update promotion
-promotionSchema.statics.updatePromotion = async (promotionDetails) => {
-  const { _id } = promotionDetails
-
-  const promotion = await Promotion.updateOne({ _id }, promotionDetails)
+promotionSchema.statics.updatePromotion = async (promotionId, promotionDetails) => {
+  const promotion = await Promotion.updateOne({ _id: promotionId }, promotionDetails)
   return promotion
 }
 

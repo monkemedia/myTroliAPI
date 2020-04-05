@@ -65,8 +65,9 @@ const updateCountry = async (req, res) => {
 
   try {
     await Country.updateCountry(countryId, data)
+    const country = await Country.findOne({ _id: countryId })
 
-    res.status(200).send(data)
+    res.status(200).send(country)
   } catch (err) {
     res.status(400).send(err)
   }

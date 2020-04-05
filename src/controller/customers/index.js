@@ -94,8 +94,9 @@ const updateCustomer = async (req, res) => {
 
   try {
     await Customer.updateCustomer(customerId, data)
-    delete data.password
-    res.status(200).send(data)
+    const customer = await Customer.findOne({ _id: customerId }).select('-password')
+
+    res.status(200).send(customer)
   } catch (err) {
     res.status(400).send(err)
   }
