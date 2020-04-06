@@ -75,15 +75,27 @@ const orderSchema = new Schema({
       type: String,
       required: true
     },
+    company_name: {
+      type: String,
+      default: ''
+    },
     line_1: {
       type: String,
       required: true
+    },
+    line_2: {
+      type: String,
+      default: ''
     },
     city: {
       type: String,
       required: true
     },
     postcode: {
+      type: String,
+      required: true
+    },
+    country: {
       type: String,
       required: true
     },
@@ -94,6 +106,10 @@ const orderSchema = new Schema({
     email: {
       type: String,
       required: true
+    },
+    telephone: {
+      type: String,
+      default: ''
     }
   },
   shipping_address: {
@@ -107,7 +123,7 @@ const orderSchema = new Schema({
     },
     company_name: {
       type: String,
-      required: false
+      default: ''
     },
     line_1: {
       type: String,
@@ -115,7 +131,7 @@ const orderSchema = new Schema({
     },
     line_2: {
       type: String,
-      required: false
+      default: ''
     },
     city: {
       type: String,
@@ -125,9 +141,21 @@ const orderSchema = new Schema({
       type: String,
       required: true
     },
+    country: {
+      type: String,
+      required: true
+    },
     country_code: {
       type: String,
       required: true
+    },
+    email: {
+      type: String,
+      required: true
+    },
+    telephone: {
+      type: String,
+      default: ''
     }
   },
   products: [{

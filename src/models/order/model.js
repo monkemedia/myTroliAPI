@@ -8,18 +8,26 @@ orderSchema.plugin(AutoIncrement, {
   start_seq: 100
 })
 
+async function updateProductStock (product, quantity) {
+  const productId = product._id
+  const currentStock = product.stock
+  const newStock = currentStock - quantity
+  const updateProduct = await Product.updateOne({ _id: productId }, {
+    stock: newStock
+  })
+
+  return updateProduct
+}
+
 async function stockCheckMethod (order) {
   const promise = await order.products.map(async (orderProduct) => {
     const productId = orderProduct.product_id
     const product = await Product.findOne({ _id: productId })
 
-    console.log(orderProduct.quantity)
-    console.log(product.stock)
-
     if (orderProduct.quantity > product.stock) {
       return false
     }
-
+    await updateProductStock(product, orderProduct.quantity)
     return true
   })
 
