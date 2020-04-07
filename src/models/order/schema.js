@@ -159,13 +159,32 @@ const orderSchema = new Schema({
     }
   },
   products: [{
-    product_id: {
+    _id: false,
+    id: {
+      type: String,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    sku: {
       type: String,
       required: true
     },
     quantity: {
       type: Number,
       required: true
+    },
+    price: {
+      amount: {
+        type: Number,
+        default: 0
+      },
+      currency: {
+        type: String,
+        default: 'GBP'
+      }
     }
   }]
 }, { versionKey: false })
