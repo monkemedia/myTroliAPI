@@ -177,14 +177,8 @@ const orderSchema = new Schema({
       required: true
     },
     price: {
-      amount: {
-        type: Number,
-        default: 0
-      },
-      currency: {
-        type: String,
-        default: 'GBP'
-      }
+      type: Number,
+      default: 0
     }
   }]
 }, { versionKey: false })
