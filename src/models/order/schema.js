@@ -18,15 +18,27 @@ const orderSchema = new Schema({
     type: Number,
     default: 0
   },
-  subtotal: {
+  subtotal_exc_tax: {
     type: Number,
     default: 0
   },
-  total: {
+  subtotal_inc_tax: {
     type: Number,
     default: 0
   },
-  shipping_cost: {
+  total_exc_tax: {
+    type: Number,
+    default: 0
+  },
+  total_inc_tax: {
+    type: Number,
+    default: 0
+  },
+  shipping_cost_exc_tax: {
+    type: Number,
+    default: 0
+  },
+  shipping_cost_inc_tax: {
     type: Number,
     default: 0
   },
