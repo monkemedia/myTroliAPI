@@ -172,7 +172,7 @@ const orderSchema = new Schema({
   },
   products: [{
     _id: false,
-    id: {
+    product_id: {
       type: String,
       required: true
     },
@@ -195,7 +195,24 @@ const orderSchema = new Schema({
     price_exc_tax: {
       type: Number,
       default: 0
-    }
+    },
+    product_options: [
+      {
+        _id: false,
+        variant_id: {
+          type: String,
+          required: true
+        },
+        display_name: {
+          type: String,
+          required: true
+        },
+        display_value: {
+          type: String,
+          required: true
+        }
+      }
+    ]
   }]
 }, { versionKey: false })
 
