@@ -32,11 +32,19 @@ const productSchema = Schema({
     type: String,
     required: true
   },
-  price: {
+  price_exc_tax: {
     type: Object,
     required: true
   },
-  sale_price: {
+  price_inc_tax: {
+    type: Object,
+    required: true
+  },
+  sale_price_exc_tax: {
+    type: Object,
+    required: false
+  },
+  sale_price_inc_tax: {
     type: Object,
     required: false
   },

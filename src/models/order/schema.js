@@ -176,7 +176,11 @@ const orderSchema = new Schema({
       type: Number,
       required: true
     },
-    price: {
+    price_inc_tax: {
+      type: Number,
+      default: 0
+    },
+    price_exc_tax: {
       type: Number,
       default: 0
     }
