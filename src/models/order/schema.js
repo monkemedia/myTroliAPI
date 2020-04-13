@@ -48,11 +48,15 @@ const orderSchema = new Schema({
   },
   payment_method: {
     type: String,
-    default: 0
+    default: ''
   },
   payment_provider_id: {
     type: String,
-    default: 0
+    default: ''
+  },
+  payment_status: {
+    type: String,
+    default: ''
   },
   refunded_amount: {
     type: Number,
@@ -193,6 +197,14 @@ const orderSchema = new Schema({
       default: 0
     },
     price_exc_tax: {
+      type: Number,
+      default: 0
+    },
+    is_refunded: {
+      type: Boolean,
+      default: false
+    },
+    refund_amount: {
       type: Number,
       default: 0
     },
