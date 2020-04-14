@@ -60,8 +60,17 @@ const createCustomer = async (req, res) => {
 }
 
 const getCustomers = async (req, res) => {
+  const query = req.query.query
+  const page = parseInt(req.query.page) || 1
+  const limit = parseInt(req.query.limit) || 20
+  let customers
+
   try {
-    const customers = await Customer.findCustomers()
+    if (query) {
+      customers = await Customer.search({ page, query })
+    } else {
+      customers = await Customer.findCustomers({ page, limit })
+    }
 
     res.status(200).send(customers)
   } catch (err) {
