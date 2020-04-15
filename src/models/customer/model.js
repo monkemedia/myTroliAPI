@@ -63,12 +63,21 @@ customerSchema.statics.search = async ({ query }) => {
       },
       {
         $match: {
-          name: {
-            $regex: regex
-          }
+          $or: [
+            {
+              name: {
+                $regex: regex
+              }
+            },
+            {
+              email: {
+                $regex: regex
+              }
+            }
+          ]
         }
       }
-    ]) // .select('-password')
+    ])
 
   return customers
 }
