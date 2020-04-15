@@ -49,13 +49,26 @@ customerSchema.statics.findCustomers = async ({ page, limit }) => {
 
 // Search products by Name or SKU
 customerSchema.statics.search = async ({ query }) => {
-  const customers = await Customer.find({
-    $or: [
-      { email: { $regex: query, $options: 'i' } },
-      { first_name: { $regex: query, $options: 'i' } },
-      { last_name: { $regex: query, $options: 'i' } }
-    ]
-  }).select('-password')
+  console.log('query', query)
+  const regex = new RegExp(query, 'i')
+  const customers = await Customer
+    .aggregate([
+      {
+        $project: {
+          name: {
+            $concat: ['$first_name', ' ', '$last_name']
+          },
+          email: 1
+        }
+      },
+      {
+        $match: {
+          name: {
+            $regex: regex
+          }
+        }
+      }
+    ]) // .select('-password')
 
   return customers
 }
