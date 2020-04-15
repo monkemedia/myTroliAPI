@@ -49,8 +49,7 @@ customerSchema.statics.findCustomers = async ({ page, limit }) => {
 
 // Search products by Name or SKU
 customerSchema.statics.search = async ({ query }) => {
-  console.log('query', query)
-  const regex = new RegExp(query, 'i')
+  const regex = new RegExp(decodeURIComponent(query), 'i')
   const customers = await Customer
     .aggregate([
       {
