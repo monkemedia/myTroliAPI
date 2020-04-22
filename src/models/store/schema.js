@@ -26,6 +26,10 @@ const storeSchema = new Schema({
     type: String,
     required: false
   },
+  country_code: {
+    type: String,
+    required: false
+  },
   phone: {
     type: String,
     required: false
