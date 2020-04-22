@@ -32,12 +32,8 @@ async function stockCheckMethod (order) {
     // Check to see if its a variant first
     if (orderProduct.product_options.length > 0) {
       orderProduct.product_options.map(async (po) => {
-        console.log('PO', po)
         const productVariant = await ProductVariants.findOne({ _id: po.variant_id })
-        console.log('THE VARIANT', productVariant.stock)
-        console.log('quantity', orderProduct.quantity)
         if (orderProduct.quantity > productVariant.stock) {
-          console.log('monkey')
           return false
         }
         await updateProductStock(productVariant._id, productVariant.stock, orderProduct.quantity, true)
@@ -45,7 +41,6 @@ async function stockCheckMethod (order) {
         // console.log('UPDATE PRODUCT VARIANT STOCK')
       })
     } else {
-      console.log('NOT HERE')
       const productId = orderProduct.product_id
       const product = await Product.findOne({ _id: productId })
 

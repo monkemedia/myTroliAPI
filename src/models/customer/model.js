@@ -25,20 +25,70 @@ customerSchema.methods.generateAccessToken = async function () {
 }
 
 // Get customers
-customerSchema.statics.findCustomers = async () => {
-  const customers = await Customer.find({}).select('-password')
+customerSchema.statics.findCustomers = async ({ page, limit }) => {
+  const customers = await Customer
+    .find({})
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .select('-password')
+
+  const total = await Customer.countDocuments()
+  return {
+    data: customers,
+    meta: {
+      pagination: {
+        current: page,
+        total: customers.length
+      },
+      results: {
+        total
+      }
+    }
+  }
+}
+
+// Search products by Name or SKU
+customerSchema.statics.search = async ({ query }) => {
+  const regex = new RegExp(decodeURIComponent(query), 'i')
+  const customers = await Customer
+    .aggregate([
+      {
+        $project: {
+          name: {
+            $concat: ['$first_name', ' ', '$last_name']
+          },
+          email: 1
+        }
+      },
+      {
+        $match: {
+          $or: [
+            {
+              name: {
+                $regex: regex
+              }
+            },
+            {
+              email: {
+                $regex: regex
+              }
+            }
+          ]
+        }
+      }
+    ])
 
   return customers
 }
 
-// Search for a customer by email address
+// Find customer by email address
 customerSchema.statics.findByEmail = async (email) => {
   const customer = await Customer.findOne({ email }).select('-password')
 
   return customer
 }
 
-// Search for a customer by email and password
+// Find customer by email and password
 customerSchema.statics.findByCredentials = async (email, password) => {
   const customer = await Customer.findOne({ email }).select('-password')
 
