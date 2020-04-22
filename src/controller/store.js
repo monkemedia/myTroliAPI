@@ -33,7 +33,6 @@ const getStore = async (req, res) => {
 }
 
 const updateStore = async (req, res) => {
-  const storeId = req.params.storeId
   const data = req.body
   const { type } = data
 
@@ -50,8 +49,8 @@ const updateStore = async (req, res) => {
   }
 
   try {
-    await Store.updateStore(storeId, data)
-    const store = await Store.findOne({ _id: storeId })
+    await Store.updateStore(data)
+    const store = await Store.findOne()
 
     res.status(200).send(store)
   } catch (err) {
@@ -61,9 +60,7 @@ const updateStore = async (req, res) => {
 
 const deleteStore = async (req, res) => {
   try {
-    const storeId = req.params.storeId
-
-    await Store.deleteStore(storeId)
+    await Store.deleteStore()
 
     res.status(200).send({
       message: 'Store successfully deleted'

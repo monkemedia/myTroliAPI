@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 const storeSchema = require('./schema.js')
 
 // Update store
-storeSchema.statics.updateStore = async (_id, storeDetails) => {
-  const store = await Store.updateOne({ _id }, storeDetails)
+storeSchema.statics.updateStore = async (storeDetails) => {
+  const store = await Store.updateOne({}, storeDetails)
   return store
 }
 
 // Delete store
-storeSchema.statics.deleteStore = async (_id) => {
-  const store = await Store.deleteOne({ _id })
+storeSchema.statics.deleteStore = async () => {
+  const store = await Store.deleteOne()
   return store
 }
 
