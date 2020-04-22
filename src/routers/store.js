@@ -11,7 +11,7 @@ const {
 // Create store
 router.post('/store', (req, res) => createStore(req, res))
 // Get store
-router.get('/store/:storeId', auth, (req, res) => getStore(req, res))
+router.get('/store', auth, (req, res) => getStore(req, res))
 // Update store
 router.put('/store/:storeId', auth, (req, res) => updateStore(req, res))
 // Delete store

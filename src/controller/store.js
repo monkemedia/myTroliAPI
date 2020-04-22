@@ -27,8 +27,7 @@ const createStore = async (req, res) => {
 }
 
 const getStore = async (req, res) => {
-  const storeId = req.params.storeId
-  const store = await Store.findOne({ _id: storeId })
+  const store = await Store.findOne()
 
   res.status(200).send(store)
 }
