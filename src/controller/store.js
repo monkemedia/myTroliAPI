@@ -4,6 +4,15 @@ const createStore = async (req, res) => {
   const data = req.body
   const { type } = data
 
+  // Lets see if a store already exists
+  const store = await Store.findOne()
+
+  if (store) {
+    return res.status(401).send({
+      message: 'There is already a store'
+    })
+  }
+
   if (!type) {
     return res.status(401).send({
       message: 'Type is required'
