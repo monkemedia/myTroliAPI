@@ -121,9 +121,9 @@ const orderSchema = new Schema({
     },
     email: {
       type: String,
-      required: true
+      default: ''
     },
-    telephone: {
+    phone_number: {
       type: String,
       default: ''
     }
@@ -167,9 +167,9 @@ const orderSchema = new Schema({
     },
     email: {
       type: String,
-      required: true
+      default: ''
     },
-    telephone: {
+    phone_number: {
       type: String,
       default: ''
     }
