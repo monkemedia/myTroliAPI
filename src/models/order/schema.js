@@ -180,6 +180,10 @@ const orderSchema = new Schema({
       type: String,
       required: true
     },
+    variant_id: {
+      type: String,
+      default: null
+    },
     name: {
       type: String,
       required: true
@@ -211,10 +215,6 @@ const orderSchema = new Schema({
     product_options: [
       {
         _id: false,
-        variant_id: {
-          type: String,
-          required: true
-        },
         display_name: {
           type: String,
           required: true

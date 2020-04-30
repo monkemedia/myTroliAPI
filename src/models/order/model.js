@@ -9,17 +9,16 @@ orderSchema.plugin(AutoIncrement, {
   start_seq: 100
 })
 
-async function updateProductStock (id, stock, quantity, isVariant = false) {
-  const currentStock = stock
-  const newStock = currentStock - quantity
+async function decreaseProductStock ({ productId, variantId, currentStock, qty }) {
+  const newStock = currentStock - qty
   let update
 
-  if (!isVariant) {
-    update = await Product.updateOne({ _id: id }, {
+  if (productId) {
+    update = await Product.updateOne({ _id: productId }, {
       stock: newStock
     })
   } else {
-    update = await ProductVariants.updateOne({ _id: id }, {
+    update = await ProductVariants.updateOne({ _id: variantId }, {
       stock: newStock
     })
   }
@@ -27,45 +26,93 @@ async function updateProductStock (id, stock, quantity, isVariant = false) {
   return update
 }
 
-async function stockCheckMethod (order) {
-  const promise = await order.products.map(async (orderProduct) => {
-    // Check to see if its a variant first
-    if (orderProduct.product_options.length > 0) {
-      orderProduct.product_options.map(async (po) => {
-        const productVariant = await ProductVariants.findOne({ _id: po.variant_id })
-        if (orderProduct.quantity > productVariant.stock) {
-          return false
-        }
-        await updateProductStock(productVariant._id, productVariant.stock, orderProduct.quantity, true)
-        return true
-        // console.log('UPDATE PRODUCT VARIANT STOCK')
-      })
-    } else {
-      const productId = orderProduct.product_id
-      const product = await Product.findOne({ _id: productId })
-
-      if (orderProduct.quantity > product.stock) {
-        return false
-      }
-      await updateProductStock(product._id, product.stock, orderProduct.quantity)
-      return true
-    }
-  })
-
-  return Promise.all(promise)
-  // const product = await Product.findOne({ _id: productId })
+async function stockLevelHandler (product) {
+  // Does product have options
+  const variantId = product.variant_id
+  const productId = product.product_id
+  const productOptions = product.product_options
+  if (variantId) {
+    return productOptions.map(async () => {
+      const productVariant = await ProductVariants.findOne({ _id: variantId })
+      return productVariant.stock
+    })
+  }
+  // Product doesn't have options
+  const prod = await Product.findOne({ _id: productId })
+  return prod.stock
 }
+
+// async function changeProductStock (id, stock, quantity, isVariant = false) {
+//   const currentStock = stock
+//   const newStock = currentStock - quantity
+//   let update
+
+//   if (!isVariant) {
+//     update = await Product.updateOne({ _id: id }, {
+//       stock: newStock
+//     })
+//   } else {
+//     update = await ProductVariants.updateOne({ _id: id }, {
+//       stock: newStock
+//     })
+//   }
+
+//   return update
+// }
+
+// async function stockCheckMethod (order) {
+//   const promise = await order.products.map(async (orderProduct) => {
+//     // Check to see if its a variant first
+//     if (orderProduct.product_options.length > 0) {
+//       orderProduct.product_options.map(async (po) => {
+//         const productVariant = await ProductVariants.findOne({ _id: po.variant_id })
+//         if (orderProduct.quantity > productVariant.stock) {
+//           return false
+//         }
+//         await changeProductStock(productVariant._id, productVariant.stock, orderProduct.quantity, true)
+//         return true
+//       })
+//     } else {
+//       const productId = orderProduct.product_id
+//       const product = await Product.findOne({ _id: productId })
+
+//       if (orderProduct.quantity > product.stock) {
+//         return false
+//       }
+//       await changeProductStock(product._id, product.stock, orderProduct.quantity)
+//       return true
+//     }
+//   })
+
+//   return Promise.all(promise)
+//   // const product = await Product.findOne({ _id: productId })
+// }
 
 // Check stock before creating order
 orderSchema.pre('save', async function (next) {
   const order = this
-  const stockCheck = await stockCheckMethod(order)
-  console.log(stockCheck)
-  const outOfStock = stockCheck.includes(false)
-  if (outOfStock) {
-    throw new Error('Out of stock')
-  }
-  next()
+  const orderProducts = order.products
+
+  const promise = await orderProducts.map(async orderProduct => {
+    const productId = orderProduct.product_id
+    const productName = orderProduct.name
+    const variantId = orderProduct.variant_id
+    const orderQty = orderProduct.quantity
+    const stockLevel = await stockLevelHandler(orderProduct)
+    if (orderQty > stockLevel) {
+      throw new Error(`Product \`${productName}\` is out of stock`)
+    }
+    // There is enough stock, so decrease stock
+    decreaseProductStock({
+      currentStock: stockLevel,
+      qty: orderQty,
+      variantId,
+      productId
+    })
+    next()
+  })
+
+  await Promise.all(promise)
 })
 
 // Get orders
@@ -105,6 +152,7 @@ orderSchema.statics.search = async ({ page, query }) => {
 
 // Update order
 orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
+  // const currentOrderQty =
   const order = await Order.updateOne({ id: orderId }, orderDetails)
   return order
 }
