@@ -13,12 +13,12 @@ async function updateProductStock ({ productId, variantId, currentStock, qty }, 
   const newStock = direction === 'decrease' ? currentStock - qty : currentStock + qty
   let update
 
-  if (productId) {
-    update = await Product.updateOne({ _id: productId }, {
+  if (variantId && productId) {
+    update = await ProductVariants.updateOne({ _id: variantId }, {
       stock: newStock
     })
   } else {
-    update = await ProductVariants.updateOne({ _id: variantId }, {
+    update = await Product.updateOne({ _id: productId }, {
       stock: newStock
     })
   }
@@ -30,13 +30,11 @@ async function stockLevelHandler (product) {
   // Does product have options
   const variantId = product.variant_id
   const productId = product.product_id
-  const productOptions = product.product_options
-  if (variantId) {
-    return productOptions.map(async () => {
-      const productVariant = await ProductVariants.findOne({ _id: variantId })
-      return productVariant.stock
-    })
+  if (productId && variantId) {
+    const productVariant = await ProductVariants.findOne({ _id: variantId })
+    return productVariant.stock
   }
+
   // Product doesn't have options
   const prod = await Product.findOne({ _id: productId })
   return prod.stock
@@ -56,6 +54,7 @@ orderSchema.pre('save', async function (next) {
     if (orderQty > stockLevel) {
       throw new Error(`Product \`${productName}\` is out of stock`)
     }
+
     // There is enough stock, so decrease stock
     updateProductStock({
       currentStock: stockLevel,
