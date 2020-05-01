@@ -9,8 +9,8 @@ orderSchema.plugin(AutoIncrement, {
   start_seq: 100
 })
 
-async function decreaseProductStock ({ productId, variantId, currentStock, qty }) {
-  const newStock = currentStock - qty
+async function updateProductStock ({ productId, variantId, currentStock, qty }, direction) {
+  const newStock = direction === 'decrease' ? currentStock - qty : currentStock + qty
   let update
 
   if (productId) {
@@ -42,52 +42,6 @@ async function stockLevelHandler (product) {
   return prod.stock
 }
 
-// async function changeProductStock (id, stock, quantity, isVariant = false) {
-//   const currentStock = stock
-//   const newStock = currentStock - quantity
-//   let update
-
-//   if (!isVariant) {
-//     update = await Product.updateOne({ _id: id }, {
-//       stock: newStock
-//     })
-//   } else {
-//     update = await ProductVariants.updateOne({ _id: id }, {
-//       stock: newStock
-//     })
-//   }
-
-//   return update
-// }
-
-// async function stockCheckMethod (order) {
-//   const promise = await order.products.map(async (orderProduct) => {
-//     // Check to see if its a variant first
-//     if (orderProduct.product_options.length > 0) {
-//       orderProduct.product_options.map(async (po) => {
-//         const productVariant = await ProductVariants.findOne({ _id: po.variant_id })
-//         if (orderProduct.quantity > productVariant.stock) {
-//           return false
-//         }
-//         await changeProductStock(productVariant._id, productVariant.stock, orderProduct.quantity, true)
-//         return true
-//       })
-//     } else {
-//       const productId = orderProduct.product_id
-//       const product = await Product.findOne({ _id: productId })
-
-//       if (orderProduct.quantity > product.stock) {
-//         return false
-//       }
-//       await changeProductStock(product._id, product.stock, orderProduct.quantity)
-//       return true
-//     }
-//   })
-
-//   return Promise.all(promise)
-//   // const product = await Product.findOne({ _id: productId })
-// }
-
 // Check stock before creating order
 orderSchema.pre('save', async function (next) {
   const order = this
@@ -103,12 +57,12 @@ orderSchema.pre('save', async function (next) {
       throw new Error(`Product \`${productName}\` is out of stock`)
     }
     // There is enough stock, so decrease stock
-    decreaseProductStock({
+    updateProductStock({
       currentStock: stockLevel,
       qty: orderQty,
       variantId,
       productId
-    })
+    }, 'decrease')
     next()
   })
 
@@ -153,6 +107,51 @@ orderSchema.statics.search = async ({ page, query }) => {
 // Update order
 orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
   // const currentOrderQty =
+  const orderProducts = orderDetails.products
+
+  if (orderProducts) {
+    const promise = await orderProducts.map(async orderProduct => {
+      const storedOrder = await Order.findOne({ id: orderId })
+      const storedOrderProduct = storedOrder.products.find((order) => {
+        return order._id.toString() === orderProduct._id
+      })
+      const storedOrderProductQty = storedOrderProduct.quantity
+      const orderQty = orderProduct.quantity
+      const productName = orderProduct.name
+      const productId = orderProduct.product_id
+      const variantId = orderProduct.variant_id
+      const stockLevel = await stockLevelHandler(orderProduct)
+
+      // Quantity can not be 0 {
+      if (orderQty === '' || orderQty === 0) {
+        throw new Error(`Product \`${productName}\` quantity needs to be a valid amount`)
+      }
+
+      // Client has decreased order quantity, so increase stock level
+      if (orderQty < storedOrderProductQty) {
+        const stockToAdd = storedOrderProductQty - orderQty
+        updateProductStock({
+          currentStock: stockLevel,
+          qty: stockToAdd,
+          variantId,
+          productId
+        }, 'increase')
+      } else if (orderQty > storedOrderProductQty) {
+        const stockToRemove = orderQty - storedOrderProductQty
+        if (stockToRemove > stockLevel) {
+          throw new Error(`Product \`${productName}\` is out of stock`)
+        }
+        updateProductStock({
+          currentStock: stockLevel,
+          qty: stockToRemove,
+          variantId,
+          productId
+        }, 'decrease')
+      }
+    })
+
+    await Promise.all(promise)
+  }
   const order = await Order.updateOne({ id: orderId }, orderDetails)
   return order
 }

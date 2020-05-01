@@ -175,7 +175,6 @@ const orderSchema = new Schema({
     }
   },
   products: [{
-    _id: false,
     product_id: {
       type: String,
       required: true
