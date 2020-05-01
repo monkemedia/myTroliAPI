@@ -114,7 +114,7 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
       const storedOrderProduct = storedOrder.products.find((order) => {
         return order._id.toString() === orderProduct._id
       })
-      const storedOrderProductQty = storedOrderProduct.quantity
+      const storedOrderProductQty = storedOrderProduct ? storedOrderProduct.quantity : 0
       const orderQty = orderProduct.quantity
       const productName = orderProduct.name
       const productId = orderProduct.product_id
