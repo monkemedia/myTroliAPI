@@ -30,6 +30,10 @@ const storeSchema = new Schema({
     type: String,
     required: false
   },
+  country: {
+    type: String,
+    required: false
+  },
   phone: {
     type: String,
     required: false
@@ -43,8 +47,16 @@ const storeSchema = new Schema({
     required: false
   },
   is_price_entered_with_tax: {
+    type: Boolean,
+    required: false
+  },
+  tax_label: {
     type: String,
     required: false
+  },
+  tax_percentage: {
+    type: Number,
+    default: 0
   },
   language: {
     type: String,

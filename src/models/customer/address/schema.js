@@ -42,6 +42,10 @@ const customerAddressSchema = new Schema({
     type: String,
     required: true
   },
+  country: {
+    type: String,
+    required: true
+  },
   phone_number: {
     type: String,
     required: false
