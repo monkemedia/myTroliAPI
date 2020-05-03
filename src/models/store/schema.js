@@ -42,6 +42,10 @@ const storeSchema = new Schema({
     type: String,
     required: false
   },
+  is_price_entered_with_tax: {
+    type: String,
+    required: false
+  },
   language: {
     type: String,
     required: false
