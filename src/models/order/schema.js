@@ -195,13 +195,17 @@ const orderSchema = new Schema({
       type: Number,
       required: true
     },
-    price_inc_tax: {
+    price: {
       type: Number,
       default: 0
     },
-    price_exc_tax: {
+    sale_price: {
       type: Number,
       default: 0
+    },
+    on_sale: {
+      type: Boolean,
+      default: false
     },
     is_refunded: {
       type: Boolean,

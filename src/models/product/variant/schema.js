@@ -14,6 +14,10 @@ const productVariantSchema = new Schema({
     type: Object,
     required: true
   },
+  on_sale: {
+    type: Boolean,
+    default: false
+  },
   stock: {
     type: Number,
     default: 0
