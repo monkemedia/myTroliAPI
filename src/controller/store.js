@@ -36,9 +36,12 @@ const createStore = async (req, res) => {
 }
 
 const getStore = async (req, res) => {
-  const store = await Store.findOne()
-
-  res.status(200).send(store)
+  try {
+    const store = await Store.findOne()
+    res.status(200).send(store)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 }
 
 const updateStore = async (req, res) => {
