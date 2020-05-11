@@ -54,6 +54,7 @@ const productSchema = Schema({
       ref: 'ProductImage'
     }
   ],
+  has_variants: false,
   created_at: {
     type: Date,
     default: Date.now
