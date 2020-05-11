@@ -1,5 +1,5 @@
 
-const stripe = require('stripe')(process.env.STRIPE_PUBLISHABLE_KEY)
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 const errorHandler = require('../../utils/errorHandler')
 
 const createPayment = async (req, res) => {
@@ -8,7 +8,8 @@ const createPayment = async (req, res) => {
     type,
     amount,
     currency,
-    email
+    receipt_email,
+    source
   } = data
 
   if (!type) {
@@ -25,9 +26,8 @@ const createPayment = async (req, res) => {
 
   try {
     const chargeCustomer = await stripe.charges.create({
-      description: 'Sample Charge',
-      receipt_email: email,
-      source: 'tok_visa',
+      source,
+      receipt_email,
       currency,
       amount
     })
