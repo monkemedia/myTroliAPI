@@ -3,8 +3,9 @@ const errorHandler = require('../utils/errorHandler')
 
 const auth = async (req, res, next) => {
   let token = req.header('Authorization')
+  const tokenString = token.split(' ')[1]
 
-  if (!token) {
+  if (!token || tokenString === 'undefined' || !tokenString) {
     return res.status(401).send(errorHandler(401, 'Token is required'))
   }
 

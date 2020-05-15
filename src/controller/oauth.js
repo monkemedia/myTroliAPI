@@ -2,6 +2,9 @@ const jwt = require('jsonwebtoken')
 const Client = require('../models/client')
 const emailTemplate = require('../utils/emailTemplate')
 
+const accessTokenTime = '24hr'
+const refreshTokenTime = '48hr'
+
 const refreshToken = async (req, res) => {
   try {
     const { grant_type, refresh_token } = req.body
@@ -41,8 +44,8 @@ const refreshToken = async (req, res) => {
     try {
       jwt.verify(client.refresh_token, process.env.API_SECRET)
 
-      const accessToken = await client.generateToken()
-      const refreshToken = await client.generateToken('48hrs')
+      const accessToken = await client.generateToken(accessTokenTime)
+      const refreshToken = await client.generateToken(refreshTokenTime)
 
       client.refresh_token = refreshToken
       await client.save()
@@ -106,8 +109,8 @@ const login = async (req, res) => {
     }
 
     const client = await Client.findByCredentials(email, password)
-    const accessToken = await client.generateToken('1hr')
-    const refreshToken = await client.generateToken('24hr')
+    const accessToken = await client.generateToken(accessTokenTime)
+    const refreshToken = await client.generateToken(refreshTokenTime)
 
     client.refresh_token = refreshToken
     await client.save()
