@@ -215,6 +215,10 @@ const orderSchema = new Schema({
       type: Number,
       default: 0
     },
+    refund_reason: {
+      type: String,
+      default: ''
+    },
     product_options: [
       {
         _id: false,
