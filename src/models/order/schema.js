@@ -42,6 +42,10 @@ const orderSchema = new Schema({
     type: Number,
     default: 0
   },
+  refunded_shipping: {
+    type: Boolean,
+    default: false
+  },
   currency_code: {
     type: String,
     default: 'GBP'
