@@ -54,7 +54,12 @@ const productSchema = Schema({
       ref: 'ProductImage'
     }
   ],
-  has_variants: false,
+  variants: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductVariants'
+    }
+  ],
   created_at: {
     type: Date,
     default: Date.now

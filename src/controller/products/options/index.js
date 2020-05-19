@@ -1,5 +1,4 @@
 const ProductOption = require('../../../models/product/option/index.js')
-const Product = require('../../../models/product')
 
 const createProductOption = async (req, res) => {
   const data = req.body
@@ -38,10 +37,6 @@ const createProductOption = async (req, res) => {
     var productOption = new ProductOption({
       ...data,
       product_id: productId
-    })
-
-    await Product.updateProduct(productId, {
-      has_variants: true
     })
 
     const savedProductOptions = await productOption.save()
@@ -104,13 +99,6 @@ const deleteProductOption = async (req, res) => {
   const optionId = req.params.optionId
   try {
     await ProductOption.deleteProductOption(productId, optionId)
-    const productOptions = await await ProductOption.findProductOptions(productId)
-
-    if (productOptions.length === 0) {
-      await Product.updateProduct(productId, {
-        has_variants: false
-      })
-    }
 
     res.status(200).send({
       message: 'Product variant option successfully deleted'

@@ -194,7 +194,7 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const _id = req.params.productId
-  const product = await Product.findById({ _id }).populate('images')
+  const product = await Product.findById({ _id }).populate('images variants')
 
   res.status(200).send(product)
 }
@@ -218,7 +218,7 @@ const updateProduct = async (req, res) => {
 
   try {
     await Product.updateProduct(productId, data)
-    const product = await Product.findById({ _id: productId }).populate('images')
+    const product = await Product.findById({ _id: productId }).populate('images variants')
 
     res.status(200).send(product)
   } catch (err) {

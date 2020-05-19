@@ -207,10 +207,6 @@ const orderSchema = new Schema({
       type: Boolean,
       default: false
     },
-    is_refunded: {
-      type: Boolean,
-      default: false
-    },
     refund_amount: {
       type: Number,
       default: 0
