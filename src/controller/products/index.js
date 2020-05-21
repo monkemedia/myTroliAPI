@@ -1,3 +1,4 @@
+
 const Product = require('../../models/product')
 const currencySymbol = require('currency-symbol-map')
 const errorHandler = require('../../utils/errorHandler')
@@ -193,8 +194,8 @@ const getProducts = async (req, res) => {
 }
 
 const getProduct = async (req, res) => {
-  const _id = req.params.productId
-  const product = await Product.findById({ _id }).populate('images variants')
+  const productId = req.params.productId
+  const product = await Product.findProduct(productId)
 
   res.status(200).send(product)
 }

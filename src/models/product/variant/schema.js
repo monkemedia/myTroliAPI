@@ -22,10 +22,10 @@ const productVariantSchema = new Schema({
     type: Number,
     default: 0
   },
-  image_url: {
-    type: String,
-    default: ''
-  },
+  images: [{
+    type: Schema.Types.ObjectId,
+    ref: 'ProductVariantImage'
+  }],
   sort_order: {
     type: Number,
     default: 0
