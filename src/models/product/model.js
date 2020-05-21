@@ -35,7 +35,7 @@ productSchema.statics.findProducts = async ({ page, limit }) => {
   const products = await Product
     .find({})
     .sort('-created_at')
-    .populate('images')
+    .populate('images variants')
     .skip((page - 1) * limit)
     .limit(limit)
   const total = await Product.countDocuments()
@@ -60,7 +60,7 @@ productSchema.statics.search = async ({ page, query }) => {
       { name: { $regex: query, $options: 'i' } },
       { sku: { $regex: query, $options: 'i' } }
     ]
-  }).populate('images')
+  }).populate('images variants')
 
   return products
 }

@@ -1,5 +1,6 @@
 const ProductVariant = require('../../../models/product/variant/index.js')
 const ProductOption = require('../../../models/product/option/index.js')
+const Product = require('../../../models/product')
 
 const createProductVariant = async (req, res) => {
   const data = req.body
@@ -63,6 +64,12 @@ const createProductVariant = async (req, res) => {
     const savedProductOption = new ProductVariant(product)
 
     await savedProductOption.save()
+
+    const actualProduct = await Product.findById(productId)
+
+    actualProduct.variants.push(savedProductOption)
+
+    await actualProduct.save()
 
     res.status(201).send(savedProductOption)
   } catch (err) {
@@ -145,8 +152,15 @@ const updateProductVariant = async (req, res) => {
 const deleteProductVariant = async (req, res) => {
   try {
     const variantId = req.params.variantId
+    const productId = req.params.productId
 
     await ProductVariant.deleteProductVariant(variantId)
+
+    const actualProduct = await Product.findById(productId)
+
+    actualProduct.variants.pull(variantId)
+
+    await actualProduct.save()
 
     res.status(200).send({
       message: 'Product variant successfully deleted'
