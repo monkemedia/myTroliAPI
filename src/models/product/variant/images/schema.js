@@ -15,6 +15,10 @@ const productVariantImageSchema = new Schema({
     type: String,
     required: true
   },
+  image_url: {
+    type: String,
+    required: true
+  },
   variant_id: {
     type: String,
     required: true
