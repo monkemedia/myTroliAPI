@@ -88,10 +88,12 @@ productSchema.statics.updateProduct = async (productId, productDetails) => {
     ...productDetails
   }
 
-  await Product
-    .updateOne({ _id: productId }, data)
+  await Product.updateOne({ _id: productId }, data)
+  const product = await Product
+    .findOne({ _id: productId })
     .populate('images')
     .deepPopulate('variants.images')
+  return product
 }
 
 // Delete product by id

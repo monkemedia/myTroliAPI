@@ -218,8 +218,7 @@ const updateProduct = async (req, res) => {
   }
 
   try {
-    await Product.updateProduct(productId, data)
-    const product = await Product.findById({ _id: productId }).populate('images variants')
+    const product = await Product.updateProduct(productId, data)
 
     res.status(200).send(product)
   } catch (err) {

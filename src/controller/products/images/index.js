@@ -87,7 +87,7 @@ const getProductImages = async (req, res) => {
 const getProductImage = async (req, res) => {
   const productId = req.params.productId
   const imageId = req.params.imageId
-  const productImage = await ProductImage.findOption(productId, imageId)
+  const productImage = await ProductImage.findImage(productId, imageId)
 
   res.status(200).send(productImage)
 }
