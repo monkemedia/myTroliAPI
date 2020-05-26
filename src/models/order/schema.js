@@ -219,6 +219,10 @@ const orderSchema = new Schema({
       type: String,
       default: ''
     },
+    images: {
+      type: Array,
+      default: []
+    },
     product_options: [
       {
         _id: false,

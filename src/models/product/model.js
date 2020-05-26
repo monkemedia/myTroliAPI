@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 // const currencySymbol = require('currency-symbol-map')
+const deepPopulate = require('mongoose-deep-populate')(mongoose)
 const productSchema = require('./schema')
+
+productSchema.plugin(deepPopulate)
 
 // function formatCurrency (amount, currency) {
 //   return currencySymbol(currency) + amount
@@ -35,7 +38,8 @@ productSchema.statics.findProducts = async ({ page, limit }) => {
   const products = await Product
     .find({})
     .sort('-created_at')
-    .populate('images variants')
+    .populate('images')
+    .deepPopulate('variants.images')
     .skip((page - 1) * limit)
     .limit(limit)
   const total = await Product.countDocuments()
@@ -55,19 +59,25 @@ productSchema.statics.findProducts = async ({ page, limit }) => {
 
 // Search products by Name or SKU
 productSchema.statics.search = async ({ page, query }) => {
-  const products = await Product.find({
-    $or: [
-      { name: { $regex: query, $options: 'i' } },
-      { sku: { $regex: query, $options: 'i' } }
-    ]
-  }).populate('images variants')
+  const products = await Product
+    .find({
+      $or: [
+        { name: { $regex: query, $options: 'i' } },
+        { sku: { $regex: query, $options: 'i' } }
+      ]
+    })
+    .populate('images')
+    .deepPopulate('variants.images')
 
   return products
 }
 
 // Get product
 productSchema.statics.findProduct = async (_id) => {
-  const product = await Product.findOne({ _id })
+  const product = await Product
+    .findOne({ _id })
+    .populate('images')
+    .deepPopulate('variants.images')
   return product
 }
 
@@ -78,7 +88,12 @@ productSchema.statics.updateProduct = async (productId, productDetails) => {
     ...productDetails
   }
 
-  await Product.updateOne({ _id: productId }, data).populate('images')
+  await Product.updateOne({ _id: productId }, data)
+  const product = await Product
+    .findOne({ _id: productId })
+    .populate('images')
+    .deepPopulate('variants.images')
+  return product
 }
 
 // Delete product by id

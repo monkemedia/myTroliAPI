@@ -91,7 +91,9 @@ const getProductVariants = async (req, res) => {
 const getProductVariant = async (req, res) => {
   const variantId = req.params.variantId
   const productId = req.params.productId
-  const productVariant = await ProductVariant.findOne({ _id: variantId, product_id: productId })
+  const productVariant = await ProductVariant
+    .findOne({ _id: variantId, product_id: productId })
+    .populate('images')
 
   res.status(200).send(productVariant)
 }
@@ -141,7 +143,9 @@ const updateProductVariant = async (req, res) => {
     product.option_values = results
 
     await ProductVariant.updateProductVariant(variantId, product)
-    const productVariant = await ProductVariant.findOne({ _id: variantId, product_id: productId })
+    const productVariant = await ProductVariant
+      .findOne({ _id: variantId, product_id: productId })
+      .populate('images')
 
     res.status(200).send(productVariant)
   } catch (err) {

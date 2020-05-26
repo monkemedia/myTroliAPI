@@ -1,5 +1,6 @@
 const ProductImage = require('../../../models/product/images')
 const Product = require('../../../models/product')
+const Image = require('../../../models/image')
 
 const createProductImage = async (req, res) => {
   const data = req.body
@@ -87,7 +88,7 @@ const getProductImages = async (req, res) => {
 const getProductImage = async (req, res) => {
   const productId = req.params.productId
   const imageId = req.params.imageId
-  const productImage = await ProductImage.findOption(productId, imageId)
+  const productImage = await ProductImage.findImage(productId, imageId)
 
   res.status(200).send(productImage)
 }
@@ -112,7 +113,7 @@ const updateProductImage = async (req, res) => {
 
   try {
     await ProductImage.updateProductImage(productId, imageId, data)
-    const productImage = await ProductImage.findOption(productId, imageId)
+    const productImage = await ProductImage.findProductImage(productId, imageId)
 
     res.status(200).send(productImage)
   } catch (err) {
@@ -139,9 +140,10 @@ const deleteProductImage = async (req, res) => {
   try {
     const product = await Product.findById(productId)
     const promise = await data.map(async obj => {
-      console.log('delete', obj)
-      await ProductImage.deleteImage(obj.image_id)
-      await product.images.pull(obj.image_id)
+      // Delete image from uploadcare first
+      await Image.deleteImage(obj.image_id)
+      await ProductImage.deleteImage(obj._id)
+      await product.images.pull(obj._id)
     })
 
     await Promise.all(promise)

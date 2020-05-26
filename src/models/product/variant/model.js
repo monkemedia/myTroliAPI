@@ -3,7 +3,10 @@ const productVariantSchema = require('./schema')
 
 // Get product variants
 productVariantSchema.statics.findProductVariants = async (productId) => {
-  const productVariants = await ProductVariants.find({ product_id: productId }).sort({ sort_order: 1 })
+  const productVariants = await ProductVariants
+    .find({ product_id: productId })
+    .sort({ sort_order: 1 })
+    .populate('images')
 
   return productVariants
 }
