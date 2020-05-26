@@ -23,17 +23,9 @@ const productVariantImageSchema = new Schema({
     type: String,
     required: true
   },
-  sort_order: {
-    type: Number,
-    default: 0
-  },
   description: {
     type: String,
     default: ''
-  },
-  is_thumbnail: {
-    type: Boolean,
-    default: false
   }
 }, { versionKey: false })
 

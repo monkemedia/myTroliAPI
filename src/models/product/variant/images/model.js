@@ -23,9 +23,9 @@ productVariantImageSchema.statics.findProductVariantImagesByQuery = async (produ
 }
 
 // Update product variant images
-productVariantImageSchema.statics.updateProductVariantImage = async (productId, variantId, imageId, data) => {
+productVariantImageSchema.statics.updateProductVariantImage = async (productId, variantId, data) => {
   const productVariantImage = await ProductVariantImage.updateOne({
-    _id: imageId,
+    _id: data._id,
     product_id: productId,
     variant_id: variantId
   }, data)
@@ -39,8 +39,9 @@ productVariantImageSchema.statics.findProductVariantImage = async (productId, va
 }
 
 // Delete file
-productVariantImageSchema.statics.deleteImage = async (_id) => {
-  const image = await ProductVariantImage.deleteOne({ _id })
+productVariantImageSchema.statics.deleteImage = async (id) => {
+  console.log('ID', id)
+  const image = await ProductVariantImage.deleteOne({ _id: id })
   return image
 }
 

@@ -101,7 +101,7 @@ const updateProductVariantImage = async (req, res) => {
   const { type } = data
   const productId = req.params.productId
   const variantId = req.params.variantId
-  const imageId = req.params.imageId
+  const imageId = data._id
 
   if (!type) {
     return res.status(401).send({
@@ -116,7 +116,7 @@ const updateProductVariantImage = async (req, res) => {
   }
 
   try {
-    await ProductVariantImage.updateProductVariantImage(productId, variantId, imageId, data)
+    await ProductVariantImage.updateProductVariantImage(productId, variantId, data)
     const productVariantImage = await ProductVariantImage.findProductVariantImage(productId, variantId, imageId)
 
     res.status(200).send(productVariantImage)
@@ -127,31 +127,30 @@ const updateProductVariantImage = async (req, res) => {
 
 const deleteProductVariantImage = async (req, res) => {
   const data = req.body
+  console.log('data', data)
+  const { type } = data
   const productId = req.params.productId
   const variantId = req.params.variantId
 
-  if (data.some(val => !val.type)) {
+  if (!type) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (data.some(val => val.type !== 'product-variant-image')) {
+  if (type !== 'product-variant-image') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
   try {
+    await ProductVariantImage.deleteImage(data._id)
     const productVariant = await ProductVariant.findOne({ _id: variantId, product_id: productId })
-    const promise = await data.map(async obj => {
-      await ProductVariantImage.deleteImage(obj.image_id)
-      await productVariant.images.pull(obj.image_id)
-    })
-
-    await Promise.all(promise)
-
-    productVariant.save()
+    if (productVariant) {
+      await productVariant.images.pull(data._id)
+      productVariant.save()
+    }
 
     res.status(200).send({
       message: 'Product variant image successfully deleted'
