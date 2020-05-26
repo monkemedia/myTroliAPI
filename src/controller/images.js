@@ -1,9 +1,7 @@
-
-const uploadcare = require('uploadcare')(process.env.UPLOADCARE_PUBLIC_KEY, process.env.UPLOADCARE_PRIVATE_KEY)
-const fs = require('fs')
+const Image = require('../models/image')
 const errorHandler = require('../utils/errorHandler')
 
-const uploadImage = (req, res) => {
+const uploadImage = async (req, res) => {
   const image = req.file
   const type = req.body.type
 
@@ -26,71 +24,55 @@ const uploadImage = (req, res) => {
   }
 
   // Upload image to uploadcare
-  uploadcare.file.upload(fs.createReadStream(image.path), (error, response) => {
-    if (error) {
-      return res.status(401).send(errorHandler(401, error))
-    }
+  try {
+    const images = await Image.createImage(image)
 
-    // Get image data
-    uploadcare.files.info(response.file, (err, info) => {
-      if (err) {
-        return res.status(401).send(errorHandler(401, error))
-      }
-
-      // Remove image from upload directory
-      fs.unlink(image.path, (er) => {
-        if (er) {
-          return res.status(401).send(errorHandler(401, er))
-        }
-        return res.status(201).send(info)
-      })
-    })
-  })
+    res.status(200).send(images)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 }
 
-const getImages = (req, res) => {
-  uploadcare.files.list({ page: 1, limit: 100 }, (err, info) => {
-    if (err) {
-      return res.status(401).send(errorHandler(401, err))
-    }
-    return res.status(201).send(info)
-  })
+const getImages = async (req, res) => {
+  try {
+    const images = await Image.findImages()
+
+    res.status(200).send(images)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 }
 
-const getImage = (req, res) => {
+const getImage = async (req, res) => {
   const image = req.params.imageId
 
-  uploadcare.files.info(image, (err, info) => {
-    if (err) {
-      return res.status(401).send(errorHandler(401, err))
-    }
-    return res.status(201).send(info)
-  })
+  try {
+    const images = await Image.findImage(image)
+
+    res.status(200).send(images)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 }
 
-const deleteImage = (req, res) => {
+const deleteImage = async (req, res) => {
   const image = req.params.imageId
 
-  uploadcare.files.remove(image, (err, info) => {
-    if (err) {
-      return res.status(401).send(errorHandler(401, err))
-    }
-    return res.status(201).send({ message: 'Image has been deleted' })
-  })
+  try {
+    const images = await Image.deleteImage(image)
+
+    res.status(200).send(images)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 }
 
 const storeImages = async (req, res) => {
   const images = req.body
 
-  const promises = images.map(async (id) => {
-    return new Promise((resolve, reject) => {
-      return uploadcare.files.store(id, (err, info) => {
-        if (err) {
-          reject(new Error(err))
-        }
-        resolve(info)
-      })
-    })
+  const promises = images.map(async (images) => {
+    const image = await Image.storeImage(images)
+    return image
   })
 
   try {
