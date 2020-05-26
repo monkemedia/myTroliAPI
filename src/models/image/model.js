@@ -49,16 +49,10 @@ imageSchema.statics.findImage = async (image) => {
 // Store Image
 imageSchema.statics.storeImage = async (image) => {
   return new Promise((resolve, reject) => {
-    return uploadcare.files.store(image.uuid, (err, info) => {
+    return uploadcare.files.store(image, (err, info) => {
       err ? reject(err) : resolve(info)
     })
   })
-}
-
-// Update category
-imageSchema.statics.updateImage = async (categoryId, categoryDetails) => {
-  const image = await Image.updateOne({ _id: imageId }, imageDetails)
-  return image
 }
 
 // Delete image

@@ -1,5 +1,6 @@
 const ProductVariantImage = require('../../../../models/product/variant/images')
 const ProductVariant = require('../../../../models/product/variant')
+const Image = require('../../../../models/image')
 
 const createProductVariantImage = async (req, res) => {
   const data = req.body
@@ -148,6 +149,7 @@ const deleteProductVariantImage = async (req, res) => {
     await ProductVariantImage.deleteImage(data._id)
     const productVariant = await ProductVariant.findOne({ _id: variantId, product_id: productId })
     if (productVariant) {
+      await Image.delete(data.image_id)
       await productVariant.images.pull(data._id)
       productVariant.save()
     }
