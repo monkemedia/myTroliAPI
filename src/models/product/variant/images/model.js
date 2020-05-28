@@ -40,7 +40,6 @@ productVariantImageSchema.statics.findProductVariantImage = async (productId, va
 
 // Delete file
 productVariantImageSchema.statics.deleteImage = async (id) => {
-  console.log('ID', id)
   const image = await ProductVariantImage.deleteOne({ _id: id })
   return image
 }
