@@ -47,8 +47,17 @@ const createCategory = async (req, res) => {
 }
 
 const getCategories = async (req, res) => {
+  const query = req.query.query
+  const page = parseInt(req.query.page) || 1
+  const limit = parseInt(req.query.limit) || 20
+  let categories
+
   try {
-    const categories = await Category.findCategories()
+    if (query) {
+      categories = await Category.search({ page, query })
+    } else {
+      categories = await Category.findCategories({ page, limit })
+    }
 
     res.status(200).send(categories)
   } catch (err) {
