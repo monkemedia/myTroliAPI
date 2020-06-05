@@ -10,10 +10,12 @@ const productCategorySchema = new Schema({
     type: String,
     required: true
   },
-  categories: {
-    type: Array,
-    unique: true
-  }
+  categories: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Category'
+    }
+  ]
 }, { versionKey: false })
 
 module.exports = productCategorySchema

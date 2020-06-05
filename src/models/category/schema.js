@@ -19,6 +19,10 @@ const categorySchema = new Schema({
     type: String,
     required: false
   },
+  parent_id: {
+    type: String,
+    default: null
+  },
   status: {
     type: Object,
     required: false
