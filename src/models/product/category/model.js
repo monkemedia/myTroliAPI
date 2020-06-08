@@ -8,7 +8,6 @@ productCategorySchema.plugin(uniqueArrayPlugin)
 productCategorySchema.statics.findProductCategories = async (id) => {
   const productCategory = await ProductCategory
     .find({ 'data.category_id': id })
-    .populate('categories')
   return productCategory
 }
 
@@ -16,7 +15,6 @@ productCategorySchema.statics.findProductCategories = async (id) => {
 productCategorySchema.statics.findProductCategory = async (productId) => {
   const productCategory = await ProductCategory
     .findOne({ product_id: productId })
-    .populate('categories')
   return productCategory
 }
 
