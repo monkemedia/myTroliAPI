@@ -2,22 +2,22 @@ const express = require('express')
 const router = express.Router()
 const auth = require('../middleware/auth')
 const {
-  createCountries,
-  getCountries,
-  getCountry,
-  updateCountry,
-  deleteCountry
-} = require('../controller/countries.js')
+  createCurrencies,
+  getCurrencies,
+  getCurrency,
+  updateCurrency,
+  deleteCurrency
+} = require('../controller/currencies.js')
 
-// Create countries
-router.post('/countries', auth, (req, res) => createCountries(req, res))
-// Get countries
-router.get('/countries', auth, (req, res) => getCountries(req, res))
-// Get country
-router.get('/countries/:countryId', auth, (req, res) => getCountry(req, res))
-// Update country
-router.put('/countries/:countryId', auth, (req, res) => updateCountry(req, res))
-// Delete country
-router.delete('/countries/:countryId', auth, (req, res) => deleteCountry(req, res))
+// Create currencies
+router.post('/currencies', auth, (req, res) => createCurrencies(req, res))
+// Get currencies
+router.get('/currencies', auth, (req, res) => getCurrencies(req, res))
+// Get currency
+router.get('/currencies/:currencyId', auth, (req, res) => getCurrency(req, res))
+// Update currency
+router.put('/currencies/:currencyId', auth, (req, res) => updateCurrency(req, res))
+// Delete currency
+router.delete('/currencies/:currencyId', auth, (req, res) => deleteCurrency(req, res))
 
 module.exports = router
