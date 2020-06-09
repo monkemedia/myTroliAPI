@@ -20,5 +20,14 @@ module.exports = {
       Subject: 'Confirm email address',
       TextBody: `Richard Roberts, You must confirm your ${data.email} email before you can sign in (link is only valid once): ${textBodyUrl}`
     })
+  },
+
+  orderInvoice: async (data) => {
+    await postmarkClient.sendEmail({
+      From: process.env.EMAIL_ADDRESS,
+      To: data.email,
+      Subject: 'Order invoice',
+      TextBody: 'Thank you for your order'
+    })
   }
 }

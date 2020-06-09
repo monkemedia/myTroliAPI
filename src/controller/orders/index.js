@@ -1,8 +1,9 @@
 const Order = require('../../models/order/index.js')
+const emailTemplate = require('../../utils/emailTemplate')
 
 const createOrder = async (req, res) => {
   const data = req.body
-  const { type, products, billing_address, shipping_address } = data
+  const { type, products, billing_address, shipping_address, send_invoice } = data
 
   if (!type) {
     return res.status(401).send({
@@ -43,6 +44,12 @@ const createOrder = async (req, res) => {
 
     await order.save()
 
+    if (send_invoice) {
+      await emailTemplate.orderInvoice({
+        email: billing_address.email
+      })
+    }
+
     res.status(201).send(order)
   } catch (err) {
     let error = {}
@@ -79,7 +86,8 @@ const getOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
   const orderId = req.params.orderId
   const data = req.body
-  const { type } = data
+  const { type, billing_address, status_id } = data
+  const currentOrder = await Order.findOne({ id: req.params.orderId })
 
   if (!type) {
     return res.status(401).send({
@@ -96,6 +104,13 @@ const updateOrder = async (req, res) => {
   try {
     await Order.updateOrder(orderId, data)
     const order = await Order.findOne({ id: orderId })
+
+    if (currentOrder.status_id !== status_id) {
+      // Status Id has changed so email customer
+      await emailTemplate.orderInvoice({
+        email: billing_address ? billing_address.email : order.billing_address.email
+      })
+    }
 
     res.status(200).send(order)
   } catch (err) {
