@@ -15,6 +15,24 @@ const createCurrencies = async (req, res) => {
     })
   }
 
+  if (data.some(val => !val.name)) {
+    return res.status(401).send({
+      message: 'Name is required'
+    })
+  }
+
+  if (data.some(val => !val.currency_code)) {
+    return res.status(401).send({
+      message: 'Currency code is required'
+    })
+  }
+
+  if (data.some(val => !val.currency_symbol)) {
+    return res.status(401).send({
+      message: 'Currency symbol is required'
+    })
+  }
+
   try {
     const promise = data.map(async obj => {
       const currency = new Currency(obj)

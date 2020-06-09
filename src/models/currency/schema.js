@@ -13,7 +13,12 @@ const currencySchema = new Schema({
   currency_code: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    uppercase: true
+  },
+  currency_symbol: {
+    type: String,
+    required: true
   },
   enabled: {
     type: Boolean,
