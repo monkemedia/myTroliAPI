@@ -29,5 +29,15 @@ module.exports = {
       Subject: 'Order invoice',
       TextBody: 'Thank you for your order'
     })
+  },
+
+  verifyEmailAddress: async (data) => {
+    const textBodyUrl = `${process.env.WEB_ADDRESS}/verify/${data.token}`
+    await postmarkClient.sendEmail({
+      From: process.env.EMAIL_ADDRESS,
+      To: data.email,
+      Subject: 'Verify email address',
+      TextBody: `${data.name}, please confirm you email address ${textBodyUrl}`
+    })
   }
 }

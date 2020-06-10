@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken')
 const Customer = require('../../models/customer')
+const emailTemplate = require('../../utils/emailTemplate')
 
 const createCustomer = async (req, res) => {
   try {
@@ -50,8 +52,14 @@ const createCustomer = async (req, res) => {
     }
 
     const customer = new Customer(data)
-
+    const token = await customer.generateVerifyToken('1hr')
+    customer.verify_token = token
     await customer.save()
+    await emailTemplate.verifyEmailAddress({
+      name: `${first_name} ${last_name}`,
+      email,
+      token
+    })
 
     res.status(201).send(customer)
   } catch (err) {
@@ -123,10 +131,57 @@ const deleteCustomer = async (req, res) => {
   }
 }
 
+const verifyCustomer = async (req, res) => {
+  try {
+    const { type, verify_token } = req.body
+
+    if (!type) {
+      return res.status(401).send({
+        message: 'Type is required'
+      })
+    }
+
+    if (type !== 'verify_customer') {
+      return res.status(401).send({
+        message: 'Correct Type is required'
+      })
+    }
+
+    try {
+      jwt.verify(verify_token, process.env.VERIFY_SECRET)
+
+      const customer = await Customer.verifyToken(verify_token)
+
+      if (!customer) {
+        // customer doesn't exist but we can't tell users that
+        return res.status(401).send({
+          message: 'Customer does\'t exist'
+        })
+      }
+
+      res.status(200).send({
+        message: 'Email address has been verified'
+      })
+    } catch (err) {
+      if (err.message === 'jwt expired') {
+        return res.status(401).send({
+          message: 'Token has expired'
+        })
+      }
+      return res.status(401).send({
+        message: 'Token is incorrect'
+      })
+    }
+  } catch (err) {
+    res.status(err.status).send(err)
+  }
+}
+
 module.exports = {
   createCustomer,
   getCustomers,
   getCustomer,
   updateCustomer,
-  deleteCustomer
+  deleteCustomer,
+  verifyCustomer
 }

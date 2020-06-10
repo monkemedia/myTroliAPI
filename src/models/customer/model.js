@@ -14,6 +14,16 @@ customerSchema.pre('save', async function (next) {
   next()
 })
 
+// Generate customer verify token
+customerSchema.methods.generateVerifyToken = async function (expiresIn) {
+  const customer = this
+  const verifyToken = jwt.sign({
+    email: customer.email
+  }, process.env.VERIFY_SECRET, { expiresIn: expiresIn || '24hrs' })
+
+  return verifyToken
+}
+
 // Generate an auth token for customer
 customerSchema.methods.generateAccessToken = async function () {
   const customer = this
@@ -85,6 +95,15 @@ customerSchema.statics.search = async ({ query }) => {
 customerSchema.statics.findByEmail = async (email) => {
   const customer = await Customer.findOne({ email }).select('-password')
 
+  return customer
+}
+
+// Find customer by verify token
+customerSchema.statics.verifyToken = async (verify_token) => {
+  const customer = await Customer.updateOne({ verify_token }, {
+    verified: true,
+    verify_token: null
+  }).select('-password')
   return customer
 }
 

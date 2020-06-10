@@ -6,7 +6,8 @@ const {
   getCustomers,
   getCustomer,
   updateCustomer,
-  deleteCustomer
+  deleteCustomer,
+  verifyCustomer
 } = require('../../controller/customers')
 
 // Create customer
@@ -19,5 +20,7 @@ router.get('/customers/:customerId', auth, (req, res) => getCustomer(req, res))
 router.put('/customers/:customerId', auth, (req, res) => updateCustomer(req, res))
 // Delete customer
 router.delete('/customers/:customerId', auth, (req, res) => deleteCustomer(req, res))
+// Verify customer email address
+router.post('/customers/verify', (req, res) => verifyCustomer(req, res))
 
 module.exports = router
