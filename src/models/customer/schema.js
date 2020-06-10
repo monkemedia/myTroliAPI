@@ -16,6 +16,14 @@ const customerSchema = new Schema({
     type: String,
     required: true
   },
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  verify_token: {
+    type: String,
+    default: null
+  },
   email: {
     type: String,
     required: true,
