@@ -131,6 +131,41 @@ const deleteCustomer = async (req, res) => {
   }
 }
 
+const resendVerificationEmail = async (req, res) => {
+  try {
+    const data = req.body
+    const { type, first_name, last_name, email } = data
+
+    if (!type) {
+      return res.status(401).send({
+        message: 'Type is required'
+      })
+    }
+
+    if (type !== 'customer') {
+      return res.status(401).send({
+        message: 'Correct Type is required'
+      })
+    }
+
+    const customer = await Customer.findOne({ _id: req.params.customerId }).select('-password')
+    const token = await customer.generateVerifyToken('1hr')
+
+    customer.verify_token = token
+    await customer.save()
+    await emailTemplate.verifyEmailAddress({
+      name: `${first_name} ${last_name}`,
+      email,
+      token
+    })
+    res.status(200).send({
+      message: 'Verification email successfully sent'
+    })
+  } catch (err) {
+    res.status(err.status).send(err)
+  }
+}
+
 const verifyCustomer = async (req, res) => {
   try {
     const { type, verify_token } = req.body
@@ -183,5 +218,6 @@ module.exports = {
   getCustomer,
   updateCustomer,
   deleteCustomer,
+  resendVerificationEmail,
   verifyCustomer
 }

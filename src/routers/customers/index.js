@@ -7,6 +7,7 @@ const {
   getCustomer,
   updateCustomer,
   deleteCustomer,
+  resendVerificationEmail,
   verifyCustomer
 } = require('../../controller/customers')
 
@@ -20,6 +21,8 @@ router.get('/customers/:customerId', auth, (req, res) => getCustomer(req, res))
 router.put('/customers/:customerId', auth, (req, res) => updateCustomer(req, res))
 // Delete customer
 router.delete('/customers/:customerId', auth, (req, res) => deleteCustomer(req, res))
+// Resend verification email
+router.post('/customers/resend/:customerId', auth, (req, res) => resendVerificationEmail(req, res))
 // Verify customer email address
 router.post('/customers/verify', (req, res) => verifyCustomer(req, res))
 
