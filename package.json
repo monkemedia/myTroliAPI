@@ -4,7 +4,8 @@
   "description": "My Troli API",
   "scripts": {
     "test": "npm run test",
-    "start": "env-cmd -f ./.env nodemon src/app.js"
+    "start": "env-cmd -f ./.env nodemon src/app.js",
+    "heroku-postbuild": "npm run build"
   },
   "repository": {
     "type": "git",
