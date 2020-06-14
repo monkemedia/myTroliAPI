@@ -5,7 +5,6 @@
   "scripts": {
     "test": "npm run test",
     "start": "NODE_ENV=development nodemon src/app.js",
-    "production": "NODE_ENV=production nodemon src/app.js",
     "heroku-postbuild": "npm run build"
   },
   "repository": {
