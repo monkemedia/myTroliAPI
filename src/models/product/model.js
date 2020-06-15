@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-// const currencySymbol = require('currency-symbol-map')
 const deepPopulate = require('mongoose-deep-populate')(mongoose)
 const productSchema = require('./schema')
 

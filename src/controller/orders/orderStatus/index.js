@@ -2,44 +2,46 @@ const OrderStatus = require('../../../models/order/orderStatus/index.js')
 
 const createOrderStatus = async (req, res) => {
   const data = req.body
-  const { type, status_id, name, value } = data
 
-  if (!type) {
+  if (data.some(val => !val.type)) {
     return res.status(401).send({
       message: 'Type is required'
     })
   }
 
-  if (type && type !== 'order-status') {
+  if (data.some(val => val.type !== 'order-status')) {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
-  if (isNaN(status_id)) {
+  if (data.some(val => isNaN(val.status_id))) {
     return res.status(401).send({
       message: 'Status ID is required'
     })
   }
 
-  if (!name) {
+  if (data.some(val => !val.name)) {
     return res.status(401).send({
       message: 'Name is required'
     })
   }
 
-  if (!value) {
+  if (data.some(val => !val.value)) {
     return res.status(401).send({
       message: 'Value is required'
     })
   }
 
   try {
-    const orderStatus = new OrderStatus(data)
+    const promise = data.map(async obj => {
+      const orderStatus = new OrderStatus(obj)
+      const save = await orderStatus.save()
+      return save
+    })
+    const savedOrderStatuses = await Promise.all(promise)
 
-    await orderStatus.save()
-
-    res.status(201).send(orderStatus)
+    res.status(201).send(savedOrderStatuses)
   } catch (err) {
     res.status(400).send(err)
   }
