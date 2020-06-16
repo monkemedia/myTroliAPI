@@ -4,34 +4,6 @@ const productSchema = require('./schema')
 
 productSchema.plugin(deepPopulate)
 
-// function formatCurrency (amount, currency) {
-//   return currencySymbol(currency) + amount
-// }
-
-// function updateMeta (product, amount, currency, stock) {
-//   return {
-//     display_price: {
-//       currency,
-//       formatted: formatCurrency(amount, currency)
-//     },
-//     stock: {
-//       level: product.stock,
-//       availability: stock === 0 ? 'out-stock' : 'in-stock'
-//     }
-//   }
-// }
-
-// Add meta data before saving
-// productSchema.pre('save', async function (next) {
-//   const product = this
-//   const amount = product.price.amount
-//   const currency = product.price.currency
-//   const stock = product.stock
-
-//   product.meta = updateMeta(product, amount, currency, stock)
-//   next()
-// })
-
 // Get all products
 productSchema.statics.findProducts = async ({ page, limit }) => {
   const products = await Product
@@ -57,18 +29,33 @@ productSchema.statics.findProducts = async ({ page, limit }) => {
 }
 
 // Search products by Name or SKU
-productSchema.statics.search = async ({ page, query }) => {
+productSchema.statics.search = async ({ page, limit, query }) => {
+  const searchQuery = {
+    $or: [
+      { name: { $regex: query, $options: 'i' } },
+      { sku: { $regex: query, $options: 'i' } }
+    ]
+  }
   const products = await Product
-    .find({
-      $or: [
-        { name: { $regex: query, $options: 'i' } },
-        { sku: { $regex: query, $options: 'i' } }
-      ]
-    })
+    .find(searchQuery)
+    .skip((page - 1) * limit)
+    .limit(limit)
     .populate('images')
     .deepPopulate('variants.images')
 
-  return products
+  const total = await Product.countDocuments(searchQuery)
+  return {
+    data: products,
+    meta: {
+      pagination: {
+        current: page,
+        total: products.length
+      },
+      results: {
+        total: total
+      }
+    }
+  }
 }
 
 // Get product

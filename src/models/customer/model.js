@@ -57,38 +57,36 @@ customerSchema.statics.findCustomers = async ({ page, limit }) => {
   }
 }
 
-// Search products by Name or SKU
-customerSchema.statics.search = async ({ query }) => {
-  const regex = new RegExp(decodeURIComponent(query), 'i')
+// Search customers by name or email address
+customerSchema.statics.search = async ({ query, page, limit }) => {
+  const searchString = new RegExp(decodeURIComponent(query), 'i')
+  const searchQuery = {
+    fullname: { $concat: ['$first_name', ' ', '$last_name'] },
+    first_name: 1,
+    last_name: 1,
+    email: 1
+  }
+  const searchArray = { $or: [{ fullname: searchString }, { email: searchString }] }
   const customers = await Customer
-    .aggregate([
-      {
-        $project: {
-          name: {
-            $concat: ['$first_name', ' ', '$last_name']
-          },
-          email: 1
-        }
-      },
-      {
-        $match: {
-          $or: [
-            {
-              name: {
-                $regex: regex
-              }
-            },
-            {
-              email: {
-                $regex: regex
-              }
-            }
-          ]
-        }
-      }
-    ])
+    .aggregate()
+    .project(searchQuery)
+    .match(searchArray)
+    .skip((page - 1) * limit)
+    .limit(limit)
 
-  return customers
+  const total = await Customer.countDocuments(searchArray)
+  return {
+    data: customers,
+    meta: {
+      pagination: {
+        current: page,
+        total: customers.length
+      },
+      results: {
+        total: total
+      }
+    }
+  }
 }
 
 // Find customer by email address

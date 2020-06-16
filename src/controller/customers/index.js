@@ -75,7 +75,7 @@ const getCustomers = async (req, res) => {
 
   try {
     if (query) {
-      customers = await Customer.search({ page, query })
+      customers = await Customer.search({ page, limit, query })
     } else {
       customers = await Customer.findCustomers({ page, limit })
     }

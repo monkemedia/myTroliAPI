@@ -24,15 +24,30 @@ categorySchema.statics.findCategories = async ({ page, limit }) => {
 }
 
 // Search categories by name
-categorySchema.statics.search = async ({ query }) => {
+categorySchema.statics.search = async ({ page, limit, query }) => {
+  const searchArray = [
+    { name: { $regex: query, $options: 'i' } },
+    { slug: { $regex: query, $options: 'i' } }
+  ]
   const categories = await Category
-    .find({
-      $or: [
-        { name: { $regex: query, $options: 'i' } }
-      ]
-    })
+    .find()
+    .or(searchArray)
+    .skip((page - 1) * limit)
+    .limit(limit)
 
-  return categories
+  const total = await Category.countDocuments(searchArray)
+  return {
+    data: categories,
+    meta: {
+      pagination: {
+        current: page,
+        total: categories.length
+      },
+      results: {
+        total: total
+      }
+    }
+  }
 }
 
 // Update category

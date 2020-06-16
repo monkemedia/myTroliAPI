@@ -183,7 +183,7 @@ const getProducts = async (req, res) => {
     let products
 
     if (query) {
-      products = await Product.search({ page, query })
+      products = await Product.search({ page, query, limit })
     } else {
       products = await Product.findProducts({ page, limit })
     }

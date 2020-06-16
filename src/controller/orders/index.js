@@ -66,7 +66,7 @@ const getOrders = async (req, res) => {
     let orders
 
     if (query) {
-      orders = await Order.search({ page, query })
+      orders = await Order.search({ page, query, limit })
     } else {
       orders = await Order.findOrders({ page, limit })
     }

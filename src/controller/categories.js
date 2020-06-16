@@ -54,7 +54,7 @@ const getCategories = async (req, res) => {
 
   try {
     if (query) {
-      categories = await Category.search({ page, query })
+      categories = await Category.search({ page, limit, query })
     } else {
       categories = await Category.findCategories({ page, limit })
     }

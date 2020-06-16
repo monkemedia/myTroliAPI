@@ -91,16 +91,33 @@ orderSchema.statics.findOrders = async ({ page, limit }) => {
   }
 }
 
-// Search orders by Name or SKU
-orderSchema.statics.search = async ({ page, query }) => {
-  const orders = await Order.find({
-    $or: [
-      { name: { $regex: query, $options: 'i' } },
-      { sku: { $regex: query, $options: 'i' } }
-    ]
-  })
+// Search orders by order id or customer name
+orderSchema.statics.search = async ({ page, query, limit }) => {
+  const searchString = new RegExp(decodeURIComponent(query), 'i')
+  const searchQuery = {
+    fullname: { $concat: ['$billing_address.first_name', ' ', '$billing_address.last_name'] }
+  }
+  const searchArray = { $or: [{ fullname: searchString }, { id: parseInt(query) || null }] }
+  const orders = await Order
+    .aggregate()
+    .addFields(searchQuery)
+    .match(searchArray)
+    .skip((page - 1) * limit)
+    .limit(limit)
 
-  return orders
+  const total = await Order.countDocuments(searchArray)
+  return {
+    data: orders,
+    meta: {
+      pagination: {
+        current: page,
+        total: orders.length
+      },
+      results: {
+        total: total
+      }
+    }
+  }
 }
 
 // Update order
