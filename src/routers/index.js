@@ -10,6 +10,7 @@ const categories = require('./categories.js')
 const variations = require('./variations.js')
 const store = require('./store.js')
 const shippingAddress = require('./shipping/address/index.js')
+const shippingZone = require('./shipping/zone/index.js')
 const productVariants = require('./products/variants/index.js')
 const productVariantImages = require('./products/variants/images/index.js')
 const productOptions = require('./products/options/index.js')
@@ -32,6 +33,7 @@ router.use(
   variations,
   store,
   shippingAddress,
+  shippingZone,
   productVariants,
   productVariantImages,
   productOptions,
