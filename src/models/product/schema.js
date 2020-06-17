@@ -67,6 +67,34 @@ const productSchema = Schema({
   updated_at: {
     type: Date,
     default: ''
+  },
+  weight: {
+    type: Number,
+    default: null
+  },
+  width: {
+    type: Number,
+    default: null
+  },
+  depth: {
+    type: Number,
+    default: null
+  },
+  height: {
+    type: Number,
+    default: null
+  },
+  fixed_shipping_cost: {
+    type: Number,
+    default: null
+  },
+  is_free_shipping: {
+    type: Boolean,
+    default: false
+  },
+  is_featured: {
+    type: Boolean,
+    default: false
   }
 }, { versionKey: false })
 
