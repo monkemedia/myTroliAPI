@@ -7,7 +7,7 @@ const {
   getShippingZone,
   updateShippingZone,
   deleteShippingZone
-} = require('../../../controller/shipping/zone')
+} = require('../../../controller/shipping/zones')
 
 // Create shipping zone
 router.post('/shipping/zones', auth, (req, res) => createShippingZone(req, res))
