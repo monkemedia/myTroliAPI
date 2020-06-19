@@ -14,10 +14,6 @@ const shippingZoneSchema = new Schema({
     type: String,
     required: true
   },
-  free_shipping: {
-    type: Boolean,
-    default: false
-  },
   enabled: {
     type: Boolean,
     default: false

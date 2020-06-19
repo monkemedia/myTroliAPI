@@ -1,10 +1,7 @@
 const ShippingMethod = require('../../../../models/shipping/zone/methods')
 
 const conditions = [
-  'shipping-preorder',
-  'shipping-peritem',
-  'shipping-weight',
-  'shipping-total'
+  'shipping-method'
 ]
 
 const createShippingMethod = async (req, res) => {
