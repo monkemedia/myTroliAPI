@@ -10,6 +10,7 @@ imageSchema.statics.createImage = async (image) => {
       if (error) {
         reject(error)
       }
+
       // Get image data
       return uploadcare.files.info(res.file, (err, info) => {
         if (err) {
