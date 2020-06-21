@@ -8,11 +8,27 @@ const shippingZoneSchema = new Schema({
   },
   name: {
     type: String,
-    required: true
+    default: null
   },
-  country_code: {
+  price: {
+    type: Number,
+    default: 0
+  },
+  rule: {
     type: String,
-    required: true
+    default: 'flatrate'
+  },
+  zone_id: {
+    type: String,
+    default: null
+  },
+  order_price: {
+    type: Object,
+    required: false
+  },
+  order_weight: {
+    type: Object,
+    required: false
   },
   enabled: {
     type: Boolean,

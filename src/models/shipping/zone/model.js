@@ -13,6 +13,12 @@ shippingZoneSchema.statics.findZone = async (zoneId) => {
   return zone
 }
 
+// Get zone by country code
+shippingZoneSchema.statics.findZoneByCountryCode = async (countryCode) => {
+  const zone = await ShippingZone.findOne({ country_code: countryCode })
+  return zone
+}
+
 // Update zone
 shippingZoneSchema.statics.updateZone = async (zoneId, zoneDetails) => {
   const zone = await ShippingZone.updateOne({ _id: zoneId }, zoneDetails)

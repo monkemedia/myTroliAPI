@@ -28,6 +28,13 @@ const createShippingZone = async (req, res) => {
   }
 
   try {
+    // Check to see if zone already exists
+    const zoneExists = await ShippingZone.findZoneByCountryCode(data.country_code)
+    if (zoneExists) {
+      return res.status(401).send({
+        message: 'Zone already exists'
+      })
+    }
     const shippingZone = new ShippingZone(data)
     const savedShippingZone = await shippingZone.save()
 
