@@ -65,6 +65,10 @@ const storeSchema = new Schema({
   currency_code: {
     type: String,
     required: false
+  },
+  weight_unit: {
+    type: String,
+    required: false
   }
 }, { versionKey: false })
 
