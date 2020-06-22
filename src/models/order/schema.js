@@ -42,6 +42,10 @@ const orderSchema = new Schema({
     type: Number,
     default: 0
   },
+  shipping_method: {
+    type: String,
+    default: ''
+  },
   refunded_shipping: {
     type: Boolean,
     default: false
