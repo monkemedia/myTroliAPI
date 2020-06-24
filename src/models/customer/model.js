@@ -122,6 +122,14 @@ customerSchema.statics.findByCredentials = async (email, password) => {
   return customer
 }
 
+// Get customers count
+customerSchema.statics.getCount = async () => {
+  const total = await Customer.countDocuments()
+  return {
+    count: total
+  }
+}
+
 // Update customer
 customerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
   let { password } = customerDetails
