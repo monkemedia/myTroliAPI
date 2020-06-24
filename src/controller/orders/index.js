@@ -64,12 +64,13 @@ const getOrders = async (req, res) => {
     const page = parseInt(query.page) || 1
     const limit = parseInt(query.limit) || 20
     const keyword = query.keyword
+    const statusId = query.statusId
     let orders
 
     if (keyword) {
       orders = await Order.search({ page, keyword, limit })
     } else {
-      orders = await Order.findOrders({ page, limit, query })
+      orders = await Order.findOrders({ page, limit, statusId })
     }
 
     res.status(200).send(orders)
