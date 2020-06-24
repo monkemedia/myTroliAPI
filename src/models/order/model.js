@@ -70,7 +70,6 @@ orderSchema.pre('save', async function (next) {
 
 // Get orders
 orderSchema.statics.findOrders = async ({ page, limit, statusId }) => {
-  console.log('statusId', statusId)
   const findByStatusId = statusId ? { status_id: statusId } : null
   const orders = await Order
     .find(findByStatusId)
