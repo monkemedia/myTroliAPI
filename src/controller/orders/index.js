@@ -78,7 +78,14 @@ const getOrders = async (req, res) => {
 }
 
 const getOrder = async (req, res) => {
-  const order = await Order.findOne({ id: req.params.orderId })
+  const orderId = req.params.orderId
+
+  let order
+  if (orderId === 'count') {
+    order = await Order.getCount()
+  } else {
+    order = await Order.findOne({ id: req.params.orderId })
+  }
 
   res.status(200).send(order)
 }

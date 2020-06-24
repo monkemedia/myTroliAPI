@@ -91,6 +91,14 @@ orderSchema.statics.findOrders = async ({ page, limit }) => {
   }
 }
 
+// Get orders count
+orderSchema.statics.getCount = async () => {
+  const total = await Order.countDocuments()
+  return {
+    count: total
+  }
+}
+
 // Search orders by order id or customer name
 orderSchema.statics.search = async ({ page, query, limit }) => {
   const searchString = new RegExp(decodeURIComponent(query), 'i')
