@@ -60,15 +60,17 @@ const createOrder = async (req, res) => {
 
 const getOrders = async (req, res) => {
   try {
-    const query = req.query.query
-    const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 20
+    const query = req.query
+    const page = parseInt(query.page) || 1
+    const limit = parseInt(query.limit) || 20
+    const keyword = query.keyword
+    const statusId = query.statusId
     let orders
 
-    if (query) {
-      orders = await Order.search({ page, query, limit })
+    if (keyword) {
+      orders = await Order.search({ page, keyword, limit })
     } else {
-      orders = await Order.findOrders({ page, limit })
+      orders = await Order.findOrders({ page, limit, statusId })
     }
 
     res.status(200).send(orders)
@@ -78,7 +80,14 @@ const getOrders = async (req, res) => {
 }
 
 const getOrder = async (req, res) => {
-  const order = await Order.findOne({ id: req.params.orderId })
+  const orderId = req.params.orderId
+
+  let order
+  if (orderId === 'count') {
+    order = await Order.getCount()
+  } else {
+    order = await Order.findOne({ id: req.params.orderId })
+  }
 
   res.status(200).send(order)
 }

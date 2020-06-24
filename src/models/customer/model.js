@@ -58,8 +58,8 @@ customerSchema.statics.findCustomers = async ({ page, limit }) => {
 }
 
 // Search customers by name or email address
-customerSchema.statics.search = async ({ query, page, limit }) => {
-  const searchString = new RegExp(decodeURIComponent(query), 'i')
+customerSchema.statics.search = async ({ keyword, page, limit }) => {
+  const searchString = new RegExp(decodeURIComponent(keyword), 'i')
   const searchQuery = {
     fullname: { $concat: ['$first_name', ' ', '$last_name'] },
     first_name: 1,
@@ -120,6 +120,14 @@ customerSchema.statics.findByCredentials = async (email, password) => {
   }
 
   return customer
+}
+
+// Get customers count
+customerSchema.statics.getCount = async () => {
+  const total = await Customer.countDocuments()
+  return {
+    count: total
+  }
 }
 
 // Update customer
