@@ -66,7 +66,13 @@ const getCategories = async (req, res) => {
 }
 
 const getCategory = async (req, res) => {
-  const category = await Category.findOne({ _id: req.params.categoryId })
+  const categoryId = req.params.categoryId
+  let category
+  if (categoryId === 'count') {
+    category = await Category.getCount()
+  } else {
+    category = await Category.findOne({ _id: categoryId })
+  }
 
   res.status(200).send(category)
 }

@@ -92,7 +92,7 @@ const getCustomer = async (req, res) => {
   if (customerId === 'count') {
     customer = await Customer.getCount()
   } else {
-    customer = await Customer.findOne({ _id: req.params.customerId }).select('-password')
+    customer = await Customer.findOne({ _id: customerId }).select('-password')
   }
 
   res.status(200).send(customer)
