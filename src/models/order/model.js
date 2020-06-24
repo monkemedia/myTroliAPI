@@ -69,7 +69,7 @@ orderSchema.pre('save', async function (next) {
 })
 
 // Get orders
-orderSchema.statics.findOrders = async ({ page, limit }) => {
+orderSchema.statics.findOrders = async ({ page, limit, query }) => {
   const orders = await Order
     .find({})
     .sort('-date_created')
@@ -100,12 +100,12 @@ orderSchema.statics.getCount = async () => {
 }
 
 // Search orders by order id or customer name
-orderSchema.statics.search = async ({ page, query, limit }) => {
-  const searchString = new RegExp(decodeURIComponent(query), 'i')
+orderSchema.statics.search = async ({ page, keyword, limit }) => {
+  const searchString = new RegExp(decodeURIComponent(keyword), 'i')
   const searchQuery = {
     fullname: { $concat: ['$billing_address.first_name', ' ', '$billing_address.last_name'] }
   }
-  const searchArray = { $or: [{ fullname: searchString }, { id: parseInt(query) || null }] }
+  const searchArray = { $or: [{ fullname: searchString }, { id: parseInt(keyword) || null }] }
   const orders = await Order
     .aggregate()
     .addFields(searchQuery)

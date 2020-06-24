@@ -68,14 +68,15 @@ const createCustomer = async (req, res) => {
 }
 
 const getCustomers = async (req, res) => {
-  const query = req.query.query
-  const page = parseInt(req.query.page) || 1
-  const limit = parseInt(req.query.limit) || 20
+  const query = req.query
+  const page = parseInt(query.page) || 1
+  const limit = parseInt(query.limit) || 20
+  const keyword = query && query.keyword
   let customers
 
   try {
-    if (query) {
-      customers = await Customer.search({ page, limit, query })
+    if (keyword) {
+      customers = await Customer.search({ page, limit, keyword })
     } else {
       customers = await Customer.findCustomers({ page, limit })
     }

@@ -24,10 +24,10 @@ categorySchema.statics.findCategories = async ({ page, limit }) => {
 }
 
 // Search categories by name
-categorySchema.statics.search = async ({ page, limit, query }) => {
+categorySchema.statics.search = async ({ page, limit, keyword }) => {
   const searchArray = [
-    { name: { $regex: query, $options: 'i' } },
-    { slug: { $regex: query, $options: 'i' } }
+    { name: { $regex: keyword, $options: 'i' } },
+    { slug: { $regex: keyword, $options: 'i' } }
   ]
   const categories = await Category
     .find()

@@ -29,11 +29,11 @@ productSchema.statics.findProducts = async ({ page, limit }) => {
 }
 
 // Search products by Name or SKU
-productSchema.statics.search = async ({ page, limit, query }) => {
+productSchema.statics.search = async ({ page, limit, keyword }) => {
   const searchQuery = {
     $or: [
-      { name: { $regex: query, $options: 'i' } },
-      { sku: { $regex: query, $options: 'i' } }
+      { name: { $regex: keyword, $options: 'i' } },
+      { sku: { $regex: keyword, $options: 'i' } }
     ]
   }
   const products = await Product

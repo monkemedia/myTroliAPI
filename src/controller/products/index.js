@@ -177,13 +177,14 @@ const createProduct = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
-    const query = req.query.query
-    const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 20
+    const query = req.query
+    const page = parseInt(query.page) || 1
+    const limit = parseInt(query.limit) || 20
+    const keyword = query && query.keyword
     let products
 
-    if (query) {
-      products = await Product.search({ page, query, limit })
+    if (keyword) {
+      products = await Product.search({ page, keyword, limit })
     } else {
       products = await Product.findProducts({ page, limit })
     }

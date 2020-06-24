@@ -47,14 +47,17 @@ const createCategory = async (req, res) => {
 }
 
 const getCategories = async (req, res) => {
-  const query = req.query.query
-  const page = parseInt(req.query.page) || 1
-  const limit = parseInt(req.query.limit) || 20
+  const query = req.query
+  const page = parseInt(query.page) || 1
+  const limit = parseInt(query.limit) || 20
+  const keyword = query && query.keyword
   let categories
 
+  console.log(query)
+
   try {
-    if (query) {
-      categories = await Category.search({ page, limit, query })
+    if (keyword) {
+      categories = await Category.search({ page, limit, keyword })
     } else {
       categories = await Category.findCategories({ page, limit })
     }
