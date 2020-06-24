@@ -195,7 +195,12 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const productId = req.params.productId
-  const product = await Product.findProduct(productId)
+  let product
+  if (productId === 'count') {
+    product = await Product.getCount()
+  } else {
+    product = await Product.findProduct(productId)
+  }
 
   res.status(200).send(product)
 }

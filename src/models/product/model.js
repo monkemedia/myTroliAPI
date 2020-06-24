@@ -67,6 +67,14 @@ productSchema.statics.findProduct = async (_id) => {
   return product
 }
 
+// Get product count
+productSchema.statics.getCount = async () => {
+  const total = await Product.countDocuments()
+  return {
+    count: total
+  }
+}
+
 // Update product
 productSchema.statics.updateProduct = async (productId, productDetails) => {
   productDetails.updated_at = new Date()
