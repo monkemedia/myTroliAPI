@@ -1,7 +1,7 @@
 {
-  "name": "my-troli-api",
+  "name": "my-trolify-api",
   "version": "1.0.0",
-  "description": "My Troli API",
+  "description": "My Trolify API",
   "scripts": {
     "test": "npm run test",
     "start": "NODE_ENV=development nodemon src/app.js"
