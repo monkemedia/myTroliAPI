@@ -69,10 +69,36 @@ orderSchema.pre('save', async function (next) {
 })
 
 // Get orders
-orderSchema.statics.findOrders = async ({ page, limit, statusId }) => {
-  const findByStatusId = statusId ? { status_id: statusId } : null
+orderSchema.statics.findOrders = async ({ page, limit }) => {
   const orders = await Order
-    .find(findByStatusId)
+    .find()
+    .sort('-date_created')
+    .skip((page - 1) * limit)
+    .limit(limit)
+
+  const total = await Order.countDocuments()
+  return {
+    data: orders,
+    meta: {
+      pagination: {
+        current: page,
+        total: orders.length
+      },
+      results: {
+        total
+      }
+    }
+  }
+}
+
+// Get orders by status id
+orderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => {
+  const statusIdCollection = statusId ? statusId.split(',') : []
+
+  const orders = await Order
+    .find()
+    .where('status_id')
+    .in(statusIdCollection)
     .sort('-date_created')
     .skip((page - 1) * limit)
     .limit(limit)
