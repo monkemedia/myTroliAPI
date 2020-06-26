@@ -4,7 +4,8 @@ const auth = require('../../middleware/auth')
 const {
   createPayment,
   getPayment,
-  updatePayment
+  updatePayment,
+  getBalance
 } = require('../../controller/payments')
 
 const {
@@ -15,7 +16,12 @@ const {
 // Create new Payment Account
 router.post('/', auth, (req, res) => createPayment(req, res))
 // Get payment
-router.get('/:paymentId', auth, (req, res) => getPayment(req, res))
+router.get('/:paymentId', auth, (req, res) => {
+  if (req.params.paymentId === 'balance') {
+    return getBalance(req, res)
+  }
+  return getPayment(req, res)
+})
 // delete image
 router.put('/:paymentId', auth, (req, res) => updatePayment(req, res))
 
