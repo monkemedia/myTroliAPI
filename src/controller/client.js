@@ -2,16 +2,16 @@ const Client = require('../models/client')
 
 const createClient = async (req, res) => {
   const data = req.body
-  const { email, name, password, grant_type } = data
+  const { email, name, password, type } = data
   const clientExists = await Client.findByEmail(email)
 
-  if (!grant_type) {
+  if (!type) {
     return res.status(401).send({
-      message: 'Grant Type is required'
+      message: 'Type is required'
     })
   }
 
-  if (grant_type && grant_type !== 'client_credentials') {
+  if (type !== 'client') {
     return res.status(401).send({
       message: 'Correct Grant Type is required'
     })
@@ -84,18 +84,26 @@ const updateClient = async (req, res) => {
     })
   }
 
-  if (type && type !== 'client') {
+  if (type !== 'client_credentials') {
     return res.status(401).send({
       message: 'Correct Type is required'
     })
   }
 
   try {
-    await Client.updateClient(clientId, data)
+    if (data.password) {
+      await Client.updateClientWithPassword(clientId, data)
+    } else {
+      await Client.updateClient(clientId, data)
+    }
     const client = await Client.findOne({ _id: clientId })
       .select('-reset_token -refresh_token')
 
-    res.status(200).send(client)
+    const clientClone = Object.assign(client, {
+      password: !!client.password
+    })
+
+    res.status(200).send(clientClone)
   } catch (err) {
     res.status(400).send(err)
   }

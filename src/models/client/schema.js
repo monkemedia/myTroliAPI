@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const clientSchema = new Schema({
-  grant_type: {
+  type: {
     type: String,
     required: true
   },
@@ -14,6 +14,11 @@ const clientSchema = new Schema({
   name: {
     type: String,
     required: false
+  },
+  role: {
+    type: String,
+    required: true,
+    enum: ['owner', 'admin', 'supervisor', 'basic']
   },
   password: {
     type: String,
