@@ -69,7 +69,7 @@ orderSchema.pre('save', async function (next) {
 })
 
 // Get orders
-orderSchema.statics.findOrders = async ({ page, limit }) => {
+orderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
   const orders = await Order
     .find()
     .sort('-date_created')

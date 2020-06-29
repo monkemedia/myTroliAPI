@@ -17,6 +17,7 @@ const productVariantImages = require('./products/variants/images/index.js')
 const productOptions = require('./products/options/index.js')
 const productCategories = require('./products/categories/index.js')
 const productImages = require('./products/images/index.js')
+const performance = require('./performance.js')
 const orders = require('./orders/index.js')
 const orderStatus = require('./orders/orderStatus/index.js')
 
@@ -41,6 +42,7 @@ router.use(
   productOptions,
   productCategories,
   productImages,
+  performance,
   orders,
   orderStatus
 )
