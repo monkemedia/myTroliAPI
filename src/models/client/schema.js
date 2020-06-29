@@ -20,6 +20,15 @@ const clientSchema = new Schema({
     required: true,
     enum: ['owner', 'admin', 'supervisor', 'basic']
   },
+  image_id: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  image_url: {
+    type: String,
+    required: true
+  },
   password: {
     type: String,
     required: true
