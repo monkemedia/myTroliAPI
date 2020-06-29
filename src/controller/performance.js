@@ -1,21 +1,6 @@
 const Order = require('../models/order/index.js')
 
 const getStoreRevenue = async (req, res) => {
-  const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'store-performance') {
-    return res.status(401).send({
-      message: 'Correct Type is required'
-    })
-  }
-
   try {
     const orders = await Order.findOrders({})
     let totalExcTaxSum = 0
