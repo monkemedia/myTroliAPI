@@ -54,6 +54,14 @@ clientSchema.statics.findByCredentials = async (email, password) => {
     throw errorHandler(422, 'Client does\'t exists')
   }
 
+  if (!client.password) {
+    throw errorHandler(422, 'Account inactive')
+  }
+
+  if (client.status === 'inactive') {
+    throw errorHandler(422, 'Account inactive')
+  }
+
   const isPasswordMatch = await bcrypt.compare(password, client.password)
 
   if (!isPasswordMatch) {
@@ -70,12 +78,10 @@ clientSchema.statics.updateClient = async (clientId, data) => {
 }
 
 // Update password
-clientSchema.statics.updateClientWithPassword = async (clientId, details) => {
-  const { password } = details
-
+clientSchema.statics.updateClientWithPassword = async (clientId, password) => {
   const hashedPassword = await bcrypt.hash(password, 8)
 
-  const client = await Client.updateOne({ _id: clientId }, { ...details, password: hashedPassword, refresh_token: null })
+  const client = await Client.updateOne({ _id: clientId }, { password: hashedPassword, refresh_token: null, reset_token: null })
   return client
 }
 

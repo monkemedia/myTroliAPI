@@ -1,8 +1,9 @@
 const Client = require('../models/client')
+const emailTemplate = require('../utils/emailTemplate')
 
 const createClient = async (req, res) => {
   const data = req.body
-  const { email, name, password, type } = data
+  const { email, name, status, type } = data
   const clientExists = await Client.findByEmail(email)
 
   if (!type) {
@@ -11,9 +12,9 @@ const createClient = async (req, res) => {
     })
   }
 
-  if (type !== 'client') {
+  if (type !== 'client_credentials') {
     return res.status(401).send({
-      message: 'Correct Grant Type is required'
+      message: 'Correct Type is required'
     })
   }
 
@@ -29,9 +30,9 @@ const createClient = async (req, res) => {
     })
   }
 
-  if (!password) {
+  if (!status) {
     return res.status(401).send({
-      message: 'Password is required'
+      message: 'Status is required'
     })
   }
 
@@ -43,19 +44,40 @@ const createClient = async (req, res) => {
 
   try {
     const client = new Client(data)
+    const activateToken = await client.generateToken('1hr')
+
+    client.reset_token = activateToken
     await client.save()
 
-    const { _id } = client
+    emailTemplate.activateAccount({
+      email,
+      name,
+      activateToken
+    })
+    await client.save()
 
     const clientCopy = Object.assign(data, {
-      password: !!password,
-      _id
+      password: false
     })
 
     res.status(201).send(clientCopy)
   } catch (err) {
     res.status(err.status).send(err)
   }
+}
+
+const getClients = async (req, res) => {
+  const client = await Client
+    .aggregate()
+    .project({
+      name: 1,
+      email: 1,
+      status: 1,
+      role: 1,
+      password: { $toBool: '$password' }
+    })
+
+  res.status(200).send(client)
 }
 
 const getClient = async (req, res) => {
@@ -123,6 +145,7 @@ const deleteClient = async (req, res) => {
 
 module.exports = {
   createClient,
+  getClients,
   getClient,
   updateClient,
   deleteClient

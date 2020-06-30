@@ -15,23 +15,27 @@ const clientSchema = new Schema({
     type: String,
     required: false
   },
+  status: {
+    type: String,
+    enum: ['inactive', 'active'],
+    required: true
+  },
   role: {
     type: String,
-    required: true,
-    enum: ['owner', 'admin', 'supervisor', 'basic']
+    enum: ['owner', 'admin', 'supervisor', 'basic'],
+    required: true
   },
   image_id: {
     type: String,
-    required: true,
-    unique: true
+    required: false
   },
   image_url: {
     type: String,
-    required: true
+    required: false
   },
   password: {
-    type: String,
-    required: true
+    type: Schema.Types.Mixed,
+    default: false
   },
   refresh_token: {
     type: String,

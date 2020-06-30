@@ -216,7 +216,7 @@ const resetPassword = async (req, res) => {
         })
       }
 
-      await Client.updatePassword({ _id: client._id, password })
+      await Client.updateClientWithPassword(client._id, password)
 
       res.status(200).send({
         message: 'Password has been updated'

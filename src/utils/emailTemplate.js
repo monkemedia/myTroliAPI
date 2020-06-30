@@ -22,6 +22,16 @@ module.exports = {
     })
   },
 
+  activateAccount: async (data) => {
+    const textBodyUrl = `${process.env.WEB_ADDRESS}/auth/activate-account/${data.activateToken}`
+    await postmarkClient.sendEmail({
+      From: process.env.EMAIL_ADDRESS,
+      To: data.email,
+      Subject: 'Activate account',
+      TextBody: `${data.name}, please activate your account ${textBodyUrl}`
+    })
+  },
+
   orderInvoice: async (data) => {
     await postmarkClient.sendEmail({
       From: process.env.EMAIL_ADDRESS,
