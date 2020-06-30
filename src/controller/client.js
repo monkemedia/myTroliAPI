@@ -30,12 +30,6 @@ const createClient = async (req, res) => {
     })
   }
 
-  if (!status) {
-    return res.status(401).send({
-      message: 'Status is required'
-    })
-  }
-
   if (!role) {
     return res.status(401).send({
       message: 'Role is required'
@@ -78,7 +72,7 @@ const getClients = async (req, res) => {
     .project({
       name: 1,
       email: 1,
-      status: 1,
+      enabled: 1,
       role: 1,
       password: { $toBool: '$password' }
     })

@@ -15,9 +15,9 @@ const clientSchema = new Schema({
     type: String,
     required: false
   },
-  status: {
-    type: String,
-    required: true
+  enabled: {
+    type: Boolean,
+    default: false
   },
   role: {
     type: String,
