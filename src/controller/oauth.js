@@ -119,9 +119,9 @@ const login = async (req, res) => {
 
     client.refresh_token = refreshToken
     console.log('hello', client)
-    await client.save()
+    const test = await client.save()
 
-    console.log('MONKEY')
+    console.log('MONKEY', test)
 
     res.status(200).send({
       grant_type: 'client_credentials',
@@ -130,6 +130,7 @@ const login = async (req, res) => {
       refresh_token: refreshToken
     })
   } catch (err) {
+    console.log('ERROR', err)
     res.status(err.status).send(err)
   }
 }
