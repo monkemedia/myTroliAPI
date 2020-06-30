@@ -129,7 +129,7 @@ const login = async (req, res) => {
 
 const resetToken = async (req, res) => {
   try {
-    const { grant_type, email } = req.body
+    const { type, email } = req.body
 
     if (!email) {
       return res.status(401).send({
@@ -137,15 +137,15 @@ const resetToken = async (req, res) => {
       })
     }
 
-    if (!grant_type) {
+    if (!type) {
       return res.status(401).send({
-        message: 'Grant Type is required'
+        message: 'Type is required'
       })
     }
 
-    if (grant_type && grant_type !== 'reset_token') {
+    if (type !== 'reset_token') {
       return res.status(401).send({
-        message: 'Correct Grant Type is required'
+        message: 'Correct Type is required'
       })
     }
 

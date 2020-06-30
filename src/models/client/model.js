@@ -19,7 +19,7 @@ clientSchema.methods.generateToken = async function (expiresIn) {
   const client = this
   const accessToken = jwt.sign({
     client_id: client._id,
-    grant_type: client.grant_type
+    type: client.type
   }, process.env.API_SECRET, { expiresIn: expiresIn || '24hrs' })
 
   return accessToken
