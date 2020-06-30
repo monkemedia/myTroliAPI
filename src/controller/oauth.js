@@ -108,20 +108,12 @@ const login = async (req, res) => {
       })
     }
 
-    console.log('here')
-
     const client = await Client.findByCredentials(email, password)
-    console.log('client', client)
     const accessToken = await client.generateToken(accessTokenTime)
-    console.log('accessToken', accessToken)
     const refreshToken = await client.generateToken(refreshTokenTime)
-    console.log('refreshToken', refreshToken)
 
     client.refresh_token = refreshToken
-    console.log('hello', client)
-    const test = await client.save()
-
-    console.log('MONKEY', test)
+    await client.save()
 
     res.status(200).send({
       type: 'client_credentials',

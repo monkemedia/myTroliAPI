@@ -17,12 +17,10 @@ const clientSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ['inactive', 'active'],
     required: false
   },
   role: {
     type: String,
-    enum: ['owner', 'admin', 'supervisor', 'basic'],
     required: false
   },
   image_id: {
