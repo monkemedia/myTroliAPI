@@ -108,7 +108,10 @@ const login = async (req, res) => {
       })
     }
 
+    console.log('here')
+
     const client = await Client.findByCredentials(email, password)
+    console.log('client', client)
     const accessToken = await client.generateToken(accessTokenTime)
     const refreshToken = await client.generateToken(refreshTokenTime)
 
