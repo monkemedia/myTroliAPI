@@ -17,11 +17,11 @@ const clientSchema = new Schema({
   },
   status: {
     type: String,
-    required: false
+    required: true
   },
   role: {
     type: String,
-    required: false
+    required: true
   },
   image_id: {
     type: String,

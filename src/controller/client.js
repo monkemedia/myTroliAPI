@@ -3,7 +3,7 @@ const emailTemplate = require('../utils/emailTemplate')
 
 const createClient = async (req, res) => {
   const data = req.body
-  const { email, name, status, type } = data
+  const { email, name, status, role, type } = data
   const clientExists = await Client.findByEmail(email)
 
   if (!type) {
@@ -33,6 +33,12 @@ const createClient = async (req, res) => {
   if (!status) {
     return res.status(401).send({
       message: 'Status is required'
+    })
+  }
+
+  if (!role) {
+    return res.status(401).send({
+      message: 'Role is required'
     })
   }
 
