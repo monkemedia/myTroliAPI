@@ -118,7 +118,7 @@ const login = async (req, res) => {
     console.log('refreshToken', refreshToken)
 
     client.refresh_token = refreshToken
-    console.log('hello')
+    console.log('hello', client)
     await client.save()
 
     console.log('MONKEY')
