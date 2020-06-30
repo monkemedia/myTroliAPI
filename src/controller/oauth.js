@@ -7,17 +7,17 @@ const refreshTokenTime = '48hr'
 
 const refreshToken = async (req, res) => {
   try {
-    const { grant_type, refresh_token } = req.body
+    const { type, refresh_token } = req.body
 
-    if (!grant_type) {
+    if (!type) {
       return res.status(401).send({
-        message: 'Grant Type is required'
+        message: 'Type is required'
       })
     }
 
-    if (grant_type && grant_type !== 'refresh_token') {
+    if (type !== 'refresh_token') {
       return res.status(401).send({
-        message: 'Correct Grant Type is required'
+        message: 'Correct Type is required'
       })
     }
 
@@ -70,7 +70,7 @@ const refreshToken = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { grant_type, client_secret, email, password } = req.body
+    const { type, client_secret, email, password } = req.body
 
     if (!email) {
       return res.status(401).send({
@@ -96,15 +96,15 @@ const login = async (req, res) => {
       })
     }
 
-    if (!grant_type) {
+    if (!type) {
       return res.status(401).send({
-        message: 'Grant Type is required'
+        message: 'Type is required'
       })
     }
 
-    if (grant_type && grant_type !== 'client_credentials') {
+    if (type !== 'client_credentials') {
       return res.status(401).send({
-        message: 'Correct Grant Type is required'
+        message: 'Correct Type is required'
       })
     }
 
@@ -124,7 +124,7 @@ const login = async (req, res) => {
     console.log('MONKEY', test)
 
     res.status(200).send({
-      grant_type: 'client_credentials',
+      type: 'client_credentials',
       client_id: client._id,
       access_token: accessToken,
       refresh_token: refreshToken
@@ -177,7 +177,7 @@ const resetToken = async (req, res) => {
     })
 
     res.status(200).send({
-      grant_type: 'reset_token',
+      type: 'reset_token',
       reset_token: resetToken
     })
   } catch (err) {
@@ -187,7 +187,7 @@ const resetToken = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const { grant_type, password, reset_token } = req.body
+    const { type, password, reset_token } = req.body
 
     if (!password) {
       return res.status(401).send({
@@ -201,15 +201,15 @@ const resetPassword = async (req, res) => {
       })
     }
 
-    if (!grant_type) {
+    if (!type) {
       return res.status(401).send({
-        message: 'Grant Type is required'
+        message: 'Type is required'
       })
     }
 
-    if (grant_type && grant_type !== 'reset_password') {
+    if (type !== 'reset_password') {
       return res.status(401).send({
-        message: 'Correct Grant Type is required'
+        message: 'Correct Type is required'
       })
     }
 
