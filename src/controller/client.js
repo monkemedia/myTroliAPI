@@ -3,7 +3,7 @@ const emailTemplate = require('../utils/emailTemplate')
 
 const createClient = async (req, res) => {
   const data = req.body
-  const { email, name, status, role, type } = data
+  const { email, name, role, type } = data
   const clientExists = await Client.findByEmail(email)
 
   if (!type) {
@@ -143,10 +143,46 @@ const deleteClient = async (req, res) => {
   }
 }
 
+const resendActivationEmail = async (req, res) => {
+  try {
+    const data = req.body
+    const { type, name, email } = data
+
+    if (!type) {
+      return res.status(401).send({
+        message: 'Type is required'
+      })
+    }
+
+    if (type !== 'client_credentials') {
+      return res.status(401).send({
+        message: 'Correct Type is required'
+      })
+    }
+
+    const client = await Client.findOne({ _id: req.params.clientId }).select('-password')
+    const activateToken = await client.generateToken('1hr')
+
+    client.reset_token = activateToken
+    await client.save()
+    emailTemplate.activateAccount({
+      email,
+      name,
+      activateToken
+    })
+    res.status(200).send({
+      message: 'Activation email successfully sent'
+    })
+  } catch (err) {
+    res.status(err.status).send(err)
+  }
+}
+
 module.exports = {
   createClient,
   getClients,
   getClient,
   updateClient,
-  deleteClient
+  deleteClient,
+  resendActivationEmail
 }

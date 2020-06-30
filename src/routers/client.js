@@ -6,7 +6,8 @@ const {
   getClients,
   getClient,
   updateClient,
-  deleteClient
+  deleteClient,
+  resendActivationEmail
 } = require('../controller/client')
 
 // Create client
@@ -19,5 +20,7 @@ router.get('/client/:clientId', auth, (req, res) => getClient(req, res))
 router.put('/client/:clientId', auth, (req, res) => updateClient(req, res))
 // Delete client
 router.delete('/client/:clientId', auth, (req, res) => deleteClient(req, res))
+// Resend activation email
+router.post('/client/resend/:clientId', auth, (req, res) => resendActivationEmail(req, res))
 
 module.exports = router
