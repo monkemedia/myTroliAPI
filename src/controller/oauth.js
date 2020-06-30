@@ -113,7 +113,9 @@ const login = async (req, res) => {
     const client = await Client.findByCredentials(email, password)
     console.log('client', client)
     const accessToken = await client.generateToken(accessTokenTime)
+    console.log('accessToken', accessToken)
     const refreshToken = await client.generateToken(refreshTokenTime)
+    console.log('refreshToken', refreshToken)
 
     client.refresh_token = refreshToken
     await client.save()
