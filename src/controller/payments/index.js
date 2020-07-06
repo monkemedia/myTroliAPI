@@ -80,8 +80,6 @@ const getBalance = async (req, res) => {
   try {
     const balance = await stripe.balance.retrieve()
 
-    console.log(balance)
-
     res.status(200).send(balance)
   } catch (err) {
     res.status(400).send(errorHandler(400, err))

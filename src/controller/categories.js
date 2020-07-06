@@ -53,8 +53,6 @@ const getCategories = async (req, res) => {
   const keyword = query && query.keyword
   let categories
 
-  console.log(query)
-
   try {
     if (keyword) {
       categories = await Category.search({ page, limit, keyword })
