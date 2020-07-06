@@ -81,18 +81,22 @@ const getClients = async (req, res) => {
 }
 
 const getClient = async (req, res) => {
-  const client = await Client.findOne({ _id: req.params.clientId }).select('-reset_token -refresh_token')
+  try {
+    const client = await Client.findOne({ _id: req.params.clientId }).select('-reset_token -refresh_token')
 
-  if (!client) {
-    return res.status(401).send({
-      message: 'Client does not exist'
+    if (!client) {
+      return res.status(401).send({
+        message: 'Client does not exist'
+      })
+    }
+    const clientClone = Object.assign(client, {
+      password: !!client.password
     })
-  }
-  const clientClone = Object.assign(client, {
-    password: !!client.password
-  })
 
-  res.status(200).send(clientClone)
+    res.status(200).send(clientClone)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 }
 
 const updateClient = async (req, res) => {
