@@ -24,8 +24,8 @@ const couponSchema = Schema({
     required: true
   },
   enabled: {
-    type: String,
-    required: true
+    type: Boolean,
+    default: true
   },
   expiry: {
     type: Date,
@@ -42,6 +42,10 @@ const couponSchema = Schema({
   max_uses_per_customer: {
     type: Number,
     default: null
+  },
+  min_purchase: {
+    type: Number,
+    default: 0
   },
   created_at: {
     type: Date
