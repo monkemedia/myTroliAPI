@@ -5,7 +5,7 @@ const customerAddresses = require('./customers/addresses/index.js')
 const countries = require('./countries.js')
 const currencies = require('./currencies.js')
 const products = require('./products/index.js')
-const promotions = require('./promotions.js')
+const coupons = require('./coupons.js')
 const categories = require('./categories.js')
 const variations = require('./variations.js')
 const store = require('./store.js')
@@ -26,11 +26,11 @@ const router = Router()
 router.use(
   client,
   customers,
+  coupons,
   customerAddresses,
   countries,
   currencies,
   products,
-  promotions,
   categories,
   variations,
   store,
