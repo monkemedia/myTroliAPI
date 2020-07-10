@@ -68,7 +68,7 @@ couponSchema.statics.findCouponByCode = async (couponCode) => {
   }
 
   // Check to see if coupon has expired
-  if (new Date(coupon.expiry).toISOString() < new Date().toISOString()) {
+  if (coupon.expiry && new Date(coupon.expiry).toISOString() < new Date().toISOString()) {
     throw errorHandler(422, 'Coupon has expired')
   }
 
