@@ -51,7 +51,7 @@ clientSchema.statics.findByCredentials = async (email, password) => {
   const client = await Client.findOne({ email })
 
   if (!client) {
-    throw errorHandler(422, 'Client does\'t exists')
+    throw errorHandler(422, 'Client does not exists')
   }
 
   if (!client.password) {

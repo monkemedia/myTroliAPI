@@ -64,7 +64,7 @@ couponSchema.statics.findCouponByCode = async (couponCode) => {
 
   // Check to see if coupon exists
   if (!coupon) {
-    throw errorHandler(422, 'Coupon does\'t exist')
+    throw errorHandler(422, 'Coupon does not exist')
   }
 
   // Check to see if coupon has expired
