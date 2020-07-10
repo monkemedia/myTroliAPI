@@ -107,9 +107,26 @@ const getCoupons = async (req, res) => {
 
 const getCoupon = async (req, res) => {
   const couponId = req.params.couponId
-  const coupon = await Coupon.findOne({ _id: couponId })
 
-  res.status(200).send(coupon)
+  try {
+    const coupon = await Coupon.findOne({ _id: couponId })
+
+    res.status(200).send(coupon)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
+
+const getCouponByCode = async (req, res) => {
+  const couponCode = req.params.couponCode
+
+  try {
+    const coupon = await Coupon.findCouponByCode(couponCode)
+
+    res.status(200).send(coupon)
+  } catch (err) {
+    res.status(400).send(err)
+  }
 }
 
 const updateCoupon = async (req, res) => {
@@ -155,6 +172,7 @@ module.exports = {
   createCoupon,
   getCoupons,
   getCoupon,
+  getCouponByCode,
   updateCoupon,
   deleteCoupon
 }

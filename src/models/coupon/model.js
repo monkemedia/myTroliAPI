@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const couponSchema = require('./schema')
+const errorHandler = require('../../utils/errorHandler')
 
 couponSchema.pre('save', async function (next) {
   const coupon = this
@@ -57,17 +58,27 @@ couponSchema.statics.search = async ({ page, limit, keyword }) => {
   }
 }
 
-// Get coupon by Id
-couponSchema.statics.findCoupon = async (couponId) => {
-  const coupon = await Coupon.findOne({ _id: couponId })
+// Get coupon by code
+couponSchema.statics.findCouponByCode = async (couponCode) => {
+  const coupon = await Coupon.findOne({ code: couponCode })
+
+  // Check to see if coupon exists
+  if (!coupon) {
+    throw errorHandler(422, 'Coupon does\'t exist')
+  }
+
+  // Check to see if coupon has expired
+  if (new Date(coupon.expiry).toISOString() < new Date().toISOString()) {
+    throw errorHandler(422, 'Coupon has expired')
+  }
+
+  // Check to see if coupon has reached maximum usage
+  if (coupon.max_uses && (coupon.number_uses >= coupon.max_uses)) {
+    throw errorHandler(422, 'Coupon has expired')
+  }
+
   return coupon
 }
-
-// Get coupon by code
-// couponSchema.statics.findCouponByCode = async (couponCode) => {
-//   const coupon = await Coupon.findOne({ code: couponCode })
-//   return coupon
-// }
 
 // Update coupon
 couponSchema.statics.updateCoupon = async (couponId, couponDetails) => {
