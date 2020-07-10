@@ -14,7 +14,29 @@ const orderSchema = new Schema({
     type: Number,
     default: 1
   },
-  discount_amount: {
+  discount_amount_exc_tax: {
+    type: Number,
+    default: 0
+  },
+  discount_amount_inc_tax: {
+    type: Number,
+    default: 0
+  },
+  coupon: {
+    code: {
+      type: String,
+      default: ''
+    },
+    amount: {
+      type: Number,
+      default: 0
+    },
+    coupon_type: {
+      type: String,
+      default: ''
+    }
+  },
+  coupon_amount: {
     type: Number,
     default: 0
   },

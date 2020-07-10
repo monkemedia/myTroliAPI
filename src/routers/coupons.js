@@ -5,6 +5,7 @@ const {
   createCoupon,
   getCoupons,
   getCoupon,
+  getCouponByCode,
   updateCoupon,
   deleteCoupon
 } = require('../controller/coupons')
@@ -13,6 +14,8 @@ const {
 router.post('/coupons', auth, (req, res) => createCoupon(req, res))
 // Get coupons
 router.get('/coupons', auth, (req, res) => getCoupons(req, res))
+// Get couponByCode
+router.get('/coupons/code/:couponCode', auth, (req, res) => getCouponByCode(req, res))
 // Get coupon
 router.get('/coupons/:couponId', auth, (req, res) => getCoupon(req, res))
 // Update coupon
