@@ -110,7 +110,7 @@ customerSchema.statics.findByCredentials = async (email, password) => {
   const customer = await Customer.findOne({ email }).select('-password')
 
   if (!customer) {
-    throw errorHandler(422, 'Customer does\'t exists')
+    throw errorHandler(422, 'Customer does not exists')
   }
 
   const isPasswordMatch = await bcrypt.compare(password, customer.password)

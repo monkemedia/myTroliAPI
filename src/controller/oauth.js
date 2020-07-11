@@ -213,7 +213,7 @@ const resetPassword = async (req, res) => {
       if (!client) {
         // customer doesn't exist but we can't tell users that
         return res.status(401).send({
-          message: 'Client does\'t exist'
+          message: 'Client does not exist'
         })
       }
 

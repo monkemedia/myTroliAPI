@@ -64,7 +64,7 @@ couponSchema.statics.findCouponByCode = async (couponCode) => {
 
   // Check to see if coupon exists
   if (!coupon) {
-    throw errorHandler(422, 'Coupon does\'t exist')
+    throw errorHandler(422, 'Coupon does not exist')
   }
 
   // Check to see if coupon has expired
@@ -82,7 +82,14 @@ couponSchema.statics.findCouponByCode = async (couponCode) => {
 
 // Update coupon
 couponSchema.statics.updateCoupon = async (couponId, couponDetails) => {
-  const coupon = await Coupon.updateOne({ _id: couponId }, couponDetails)
+  let coupon
+
+  if (couponDetails.increment_usage) {
+    coupon = await Coupon.updateOne({ _id: couponId }, { $inc: { number_uses: 1 } })
+  } else {
+    coupon = await Coupon.updateOne({ _id: couponId }, couponDetails)
+  }
+
   return coupon
 }
 

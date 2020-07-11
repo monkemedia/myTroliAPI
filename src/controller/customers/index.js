@@ -197,7 +197,7 @@ const verifyCustomer = async (req, res) => {
       if (!customer) {
         // customer doesn't exist but we can't tell users that
         return res.status(401).send({
-          message: 'Customer does\'t exist'
+          message: 'Customer does not exist'
         })
       }
 
