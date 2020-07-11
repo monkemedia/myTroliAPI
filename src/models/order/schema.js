@@ -23,6 +23,10 @@ const orderSchema = new Schema({
     default: 0
   },
   coupon: {
+    id: {
+      type: String,
+      default: ''
+    },
     code: {
       type: String,
       default: ''
