@@ -64,17 +64,12 @@ couponSchema.statics.findCouponByCode = async (couponCode) => {
 
   // Check to see if coupon exists
   if (!coupon) {
-    throw errorHandler(422, 'Coupon does not exist')
+    throw errorHandler(422, 'Coupon does not exist.')
   }
 
   // Check to see if coupon has expired
   if (coupon.expiry && new Date(coupon.expiry).toISOString() < new Date().toISOString()) {
-    throw errorHandler(422, 'Coupon has expired')
-  }
-
-  // Check to see if coupon has reached maximum usage
-  if (coupon.max_uses && (coupon.number_uses >= coupon.max_uses)) {
-    throw errorHandler(422, 'Coupon has expired')
+    throw errorHandler(422, 'Coupon has expired.')
   }
 
   return coupon
