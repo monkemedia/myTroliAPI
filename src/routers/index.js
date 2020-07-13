@@ -2,6 +2,7 @@ const { Router } = require('express')
 const client = require('./client.js')
 const customers = require('./customers/index.js')
 const customerAddresses = require('./customers/addresses/index.js')
+const customerCoupons = require('./customers/coupons/index.js')
 const countries = require('./countries.js')
 const currencies = require('./currencies.js')
 const products = require('./products/index.js')
@@ -28,6 +29,7 @@ router.use(
   customers,
   coupons,
   customerAddresses,
+  customerCoupons,
   countries,
   currencies,
   products,
