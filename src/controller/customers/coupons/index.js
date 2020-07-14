@@ -1,4 +1,4 @@
-const CustomerCoupon = require('../../../models/customer/Coupon')
+const CustomerCoupon = require('../../../models/customer/coupon')
 
 const createCustomerCoupon = async (req, res) => {
   const data = req.body
