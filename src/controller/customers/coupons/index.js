@@ -64,32 +64,19 @@ const getCustomerCoupon = async (req, res) => {
   }
 }
 
-// const updateCustomerAddress = async (req, res) => {
-//   const addressId = req.params.addressId
-//   const data = req.body
-//   const { type } = data
+const incrementCustomerCoupon = async (req, res) => {
+  const customerId = req.params.customerId
+  const couponId = req.params.couponId
 
-//   if (!type) {
-//     return res.status(401).send({
-//       message: 'Type is required'
-//     })
-//   }
+  try {
+    await CustomerCoupon.incrementCustomerCoupon(customerId, couponId)
+    const customerCoupon = await CustomerCoupon.findCustomerCoupon(customerId, couponId)
 
-//   if (type && type !== 'customer-address') {
-//     return res.status(401).send({
-//       message: 'Correct Type is required'
-//     })
-//   }
-
-//   try {
-//     await CustomerAddress.updateCustomerAddress(addressId, data)
-//     const customerAddress = await CustomerAddress.findCustomerAddress(addressId)
-
-//     res.status(200).send(customerAddress)
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
+    res.status(200).send(customerCoupon)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
 
 // const deleteCustomerAddress = async (req, res) => {
 //   try {
@@ -106,7 +93,8 @@ const getCustomerCoupon = async (req, res) => {
 
 module.exports = {
   createCustomerCoupon,
-  getCustomerCoupon
+  getCustomerCoupon,
+  incrementCustomerCoupon
   // getCustomerAddresses,
   // getCustomerAddress,
   // updateCustomerAddress,
