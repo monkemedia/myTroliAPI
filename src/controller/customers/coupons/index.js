@@ -41,16 +41,16 @@ const createCustomerCoupon = async (req, res) => {
   }
 }
 
-// const getCustomerCoupons = async (req, res) => {
-//   try {
-//     const customerId = req.params.customerId
-//     const customerAddresses = await CustomerAddress.findCustomerAddresses(customerId)
+const getCustomerCoupons = async (req, res) => {
+  try {
+    const customerId = req.params.customerId
+    const customerCoupons = await CustomerCoupon.findCustomerCoupons(customerId)
 
-//     res.status(200).send(customerAddresses)
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
+    res.status(200).send(customerCoupons)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
 
 const getCustomerCoupon = async (req, res) => {
   try {
@@ -64,51 +64,38 @@ const getCustomerCoupon = async (req, res) => {
   }
 }
 
-// const updateCustomerAddress = async (req, res) => {
-//   const addressId = req.params.addressId
-//   const data = req.body
-//   const { type } = data
+const incrementCustomerCoupon = async (req, res) => {
+  const customerId = req.params.customerId
+  const couponId = req.params.couponId
 
-//   if (!type) {
-//     return res.status(401).send({
-//       message: 'Type is required'
-//     })
-//   }
+  try {
+    await CustomerCoupon.incrementCustomerCoupon(customerId, couponId)
+    const customerCoupon = await CustomerCoupon.findCustomerCoupon(customerId, couponId)
 
-//   if (type && type !== 'customer-address') {
-//     return res.status(401).send({
-//       message: 'Correct Type is required'
-//     })
-//   }
+    res.status(200).send(customerCoupon)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
 
-//   try {
-//     await CustomerAddress.updateCustomerAddress(addressId, data)
-//     const customerAddress = await CustomerAddress.findCustomerAddress(addressId)
+const deleteCustomerCoupon = async (req, res) => {
+  try {
+    const couponId = req.params.couponId
 
-//     res.status(200).send(customerAddress)
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
+    await CustomerCoupon.deleteCustomerCoupon(couponId)
 
-// const deleteCustomerAddress = async (req, res) => {
-//   try {
-//     const addressId = req.params.addressId
-//     await CustomerAddress.deleteCustomerAddress(addressId)
-
-//     res.status(200).send({
-//       message: 'Customer Address successfully deleted'
-//     })
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
+    res.status(200).send({
+      message: 'Customer coupon successfully deleted'
+    })
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
 
 module.exports = {
   createCustomerCoupon,
-  getCustomerCoupon
-  // getCustomerAddresses,
-  // getCustomerAddress,
-  // updateCustomerAddress,
-  // deleteCustomerAddress
+  getCustomerCoupons,
+  getCustomerCoupon,
+  incrementCustomerCoupon,
+  deleteCustomerCoupon
 }
