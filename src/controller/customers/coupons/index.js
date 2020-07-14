@@ -41,16 +41,16 @@ const createCustomerCoupon = async (req, res) => {
   }
 }
 
-// const getCustomerCoupons = async (req, res) => {
-//   try {
-//     const customerId = req.params.customerId
-//     const customerAddresses = await CustomerAddress.findCustomerAddresses(customerId)
+const getCustomerCoupons = async (req, res) => {
+  try {
+    const customerId = req.params.customerId
+    const customerCoupons = await CustomerCoupon.findCustomerCoupons(customerId)
 
-//     res.status(200).send(customerAddresses)
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
+    res.status(200).send(customerCoupons)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
 
 const getCustomerCoupon = async (req, res) => {
   try {
@@ -78,25 +78,24 @@ const incrementCustomerCoupon = async (req, res) => {
   }
 }
 
-// const deleteCustomerAddress = async (req, res) => {
-//   try {
-//     const addressId = req.params.addressId
-//     await CustomerAddress.deleteCustomerAddress(addressId)
+const deleteCustomerCoupon = async (req, res) => {
+  try {
+    const couponId = req.params.couponId
 
-//     res.status(200).send({
-//       message: 'Customer Address successfully deleted'
-//     })
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
+    await CustomerCoupon.deleteCustomerCoupon(couponId)
+
+    res.status(200).send({
+      message: 'Customer coupon successfully deleted'
+    })
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
 
 module.exports = {
   createCustomerCoupon,
+  getCustomerCoupons,
   getCustomerCoupon,
-  incrementCustomerCoupon
-  // getCustomerAddresses,
-  // getCustomerAddress,
-  // updateCustomerAddress,
-  // deleteCustomerAddress
+  incrementCustomerCoupon,
+  deleteCustomerCoupon
 }

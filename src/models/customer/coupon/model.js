@@ -1,13 +1,13 @@
 const mongoose = require('mongoose')
 const customerCouponSchema = require('./schema')
 
-// Find coupon
-// customerAddressSchema.statics.findCustomerAddresses = async (customerId) => {
-//   const addresses = await CustomerAddress.find({ customer_id: customerId })
-//   return addresses
-// }
+// Find customer coupons
+customerCouponSchema.statics.findCustomerCoupons = async (customerId) => {
+  const coupons = await CustomerCoupon.find()
+  return coupons
+}
 
-// Find address
+// Find customer coupon
 customerCouponSchema.statics.findCustomerCoupon = async (customerId, couponId) => {
   const coupon = await CustomerCoupon.findOne({
     customer_id: customerId,
@@ -16,7 +16,7 @@ customerCouponSchema.statics.findCustomerCoupon = async (customerId, couponId) =
   return coupon
 }
 
-// Update address
+// Update customer coupon
 customerCouponSchema.statics.incrementCustomerCoupon = async (customerId, couponId) => {
   const coupon = await CustomerCoupon.updateOne({
     customer_id: customerId,
@@ -30,11 +30,11 @@ customerCouponSchema.statics.incrementCustomerCoupon = async (customerId, coupon
   return coupon
 }
 
-// // Delete address
-// customerAddressSchema.statics.deleteCustomerAddress = async (addressId) => {
-//   const address = await CustomerAddress.deleteOne({ _id: addressId })
-//   return address
-// }
+// Delete customer coupon
+customerCouponSchema.statics.deleteCustomerCoupon = async (couponId) => {
+  const coupon = await CustomerCoupon.deleteOne({ _id: couponId })
+  return coupon
+}
 
 const CustomerCoupon = mongoose.model('CustomerCoupon', customerCouponSchema)
 
