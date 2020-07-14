@@ -106,13 +106,13 @@ const updateCustomer = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'customer') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -131,7 +131,7 @@ const deleteCustomer = async (req, res) => {
     await Customer.deleteCustomer(req.params.customerId)
 
     res.status(204).send({
-      message: 'Customer successfully deleted'
+      message: 'Customer successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)
@@ -179,13 +179,13 @@ const verifyCustomer = async (req, res) => {
 
     if (!type) {
       return res.status(401).send({
-        message: 'Type is required'
+        message: 'Type is required.'
       })
     }
 
     if (type !== 'verify_customer') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct Type is required.'
       })
     }
 
@@ -197,21 +197,21 @@ const verifyCustomer = async (req, res) => {
       if (!customer) {
         // customer doesn't exist but we can't tell users that
         return res.status(401).send({
-          message: 'Customer does not exist'
+          message: 'Customer does not exist.'
         })
       }
 
       res.status(200).send({
-        message: 'Email address has been verified'
+        message: 'Email address has been verified.'
       })
     } catch (err) {
       if (err.message === 'jwt expired') {
         return res.status(401).send({
-          message: 'Token has expired'
+          message: 'Token has expired.'
         })
       }
       return res.status(401).send({
-        message: 'Token is incorrect'
+        message: 'Token is incorrect.'
       })
     }
   } catch (err) {

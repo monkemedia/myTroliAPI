@@ -13,25 +13,25 @@ const createProductVariant = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'product-variant') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!sku) {
     return res.status(401).send({
-      message: 'SKU is required'
+      message: 'SKU is required.'
     })
   }
 
   if (!option_values) {
     return res.status(401).send({
-      message: 'Option values is required'
+      message: 'Option values is required.'
     })
   }
 
@@ -106,13 +106,13 @@ const updateProductVariant = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'product-variant') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -167,7 +167,7 @@ const deleteProductVariant = async (req, res) => {
     await actualProduct.save()
 
     res.status(200).send({
-      message: 'Product variant successfully deleted'
+      message: 'Product variant successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

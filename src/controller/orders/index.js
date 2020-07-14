@@ -102,13 +102,13 @@ const updateOrder = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'order') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -135,7 +135,7 @@ const deleteOrder = async (req, res) => {
     await Order.deleteOrder(orderId)
 
     res.status(200).send({
-      message: 'Order successfully deleted'
+      message: 'Order successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

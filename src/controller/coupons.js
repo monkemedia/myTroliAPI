@@ -22,55 +22,55 @@ const createCoupon = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'coupon') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!name) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (!code) {
     return res.status(401).send({
-      message: 'Code is required'
+      message: 'Code is required.'
     })
   }
 
   if (!coupon_type) {
     return res.status(401).send({
-      message: 'Coupon type is required'
+      message: 'Coupon type is required.'
     })
   }
 
   if (!couponTypes.includes(coupon_type)) {
     return res.status(401).send({
-      message: 'Correct coupon type is required'
+      message: 'Correct coupon type is required.'
     })
   }
 
   if (isNaN(amount)) {
     return res.status(401).send({
-      message: 'Amount is required'
+      message: 'Amount is required.'
     })
   }
 
   if (typeof amount !== 'number') {
     return res.status(401).send({
-      message: 'Amount requires a number'
+      message: 'Amount requires a number.'
     })
   }
 
   if (!enabled) {
     return res.status(401).send({
-      message: 'Enabled is required'
+      message: 'Enabled is required.'
     })
   }
 
@@ -142,7 +142,7 @@ const updateCoupon = async (req, res) => {
 
   if (type && type !== 'coupon') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -161,7 +161,7 @@ const deleteCoupon = async (req, res) => {
     await Coupon.deleteCoupon(req.params.couponId)
 
     res.status(200).send({
-      message: 'Coupon successfully deleted'
+      message: 'Coupon successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

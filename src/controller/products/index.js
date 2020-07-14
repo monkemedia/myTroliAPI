@@ -22,145 +22,145 @@ const createProduct = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'product') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!name) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (!slug) {
     return res.status(401).send({
-      message: 'Slug is required'
+      message: 'Slug is required.'
     })
   }
 
   if (!sku) {
     return res.status(401).send({
-      message: 'SKU is required'
+      message: 'SKU is required.'
     })
   }
 
   if (isNaN(stock)) {
     return res.status(401).send({
-      message: 'Stock is required'
+      message: 'Stock is required.'
     })
   }
 
   if (typeof stock !== 'number') {
     return res.status(401).send({
-      message: 'Stock requires a number'
+      message: 'Stock requires a number.'
     })
   }
 
   if (!status) {
     return res.status(401).send({
-      message: 'Status is required'
+      message: 'Status is required.'
     })
   }
 
   if (status !== 'draft' && status !== 'live') {
     return res.status(401).send({
-      message: 'Status must be either `draft` or `live`'
+      message: 'Status must be either \'draft\' or \'live\'.'
     })
   }
 
   if (!description) {
     return res.status(401).send({
-      message: 'Description is required'
+      message: 'Description is required.'
     })
   }
 
   if (!price) {
     return res.status(401).send({
-      message: 'Price is required'
+      message: 'Price is required.'
     })
   }
 
   if (price && typeof price !== 'object') {
     return res.status(401).send({
-      message: 'Price requires an object'
+      message: 'Price requires an object.'
     })
   }
 
   if (isNaN(price.amount)) {
     return res.status(401).send({
-      message: 'Price amount is required'
+      message: 'Price amount is required.'
     })
   }
 
   if (!isNaN(price.amount) && typeof price.amount !== 'number') {
     return res.status(401).send({
-      message: 'Price amount requires a number'
+      message: 'Price amount requires a number.'
     })
   }
 
   if (!price.currency) {
     return res.status(401).send({
-      message: 'Price currency is required'
+      message: 'Price currency is required.'
     })
   }
 
   if (!currencySymbol(price.currency)) {
     return res.status(401).send({
-      message: 'Price currency is not a 3 letter ISO'
+      message: 'Price currency is not a 3 letter ISO.'
     })
   }
 
   if (sale_price && typeof sale_price !== 'object') {
     return res.status(401).send({
-      message: 'Sale price requires an object'
+      message: 'Sale price requires an object.'
     })
   }
 
   if (sale_price && isNaN(sale_price.amount)) {
     return res.status(401).send({
-      message: 'Sale price amount is required'
+      message: 'Sale price amount is required.'
     })
   }
 
   if (sale_price && !isNaN(sale_price.amount) && typeof sale_price.amount !== 'number') {
     return res.status(401).send({
-      message: 'Sale price amount requires a number'
+      message: 'Sale price amount requires a number.'
     })
   }
 
   if (sale_price && !sale_price.currency) {
     return res.status(401).send({
-      message: 'Sale price currency is required'
+      message: 'Sale price currency is required.'
     })
   }
 
   if (sale_price && !currencySymbol(sale_price.currency)) {
     return res.status(401).send({
-      message: 'Sale price currency is not a 3 letter ISO'
+      message: 'Sale price currency is not a 3 letter ISO.'
     })
   }
 
   if (on_sale && typeof on_sale !== 'boolean') {
     return res.status(401).send({
-      message: 'On sale requires a boolean'
+      message: 'On sale requires a boolean.'
     })
   }
 
   if (!commodity_type) {
     return res.status(401).send({
-      message: 'Commodity Type is required'
+      message: 'Commodity Type is required.'
     })
   }
 
   if (commodity_type !== 'physical' && commodity_type !== 'digital') {
     return res.status(401).send({
-      message: 'Commodity Type should be either physical or digital types'
+      message: 'Commodity Type should be either physical or digital types.'
     })
   }
 
@@ -213,13 +213,13 @@ const updateProduct = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'product') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -238,7 +238,7 @@ const deleteProduct = async (req, res) => {
     await Product.deleteProduct(req.params.productId)
 
     res.status(200).send({
-      message: 'Product successfully deleted'
+      message: 'Product successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

@@ -5,31 +5,31 @@ const createCurrencies = async (req, res) => {
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.some(val => val.type !== 'currency')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (data.some(val => !val.name)) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (data.some(val => !val.currency_code)) {
     return res.status(401).send({
-      message: 'Currency code is required'
+      message: 'Currency code is required.'
     })
   }
 
   if (data.some(val => !val.currency_symbol)) {
     return res.status(401).send({
-      message: 'Currency symbol is required'
+      message: 'Currency symbol is required.'
     })
   }
 
@@ -71,13 +71,13 @@ const updateCurrency = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type !== 'currency') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -98,7 +98,7 @@ const deleteCurrency = async (req, res) => {
     await Currency.deleteCurrency(currencyId)
 
     res.status(200).send({
-      message: 'Currency successfully deleted'
+      message: 'Currency successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

@@ -6,7 +6,7 @@ module.exports = (statusCode, err) => {
     const getDuplicateKey = err.errmsg.split('index: ')[1].split('_')[0]
 
     return httpError(statusCode, {
-      message: `${getDuplicateKey.charAt(0).toUpperCase() + getDuplicateKey.slice(1)} needs to be unique`
+      message: `${getDuplicateKey.charAt(0).toUpperCase() + getDuplicateKey.slice(1)} needs to be unique.`
     })
   }
 

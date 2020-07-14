@@ -5,31 +5,31 @@ const createOrderStatus = async (req, res) => {
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.some(val => val.type !== 'order-status')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (data.some(val => isNaN(val.status_id))) {
     return res.status(401).send({
-      message: 'Status ID is required'
+      message: 'Status ID is required.'
     })
   }
 
   if (data.some(val => !val.name)) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (data.some(val => !val.value)) {
     return res.status(401).send({
-      message: 'Value is required'
+      message: 'Value is required.'
     })
   }
 
@@ -70,31 +70,31 @@ const updateOrderStatus = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'order-status') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (isNaN(status_id)) {
     return res.status(401).send({
-      message: 'Status ID is required'
+      message: 'Status ID is required.'
     })
   }
 
   if (!name) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (!value) {
     return res.status(401).send({
-      message: 'Value is required'
+      message: 'Value is required.'
     })
   }
 
@@ -108,28 +108,9 @@ const updateOrderStatus = async (req, res) => {
   }
 }
 
-// const deleteCategory = async (req, res) => {
-//   try {
-//     // Delete any relationships first
-//     const relationships = await ProductCategories.findProductCategories(req.params.categoryId)
-//     relationships.map(async relationship => {
-//       await ProductCategories.deleteCategory(relationship._id)
-//     })
-
-//     await Category.deleteCategory(req.params.categoryId)
-
-//     res.status(200).send({
-//       message: 'Category successfully deleted'
-//     })
-//   } catch (err) {
-//     res.status(400).send(err)
-//   }
-// }
-
 module.exports = {
   createOrderStatus,
   getOrderStatuses,
   getOrderStatus,
   updateOrderStatus
-  // deleteCategory
 }

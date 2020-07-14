@@ -9,19 +9,19 @@ const createVariation = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'variation') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!value) {
     return res.status(401).send({
-      message: 'Value is required'
+      message: 'Value is required.'
     })
   }
 
@@ -59,13 +59,13 @@ const updateVariation = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'variation') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -103,7 +103,7 @@ const deleteVariation = async (req, res) => {
     await Variation.deleteVariation(req.params.variationId)
 
     res.status(200).send({
-      message: 'Variation successfully deleted'
+      message: 'Variation successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

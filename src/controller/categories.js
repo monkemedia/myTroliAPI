@@ -7,31 +7,31 @@ const createCategory = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'categories') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!name) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (!slug) {
     return res.status(401).send({
-      message: 'Slug is required'
+      message: 'Slug is required.'
     })
   }
 
   if (status && (status !== 'draft' && status !== 'live')) {
     return res.status(401).send({
-      message: 'Correct Status is required'
+      message: 'Correct Status is required.'
     })
   }
 
@@ -85,13 +85,13 @@ const updateCategory = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'categories') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -116,7 +116,7 @@ const deleteCategory = async (req, res) => {
     await Category.deleteCategory(req.params.categoryId)
 
     res.status(200).send({
-      message: 'Category successfully deleted'
+      message: 'Category successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

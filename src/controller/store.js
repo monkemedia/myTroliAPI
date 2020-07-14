@@ -9,19 +9,19 @@ const createStore = async (req, res) => {
 
   if (store) {
     return res.status(401).send({
-      message: 'There is already a store'
+      message: 'There is already a store.'
     })
   }
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type !== 'store') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -50,13 +50,13 @@ const updateStore = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type !== 'store') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -75,7 +75,7 @@ const deleteStore = async (req, res) => {
     await Store.deleteStore()
 
     res.status(200).send({
-      message: 'Store successfully deleted'
+      message: 'Store successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

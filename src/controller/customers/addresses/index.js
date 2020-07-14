@@ -16,55 +16,55 @@ const createCustomerAddress = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'customer-address') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!phone_number) {
     return res.status(401).send({
-      message: 'Phone number is required'
+      message: 'Phone number is required.'
     })
   }
 
   if (!first_name) {
     return res.status(401).send({
-      message: 'First name is required'
+      message: 'First name is required.'
     })
   }
 
   if (!last_name) {
     return res.status(401).send({
-      message: 'Last name is required'
+      message: 'Last name is required.'
     })
   }
 
   if (!line_1) {
     return res.status(401).send({
-      message: 'Line 1 is required'
+      message: 'Line 1 is required.'
     })
   }
 
   if (!city) {
     return res.status(401).send({
-      message: 'City is required'
+      message: 'City is required.'
     })
   }
 
   if (!postcode) {
     return res.status(401).send({
-      message: 'Postcode is required'
+      message: 'Postcode is required.'
     })
   }
 
   if (!country_code) {
     return res.status(401).send({
-      message: 'Country code is required'
+      message: 'Country code is required.'
     })
   }
 
@@ -108,13 +108,13 @@ const updateCustomerAddress = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'customer-address') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -134,7 +134,7 @@ const deleteCustomerAddress = async (req, res) => {
     await CustomerAddress.deleteCustomerAddress(addressId)
 
     res.status(200).send({
-      message: 'Customer Address successfully deleted'
+      message: 'Customer Address successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

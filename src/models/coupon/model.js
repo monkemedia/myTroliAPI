@@ -67,6 +67,11 @@ couponSchema.statics.findCouponByCode = async (couponCode) => {
     throw errorHandler(422, 'Coupon does not exist.')
   }
 
+  // Check to see if coupon is enabled
+  if (!coupon.enabled) {
+    throw errorHandler(422, 'Coupon has expired.')
+  }
+
   // Check to see if coupon has expired
   if (coupon.expiry && new Date(coupon.expiry).toISOString() < new Date().toISOString()) {
     throw errorHandler(422, 'Coupon has expired.')

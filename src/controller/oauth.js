@@ -74,37 +74,37 @@ const login = async (req, res) => {
 
     if (!email) {
       return res.status(401).send({
-        message: 'Email is required'
+        message: 'Email is required.'
       })
     }
 
     if (!password) {
       return res.status(401).send({
-        message: 'Password is required'
+        message: 'Password is required.'
       })
     }
 
     if (!client_secret) {
       return res.status(401).send({
-        message: 'Client Secret is required'
+        message: 'Client Secret is required.'
       })
     }
 
     if (!client_secret && client_secret !== process.env.CLIENT_SECRET) {
       return res.status(401).send({
-        message: 'Correct Client Secret is required'
+        message: 'Correct Client Secret is required.'
       })
     }
 
     if (!type) {
       return res.status(401).send({
-        message: 'Type is required'
+        message: 'Type is required.'
       })
     }
 
     if (type !== 'client_credentials') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct Type is required.'
       })
     }
 
@@ -133,19 +133,19 @@ const resetToken = async (req, res) => {
 
     if (!email) {
       return res.status(401).send({
-        message: 'Email is required'
+        message: 'Email is required.'
       })
     }
 
     if (!type) {
       return res.status(401).send({
-        message: 'Type is required'
+        message: 'Type is required.'
       })
     }
 
     if (type !== 'reset_token') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct Type is required.'
       })
     }
 
@@ -154,7 +154,7 @@ const resetToken = async (req, res) => {
     if (!client) {
       // customer doesn't exist but we can't tell users that
       return res.status(200).send({
-        message: 'Reset email is on it\'s way'
+        message: 'Reset email is on it\'s way.'
       })
     }
 
@@ -183,25 +183,25 @@ const resetPassword = async (req, res) => {
 
     if (!password) {
       return res.status(401).send({
-        message: 'Password is required'
+        message: 'Password is required.'
       })
     }
 
     if (!reset_token) {
       return res.status(401).send({
-        message: 'Reset Token is required'
+        message: 'Reset Token is required.'
       })
     }
 
     if (!type) {
       return res.status(401).send({
-        message: 'Type is required'
+        message: 'Type is required.'
       })
     }
 
     if (type !== 'reset_password') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct Type is required.'
       })
     }
 
@@ -213,23 +213,23 @@ const resetPassword = async (req, res) => {
       if (!client) {
         // customer doesn't exist but we can't tell users that
         return res.status(401).send({
-          message: 'Client does not exist'
+          message: 'Client does not exist.'
         })
       }
 
       await Client.updateClientWithPassword(client._id, password)
 
       res.status(200).send({
-        message: 'Password has been updated'
+        message: 'Password has been updated.'
       })
     } catch (err) {
       if (err.message === 'jwt expired') {
         return res.status(401).send({
-          message: 'Token has expired'
+          message: 'Token has expired.'
         })
       }
       return res.status(401).send({
-        message: 'Token is incorrect'
+        message: 'Token is incorrect.'
       })
     }
   } catch (err) {

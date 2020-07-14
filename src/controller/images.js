@@ -7,19 +7,19 @@ const uploadImage = async (req, res) => {
 
   if (!image) {
     return res.status(401).send({
-      message: 'Image is required'
+      message: 'Image is required.'
     })
   }
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'image') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 

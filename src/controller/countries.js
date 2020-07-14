@@ -5,13 +5,13 @@ const createCountries = async (req, res) => {
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.some(val => val.type !== 'country')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -53,13 +53,13 @@ const updateCountry = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type !== 'country') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -80,7 +80,7 @@ const deleteCountry = async (req, res) => {
     await Country.deleteCountry(countryId)
 
     res.status(200).send({
-      message: 'Country successfully deleted'
+      message: 'Country successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

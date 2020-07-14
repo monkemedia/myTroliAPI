@@ -11,25 +11,25 @@ const createProductOption = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'product-options') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!display_name) {
     return res.status(401).send({
-      message: 'Display name is required'
+      message: 'Display name is required.'
     })
   }
 
   if (!option_values) {
     return res.status(401).send({
-      message: 'Option values is required'
+      message: 'Option values is required.'
     })
   }
 
@@ -80,7 +80,7 @@ const updateProductOption = async (req, res) => {
 
   if (type && type !== 'product-options') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -101,7 +101,7 @@ const deleteProductOption = async (req, res) => {
     await ProductOption.deleteProductOption(productId, optionId)
 
     res.status(200).send({
-      message: 'Product variant option successfully deleted'
+      message: 'Product variant option successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

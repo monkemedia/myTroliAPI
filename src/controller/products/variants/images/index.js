@@ -9,19 +9,19 @@ const createProductVariantImage = async (req, res) => {
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.some(val => val.type !== 'product-variant-image')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (data.some(val => !val.image_id)) {
     return res.status(401).send({
-      message: 'Image ID is required'
+      message: 'Image ID is required.'
     })
   }
 
@@ -134,13 +134,13 @@ const deleteProductVariantImage = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type !== 'product-variant-image') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -154,7 +154,7 @@ const deleteProductVariantImage = async (req, res) => {
     }
 
     res.status(200).send({
-      message: 'Product variant image successfully deleted'
+      message: 'Product variant image successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

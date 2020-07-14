@@ -8,37 +8,37 @@ const createClient = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type !== 'client_credentials') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!email) {
     return res.status(401).send({
-      message: 'Email is required'
+      message: 'Email is required.'
     })
   }
 
   if (!name) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (!role) {
     return res.status(401).send({
-      message: 'Role is required'
+      message: 'Role is required.'
     })
   }
 
   if (clientExists) {
     return res.status(401).send({
-      message: 'Client already exists'
+      message: 'Client already exists.'
     })
   }
 
@@ -86,7 +86,7 @@ const getClient = async (req, res) => {
 
     if (!client) {
       return res.status(401).send({
-        message: 'Client does not exist'
+        message: 'Client does not exist.'
       })
     }
     const clientClone = Object.assign(client, {
@@ -106,13 +106,13 @@ const updateClient = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type !== 'client_credentials') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 

@@ -6,7 +6,7 @@ const auth = async (req, res, next) => {
   const tokenString = token.split(' ')[1]
 
   if (!token || tokenString === 'undefined' || !tokenString) {
-    return res.status(401).send(errorHandler(401, 'Token is required'))
+    return res.status(401).send(errorHandler(401, 'Token is required.'))
   }
 
   token = token.replace('Bearer ', '')
@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
     next()
   } catch (err) {
     if (err.message === 'jwt expired') {
-      return res.status(401).send(errorHandler(401, 'Token has expired'))
+      return res.status(401).send(errorHandler(401, 'Token has expired.'))
     }
 
     res.status(err.status).send(err)

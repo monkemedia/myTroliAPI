@@ -9,19 +9,19 @@ const createProductCategories = async (req, res) => {
 
   if (productCategories && productCategories.length > 0) {
     return res.status(401).send({
-      message: 'There is already a Product Category'
+      message: 'There is already a Product Category.'
     })
   }
 
   if (!data.type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.type !== 'product-category') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -57,13 +57,13 @@ const updateProductCategories = async (req, res) => {
 
   if (!data.type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.type !== 'product-category') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -84,7 +84,7 @@ const deleteProductCategories = async (req, res) => {
     await ProductCategories.deleteProductCategory(productId)
 
     res.status(200).send({
-      message: 'Product category successfully deleted'
+      message: 'Product category successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

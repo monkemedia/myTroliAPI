@@ -51,21 +51,21 @@ clientSchema.statics.findByCredentials = async (email, password) => {
   const client = await Client.findOne({ email })
 
   if (!client) {
-    throw errorHandler(422, 'Client does not exists')
+    throw errorHandler(422, 'Client does not exists.')
   }
 
   if (!client.password) {
-    throw errorHandler(422, 'Account inactive')
+    throw errorHandler(422, 'Account inactive.')
   }
 
   if (client.status === 'inactive') {
-    throw errorHandler(422, 'Account inactive')
+    throw errorHandler(422, 'Account inactive.')
   }
 
   const isPasswordMatch = await bcrypt.compare(password, client.password)
 
   if (!isPasswordMatch) {
-    throw errorHandler(422, 'Invalid login credentials')
+    throw errorHandler(422, 'Invalid login credentials.')
   }
 
   return client

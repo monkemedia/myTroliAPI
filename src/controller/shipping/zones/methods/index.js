@@ -15,7 +15,7 @@ const createShippingMethod = async (req, res) => {
 
   if (!data.type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
@@ -23,19 +23,19 @@ const createShippingMethod = async (req, res) => {
 
   if (!validateType) {
     return res.status(401).send({
-      message: 'Correct type is required'
+      message: 'Correct type is required.'
     })
   }
 
   if (!data.name) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (!data.shipping_zone_id) {
     return res.status(401).send({
-      message: 'Shipping zone ID is required'
+      message: 'Shipping zone ID is required.'
     })
   }
 
@@ -76,7 +76,7 @@ const updateShippingMethod = async (req, res) => {
 
   if (!data.type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
@@ -84,7 +84,7 @@ const updateShippingMethod = async (req, res) => {
 
   if (!validateType) {
     return res.status(401).send({
-      message: 'Correct type is required'
+      message: 'Correct type is required.'
     })
   }
 
@@ -104,7 +104,7 @@ const deleteShippingMethod = async (req, res) => {
     await ShippingMethod.deleteMethod(methodId)
 
     res.status(200).send({
-      message: 'Shipping method successfully deleted'
+      message: 'Shipping method successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

@@ -10,19 +10,19 @@ const createCustomerCoupon = async (req, res) => {
 
   if (!type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (type && type !== 'customer-coupon') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!coupon_id) {
     return res.status(401).send({
-      message: 'Coupon Id is required'
+      message: 'Coupon Id is required.'
     })
   }
 
@@ -85,7 +85,7 @@ const deleteCustomerCoupon = async (req, res) => {
     await CustomerCoupon.deleteCustomerCoupon(couponId)
 
     res.status(200).send({
-      message: 'Customer coupon successfully deleted'
+      message: 'Customer coupon successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

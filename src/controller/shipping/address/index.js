@@ -8,19 +8,19 @@ const createShippingAddress = async (req, res) => {
 
   if (shippingAddress) {
     return res.status(401).send({
-      message: 'There is already a shipping address'
+      message: 'There is already a shipping address.'
     })
   }
 
   if (!data.type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.type !== 'shipping-address') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -49,13 +49,13 @@ const updateShippingAddress = async (req, res) => {
 
   if (!data.type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.type !== 'shipping-address') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -74,7 +74,7 @@ const deleteShippingAddress = async (req, res) => {
     await ShippingAddress.deleteShippingAddress()
 
     res.status(200).send({
-      message: 'Shipping address successfully deleted'
+      message: 'Shipping address successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)

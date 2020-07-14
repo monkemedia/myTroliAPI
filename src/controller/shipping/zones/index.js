@@ -5,25 +5,25 @@ const createShippingZone = async (req, res) => {
 
   if (!data.type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.type !== 'shipping-zone') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
   if (!data.name) {
     return res.status(401).send({
-      message: 'Name is required'
+      message: 'Name is required.'
     })
   }
 
   if (!data.country_code) {
     return res.status(401).send({
-      message: 'Country code is required'
+      message: 'Country code is required.'
     })
   }
 
@@ -32,7 +32,7 @@ const createShippingZone = async (req, res) => {
     const zoneExists = await ShippingZone.findZoneByCountryCode(data.country_code)
     if (zoneExists) {
       return res.status(401).send({
-        message: 'Zone already exists'
+        message: 'Zone already exists.'
       })
     }
     const shippingZone = new ShippingZone(data)
@@ -71,13 +71,13 @@ const updateShippingZone = async (req, res) => {
 
   if (!data.type) {
     return res.status(401).send({
-      message: 'Type is required'
+      message: 'Type is required.'
     })
   }
 
   if (data.type !== 'shipping-zone') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct Type is required.'
     })
   }
 
@@ -97,7 +97,7 @@ const deleteShippingZone = async (req, res) => {
     await ShippingZone.deleteZone(zoneId)
 
     res.status(200).send({
-      message: 'Shipping zone successfully deleted'
+      message: 'Shipping zone successfully deleted.'
     })
   } catch (err) {
     res.status(400).send(err)
