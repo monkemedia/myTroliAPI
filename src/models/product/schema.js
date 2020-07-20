@@ -24,6 +24,11 @@ const productSchema = Schema({
     type: Number,
     required: true
   },
+  track_inventory: {
+    type: String,
+    enum: ['none', 'product-inventory', 'variant-inventory'],
+    default: 'none'
+  },
   status: {
     type: String,
     default: 'draft'
