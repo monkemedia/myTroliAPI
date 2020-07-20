@@ -9,15 +9,15 @@ orderSchema.plugin(AutoIncrement, {
   start_seq: 100
 })
 
-async function updateProductStock ({ productId, variantId, currentStock, qty }, direction) {
+async function updateProductStock ({ productId, variantId, trackInventory, currentStock, qty }, direction) {
   const newStock = direction === 'decrease' ? currentStock - qty : currentStock + qty
   let update
 
-  if (variantId && productId) {
+  if (trackInventory === 'variant-inventory') {
     update = await ProductVariants.updateOne({ _id: variantId }, {
       stock: newStock
     })
-  } else {
+  } else if (trackInventory === 'product-inventory') {
     update = await Product.updateOne({ _id: productId }, {
       stock: newStock
     })
@@ -30,14 +30,18 @@ async function stockLevelHandler (product) {
   // Does product have options
   const variantId = product.variant_id
   const productId = product.product_id
-  if (productId && variantId) {
+  const trackInventory = product.track_inventory
+  let stock
+
+  if (trackInventory === 'variant-inventory') {
     const productVariant = await ProductVariants.findOne({ _id: variantId })
-    return productVariant.stock
+    stock = productVariant.stock
+  } else if (trackInventory === 'product-inventory') {
+    const prod = await Product.findOne({ _id: productId })
+    stock = prod.stock
   }
 
-  // Product doesn't have options
-  const prod = await Product.findOne({ _id: productId })
-  return prod.stock
+  return stock
 }
 
 // Check stock before creating order
@@ -48,17 +52,25 @@ orderSchema.pre('save', async function (next) {
   const promise = await orderProducts.map(async orderProduct => {
     const productId = orderProduct.product_id
     const productName = orderProduct.name
+    const trackInventory = orderProduct.track_inventory
     const variantId = orderProduct.variant_id
     const orderQty = orderProduct.quantity
+
+    if (trackInventory === 'none') {
+      return next()
+    }
+
     const stockLevel = await stockLevelHandler(orderProduct)
+
     if (orderQty > stockLevel) {
-      throw new Error(`Product \`${productName}\` is out of stock`)
+      throw new Error(`Product '${productName}' is out of stock`)
     }
 
     // There is enough stock, so decrease stock
     updateProductStock({
       currentStock: stockLevel,
       qty: orderQty,
+      trackInventory,
       variantId,
       productId
     }, 'decrease')

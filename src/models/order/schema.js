@@ -217,6 +217,10 @@ const orderSchema = new Schema({
       type: String,
       default: null
     },
+    track_inventory: {
+      type: String,
+      default: 'none'
+    },
     name: {
       type: String,
       required: true
