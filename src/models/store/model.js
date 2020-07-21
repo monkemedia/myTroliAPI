@@ -2,14 +2,9 @@ const mongoose = require('mongoose')
 const storeSchema = require('./schema.js')
 
 // Update store
-storeSchema.statics.updateStore = async (storeDetails) => {
-  const store = await Store.updateOne({}, storeDetails)
-  return store
-}
-
-// Delete store
-storeSchema.statics.deleteStore = async () => {
-  const store = await Store.deleteOne()
+storeSchema.statics.updateStore = async (data) => {
+  delete data.type
+  const store = await Store.findOneAndUpdate({ type: 'store' }, data, { upsert: true })
   return store
 }
 
