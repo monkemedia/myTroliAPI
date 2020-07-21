@@ -90,12 +90,6 @@ const login = async (req, res) => {
       })
     }
 
-    if (!client_secret && client_secret !== process.env.CLIENT_SECRET) {
-      return res.status(401).send({
-        message: 'Correct Client Secret is required'
-      })
-    }
-
     if (!type) {
       return res.status(401).send({
         message: 'Type is required'
