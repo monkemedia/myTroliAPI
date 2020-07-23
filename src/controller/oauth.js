@@ -68,9 +68,9 @@ const refreshToken = async (req, res) => {
   }
 }
 
-const login = async (req, res) => {
+const accessToken = async (req, res) => {
   try {
-    const { type, client_secret, email, password } = req.body
+    const { type, email, password } = req.body
 
     if (!email) {
       return res.status(401).send({
@@ -81,12 +81,6 @@ const login = async (req, res) => {
     if (!password) {
       return res.status(401).send({
         message: 'Password is required'
-      })
-    }
-
-    if (!client_secret) {
-      return res.status(401).send({
-        message: 'Client Secret is required'
       })
     }
 
@@ -102,7 +96,7 @@ const login = async (req, res) => {
       })
     }
 
-    const client = await Client.findByCredentials(email, password)
+    const client = await Client.findByCredentials(email)
     const accessToken = await client.generateToken(accessTokenTime)
     const refreshToken = await client.generateToken(refreshTokenTime)
 
@@ -111,8 +105,9 @@ const login = async (req, res) => {
 
     res.status(200).send({
       type: 'client_credentials',
-      client_id: client._id,
+      expires_in: 3600,
       access_token: accessToken,
+      token_type: 'Bearer',
       refresh_token: refreshToken
     })
   } catch (err) {
@@ -143,7 +138,7 @@ const resetToken = async (req, res) => {
       })
     }
 
-    const client = await Client.findByEmail(email)
+    const client = await Client.findByCredentials(email)
 
     if (!client) {
       // customer doesn't exist but we can't tell users that
@@ -233,7 +228,7 @@ const resetPassword = async (req, res) => {
 
 module.exports = {
   refreshToken,
-  login,
+  accessToken,
   resetToken,
   resetPassword
 }

@@ -7,7 +7,7 @@ const createCustomer = async (req, res) => {
     // Check to see if customer already exists
     const data = req.body
     const { first_name, last_name, email, password, type } = data
-    const customerExists = await Customer.findByEmail(email)
+    const customerExists = await Customer.findByCredentials(email)
 
     if (!first_name) {
       return res.status(401).send({

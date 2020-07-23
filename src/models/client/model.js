@@ -26,7 +26,7 @@ clientSchema.methods.generateToken = async function (expiresIn) {
 }
 
 // Search for a client by email address
-clientSchema.statics.findByEmail = async (email) => {
+clientSchema.statics.findByCredentials = async (email) => {
   const client = await Client.findOne({ email })
 
   return client
@@ -42,31 +42,6 @@ clientSchema.statics.findByRefreshToken = async (refresh_token) => {
 // Search for a client by reset token
 clientSchema.statics.findByResetToken = async (reset_token) => {
   const client = await Client.findOne({ reset_token })
-
-  return client
-}
-
-// Search for a Client user by email and password
-clientSchema.statics.findByCredentials = async (email, password) => {
-  const client = await Client.findOne({ email })
-
-  if (!client) {
-    throw errorHandler(422, 'Client does not exists')
-  }
-
-  if (!client.password) {
-    throw errorHandler(422, 'Account inactive')
-  }
-
-  if (client.status === 'inactive') {
-    throw errorHandler(422, 'Account inactive')
-  }
-
-  const isPasswordMatch = await bcrypt.compare(password, client.password)
-
-  if (!isPasswordMatch) {
-    throw errorHandler(422, 'Invalid login credentials')
-  }
 
   return client
 }
