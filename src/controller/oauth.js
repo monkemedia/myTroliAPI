@@ -107,6 +107,7 @@ const accessToken = async (req, res) => {
       type: 'client_credentials',
       expires_in: 3600,
       access_token: accessToken,
+      client_id: client._id,
       token_type: 'Bearer',
       refresh_token: refreshToken
     })
