@@ -40,10 +40,6 @@ const orderSchema = new Schema({
       default: ''
     }
   },
-  coupon_amount: {
-    type: Number,
-    default: 0
-  },
   subtotal_exc_tax: {
     type: Number,
     default: 0
