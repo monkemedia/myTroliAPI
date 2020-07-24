@@ -20,7 +20,7 @@ const createPayment = async (req, res) => {
 
   if (type && type !== 'payments') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -63,7 +63,7 @@ const updatePayment = async (req, res) => {
 
   if (type && type !== 'payments') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

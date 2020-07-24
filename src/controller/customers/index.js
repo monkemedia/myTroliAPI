@@ -41,7 +41,7 @@ const createCustomer = async (req, res) => {
 
     if (type && type !== 'customer') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct type is required'
       })
     }
 
@@ -112,7 +112,7 @@ const updateCustomer = async (req, res) => {
 
   if (type && type !== 'customer') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -151,7 +151,7 @@ const resendVerificationEmail = async (req, res) => {
 
     if (type !== 'customer') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct type is required'
       })
     }
 
@@ -185,7 +185,7 @@ const verifyCustomer = async (req, res) => {
 
     if (type !== 'verify_customer') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct type is required'
       })
     }
 

@@ -14,7 +14,7 @@ const createProductImage = async (req, res) => {
 
   if (data.some(val => val.type !== 'product-image')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -107,7 +107,7 @@ const updateProductImage = async (req, res) => {
 
   if (type && type !== 'product-image') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -133,7 +133,7 @@ const deleteProductImage = async (req, res) => {
 
   if (data.some(val => val.type !== 'product-image')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

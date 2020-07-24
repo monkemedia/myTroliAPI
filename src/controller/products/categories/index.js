@@ -21,7 +21,7 @@ const createProductCategories = async (req, res) => {
 
   if (data.type !== 'product-category') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -63,7 +63,7 @@ const updateProductCategories = async (req, res) => {
 
   if (data.type !== 'product-category') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

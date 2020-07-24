@@ -17,7 +17,7 @@ const createPaymentRefund = async (req, res) => {
 
   if (type && type !== 'payment-refunds') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

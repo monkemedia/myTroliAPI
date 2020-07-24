@@ -11,7 +11,7 @@ const createCountries = async (req, res) => {
 
   if (data.some(val => val.type !== 'country')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -59,7 +59,7 @@ const updateCountry = async (req, res) => {
 
   if (type !== 'country') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

@@ -19,7 +19,7 @@ const createProductVariant = async (req, res) => {
 
   if (type && type !== 'product-variant') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -112,7 +112,7 @@ const updateProductVariant = async (req, res) => {
 
   if (type && type !== 'product-variant') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

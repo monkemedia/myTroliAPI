@@ -17,7 +17,7 @@ const refreshToken = async (req, res) => {
 
     if (type !== 'refresh_token') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct type is required'
       })
     }
 
@@ -92,7 +92,7 @@ const accessToken = async (req, res) => {
 
     if (type !== 'client_credentials') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct type is required'
       })
     }
 
@@ -135,7 +135,7 @@ const resetToken = async (req, res) => {
 
     if (type !== 'reset_token') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct type is required'
       })
     }
 
@@ -191,7 +191,7 @@ const resetPassword = async (req, res) => {
 
     if (type !== 'reset_password') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct type is required'
       })
     }
 

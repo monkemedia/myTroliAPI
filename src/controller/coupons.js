@@ -28,7 +28,7 @@ const createCoupon = async (req, res) => {
 
   if (type && type !== 'coupon') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -142,7 +142,7 @@ const updateCoupon = async (req, res) => {
 
   if (type && type !== 'coupon') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

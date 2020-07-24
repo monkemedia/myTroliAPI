@@ -20,7 +20,7 @@ const createShippingAddress = async (req, res) => {
 
   if (data.type !== 'shipping-address') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -55,7 +55,7 @@ const updateShippingAddress = async (req, res) => {
 
   if (data.type !== 'shipping-address') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

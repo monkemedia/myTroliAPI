@@ -11,7 +11,7 @@ const createShippingZone = async (req, res) => {
 
   if (data.type !== 'shipping-zone') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -77,7 +77,7 @@ const updateShippingZone = async (req, res) => {
 
   if (data.type !== 'shipping-zone') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

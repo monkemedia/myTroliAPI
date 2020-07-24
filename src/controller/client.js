@@ -14,7 +14,7 @@ const createClient = async (req, res) => {
 
   if (type !== 'client_credentials') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -112,7 +112,7 @@ const updateClient = async (req, res) => {
 
   if (type !== 'client_credentials') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -160,7 +160,7 @@ const resendActivationEmail = async (req, res) => {
 
     if (type !== 'client_credentials') {
       return res.status(401).send({
-        message: 'Correct Type is required'
+        message: 'Correct type is required'
       })
     }
 

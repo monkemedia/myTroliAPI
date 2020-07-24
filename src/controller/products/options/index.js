@@ -17,7 +17,7 @@ const createProductOption = async (req, res) => {
 
   if (type && type !== 'product-options') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -80,7 +80,7 @@ const updateProductOption = async (req, res) => {
 
   if (type && type !== 'product-options') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

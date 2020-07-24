@@ -11,7 +11,7 @@ const createOrderStatus = async (req, res) => {
 
   if (data.some(val => val.type !== 'order-status')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -76,7 +76,7 @@ const updateOrderStatus = async (req, res) => {
 
   if (type && type !== 'order-status') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

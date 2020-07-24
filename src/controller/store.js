@@ -21,7 +21,7 @@ const updateStore = async (req, res) => {
 
   if (type !== 'store') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

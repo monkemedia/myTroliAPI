@@ -11,7 +11,7 @@ const createCurrencies = async (req, res) => {
 
   if (data.some(val => val.type !== 'currency')) {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -77,7 +77,7 @@ const updateCurrency = async (req, res) => {
 
   if (type !== 'currency') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

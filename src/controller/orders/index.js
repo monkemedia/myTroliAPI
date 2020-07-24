@@ -13,7 +13,7 @@ const createOrder = async (req, res) => {
 
   if (type && type !== 'order') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -108,7 +108,7 @@ const updateOrder = async (req, res) => {
 
   if (type && type !== 'order') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

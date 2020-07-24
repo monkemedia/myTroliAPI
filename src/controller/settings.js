@@ -22,7 +22,7 @@ const updateSettings = async (req, res) => {
 
   if (type && type !== 'settings') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 

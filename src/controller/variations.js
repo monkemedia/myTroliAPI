@@ -15,7 +15,7 @@ const createVariation = async (req, res) => {
 
   if (type && type !== 'variation') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
@@ -65,7 +65,7 @@ const updateVariation = async (req, res) => {
 
   if (type && type !== 'variation') {
     return res.status(401).send({
-      message: 'Correct Type is required'
+      message: 'Correct type is required'
     })
   }
 
