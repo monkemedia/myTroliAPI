@@ -141,7 +141,7 @@ customerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
     password = await bcrypt.hash(password, 8)
   }
 
-  const customer = await Customer.updateOne({ _id: customerId }, { ...customerDetails, password })
+  const customer = await Customer.updateOne({ _id: customerId }, { ...customerDetails, password, updated_at: Date.now() })
   return customer
 }
 

@@ -30,7 +30,10 @@ productImageSchema.statics.updateProductImage = async (productId, imageId, data)
   const productImage = await ProductImage.updateOne({
     _id: imageId,
     product_id: productId
-  }, data)
+  }, {
+    ...data,
+    updated_at: Date.now()
+  })
   return productImage
 }
 

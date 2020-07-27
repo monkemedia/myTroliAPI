@@ -7,20 +7,17 @@ const shippingAddressSchema = new Schema({
     required: true
   },
   company_name: {
-    type: String,
-    required: false
+    type: String
   },
   line_1: {
     type: String,
     required: true
   },
   line_2: {
-    type: String,
-    required: false
+    type: String
   },
   city: {
-    type: String,
-    required: false
+    type: String
   },
   postcode: {
     type: String,
@@ -35,8 +32,14 @@ const shippingAddressSchema = new Schema({
     required: true
   },
   phone_number: {
-    type: String,
-    required: false
+    type: String
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

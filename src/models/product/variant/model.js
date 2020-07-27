@@ -13,7 +13,10 @@ productVariantSchema.statics.findProductVariants = async (productId) => {
 
 // Update product variant
 productVariantSchema.statics.updateProductVariant = async (variantId, productVariantDetails) => {
-  const productVariant = await ProductVariants.updateOne({ _id: variantId }, productVariantDetails)
+  const productVariant = await ProductVariants.updateOne({ _id: variantId }, {
+    ...productVariantDetails,
+    updated_at: Date.now()
+  })
   return productVariant
 }
 

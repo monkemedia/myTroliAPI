@@ -15,7 +15,10 @@ shippingMethodSchema.statics.findMethod = async (methodId) => {
 
 // Update method
 shippingMethodSchema.statics.updateMethod = async (methodId, methodDetails) => {
-  const method = await ShippingMethods.updateOne({ _id: methodId }, methodDetails)
+  const method = await ShippingMethods.updateOne({ _id: methodId }, {
+    ...methodDetails,
+    updated_at: Date.now()
+  })
   return method
 }
 

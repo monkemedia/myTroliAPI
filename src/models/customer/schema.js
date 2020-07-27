@@ -21,8 +21,7 @@ const customerSchema = new Schema({
     default: false
   },
   verify_token: {
-    type: String,
-    default: null
+    type: String
   },
   email: {
     type: String,
@@ -39,6 +38,13 @@ const customerSchema = new Schema({
     type: String,
     required: true,
     minLength: 8
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

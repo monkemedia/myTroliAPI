@@ -17,6 +17,13 @@ const shippingZoneSchema = new Schema({
   enabled: {
     type: Boolean,
     default: false
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

@@ -11,64 +11,58 @@ const storeSchema = new Schema({
     required: true
   },
   name: {
-    type: String,
-    required: false
+    type: String
   },
   first_name: {
-    type: String,
-    required: false
+    type: String
   },
   last_name: {
-    type: String,
-    required: false
+    type: String
   },
   address: {
-    type: String,
-    required: false
+    type: String
   },
   country_code: {
-    type: String,
-    required: false
+    type: String
   },
   country: {
-    type: String,
-    required: false
+    type: String
   },
   phone: {
-    type: String,
-    required: false
+    type: String
   },
   admin_email: {
-    type: String,
-    required: false
+    type: String
   },
   order_email: {
-    type: String,
-    required: false
+    type: String
   },
   is_price_entered_with_tax: {
     type: Boolean,
-    required: false
+    default: false
   },
   tax_label: {
-    type: String,
-    required: false
+    type: String
   },
   tax_percentage: {
     type: Number,
     default: 0
   },
   language: {
-    type: String,
-    required: false
+    type: String
   },
   currency_code: {
-    type: String,
-    required: false
+    type: String
   },
   weight_unit: {
-    type: String,
-    required: false
+    type: String
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

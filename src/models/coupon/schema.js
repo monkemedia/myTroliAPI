@@ -28,8 +28,7 @@ const couponSchema = Schema({
     default: true
   },
   expiry: {
-    type: Date,
-    default: null
+    type: Date
   },
   number_uses: {
     type: Number,
@@ -48,6 +47,10 @@ const couponSchema = Schema({
     default: 0
   },
   created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
     type: Date
   }
 }, { versionKey: false })

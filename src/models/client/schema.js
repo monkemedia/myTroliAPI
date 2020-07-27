@@ -12,8 +12,7 @@ const clientSchema = new Schema({
     unique: true
   },
   name: {
-    type: String,
-    required: false
+    type: String
   },
   enabled: {
     type: Boolean,
@@ -24,24 +23,19 @@ const clientSchema = new Schema({
     required: true
   },
   image_id: {
-    type: String,
-    required: false
+    type: String
   },
   image_url: {
-    type: String,
-    required: false
+    type: String
   },
   password: {
-    type: Schema.Types.Mixed,
-    default: false
+    type: Schema.Types.Mixed
   },
   refresh_token: {
-    type: String,
-    required: false
+    type: String
   },
   reset_token: {
-    type: String,
-    required: false
+    type: String
   }
 }, { versionKey: false })
 

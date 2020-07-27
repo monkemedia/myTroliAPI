@@ -8,6 +8,13 @@ const couponSchema = Schema({
   },
   variant_presets: {
     type: Array
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

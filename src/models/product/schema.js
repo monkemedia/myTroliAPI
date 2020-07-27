@@ -68,33 +68,20 @@ const productSchema = Schema({
   categories: {
     type: Array
   },
-  created_at: {
-    type: Date,
-    default: Date.now
-  },
-  updated_at: {
-    type: Date,
-    default: ''
-  },
   weight: {
-    type: Number,
-    default: null
+    type: Number
   },
   width: {
-    type: Number,
-    default: null
+    type: Number
   },
   depth: {
-    type: Number,
-    default: null
+    type: Number
   },
   height: {
-    type: Number,
-    default: null
+    type: Number
   },
   fixed_shipping_cost: {
-    type: Number,
-    default: null
+    type: Number
   },
   is_free_shipping: {
     type: Boolean,
@@ -106,6 +93,13 @@ const productSchema = Schema({
   },
   search_keywords: {
     type: Array
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

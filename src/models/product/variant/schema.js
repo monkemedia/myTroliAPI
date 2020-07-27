@@ -58,7 +58,14 @@ const productVariantSchema = new Schema({
         default: ''
       }
     }
-  ]
+  ],
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
+  }
 }, { versionKey: false })
 
 module.exports = productVariantSchema

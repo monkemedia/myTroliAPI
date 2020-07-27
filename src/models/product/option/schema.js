@@ -28,14 +28,20 @@ const productOptionSchema = new Schema({
       default: false
     },
     label: {
-      type: String,
-      required: ''
+      type: String
     },
     sort_order: {
       type: Number,
       default: 0
     }
-  }]
+  }],
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
+  }
 }, { versionKey: false })
 
 module.exports = productOptionSchema
