@@ -1,3 +1,4 @@
+const Product = require('../../../models/product')
 const ProductCategories = require('../../../models/product/category')
 
 const createProductCategories = async (req, res) => {
@@ -33,6 +34,12 @@ const createProductCategories = async (req, res) => {
   try {
     const productCategories = new ProductCategories(payload)
     const savedProductCategories = await productCategories.save()
+
+    const product = await Product.findById(productId)
+
+    product.associations = productCategories._id
+
+    await product.save()
 
     res.status(201).send(savedProductCategories)
   } catch (err) {
