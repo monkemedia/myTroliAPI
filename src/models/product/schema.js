@@ -65,9 +65,8 @@ const productSchema = Schema({
       ref: 'ProductVariants'
     }
   ],
-  associations: {
-    type: Schema.Types.ObjectId,
-    ref: 'ProductCategory'
+  categories: {
+    type: Array
   },
   created_at: {
     type: Date,
