@@ -103,6 +103,9 @@ const productSchema = Schema({
   is_featured: {
     type: Boolean,
     default: false
+  },
+  search_keywords: {
+    type: Array
   }
 }, { versionKey: false })
 
