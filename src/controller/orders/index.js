@@ -3,7 +3,7 @@ const emailTemplate = require('../../utils/emailTemplate')
 
 const createOrder = async (req, res) => {
   const data = req.body
-  const { type, products, billing_address, shipping_address, send_invoice } = data
+  const { type, line_items, billing_address, shipping_address, send_invoice } = data
 
   if (!type) {
     return res.status(401).send({
@@ -17,13 +17,13 @@ const createOrder = async (req, res) => {
     })
   }
 
-  if (!products) {
+  if (!line_items) {
     return res.status(401).send({
       message: 'Products is required'
     })
   }
 
-  if (products.length < 1) {
+  if (line_items.length < 1) {
     return res.status(401).send({
       message: 'Products must be populated'
     })

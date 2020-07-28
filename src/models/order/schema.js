@@ -182,7 +182,7 @@ const orderSchema = new Schema({
       type: String
     }
   },
-  products: [{
+  line_items: [{
     product_id: {
       type: String,
       required: true
@@ -211,8 +211,7 @@ const orderSchema = new Schema({
       default: 0
     },
     sale_price: {
-      type: Number,
-      default: 0
+      type: Number
     },
     on_sale: {
       type: Boolean,
@@ -224,9 +223,6 @@ const orderSchema = new Schema({
     },
     refund_reason: {
       type: String
-    },
-    total_sold: {
-      type: Number
     },
     images: {
       type: Array,

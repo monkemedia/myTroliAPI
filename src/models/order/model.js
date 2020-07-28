@@ -10,21 +10,11 @@ orderSchema.plugin(AutoIncrement, {
 })
 
 async function updateTotalSold (productId, quantity, direction) {
-  let product
-
-  if (direction === 'increase') {
-    product = await Product.updateOne({ _id: productId }, {
-      $inc: {
-        total_sold: quantity
-      }
-    })
-  } else {
-    product = await Product.updateOne({ _id: productId }, {
-      $inc: {
-        total_sold: -quantity
-      }
-    })
-  }
+  const product = await Product.updateOne({ _id: productId }, {
+    $inc: {
+      total_sold: direction === 'increase' ? quantity : -quantity
+    }
+  })
 
   return product
 }
@@ -67,9 +57,9 @@ async function stockLevelHandler (product) {
 // Check stock before creating order
 orderSchema.pre('save', async function (next) {
   const order = this
-  const orderProducts = order.products
+  const lineItems = order.line_items
 
-  const promise = await orderProducts.map(async orderProduct => {
+  const promise = await lineItems.map(async orderProduct => {
     const productId = orderProduct.product_id
     const productName = orderProduct.name
     const trackInventory = orderProduct.track_inventory
@@ -194,10 +184,10 @@ orderSchema.statics.search = async ({ page, keyword, limit }) => {
 // Update order
 orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
   // const currentOrderQty =
-  const orderProducts = orderDetails.products
+  const lineItems = orderDetails.line_items
 
-  if (orderProducts) {
-    const promise = await orderProducts.map(async orderProduct => {
+  if (lineItems) {
+    const promise = await lineItems.map(async orderProduct => {
       const storedOrder = await Order.findOne({ id: orderId })
       const storedOrderProduct = storedOrder.products.find((order) => {
         return order._id.toString() === orderProduct._id
@@ -207,9 +197,8 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
       const productName = orderProduct.name
       const productId = orderProduct.product_id
       const variantId = orderProduct.variant_id
+      const totalSold = orderProduct.total_sold
       const stockLevel = await stockLevelHandler(orderProduct)
-
-      console.log(storedOrderProduct)
 
       // Quantity can not be 0 {
       if (orderQty === '' || orderQty === 0) {
@@ -233,7 +222,6 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
         if (stockToRemove > stockLevel) {
           throw new Error(`Product \`${productName}\` is out of stock`)
         }
-        console.log('stockToRemove', stockToRemove)
         await updateTotalSold(productId, stockToRemove, 'increase')
         updateProductStock({
           currentStock: stockLevel,
@@ -241,6 +229,11 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
           variantId,
           productId
         }, 'decrease')
+      }
+
+      // When client refunds an item, make sure total sold is updated
+      if (totalSold > 0) {
+        await updateTotalSold(productId, totalSold, 'decrease')
       }
     })
 
