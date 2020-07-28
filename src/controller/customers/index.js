@@ -7,7 +7,8 @@ const createCustomer = async (req, res) => {
     // Check to see if customer already exists
     const data = req.body
     const { first_name, last_name, email, password, type } = data
-    const customerExists = await Customer.findByCredentials(email)
+
+    const customerExists = await Customer.findByEmail(email)
 
     if (!first_name) {
       return res.status(401).send({
@@ -50,6 +51,8 @@ const createCustomer = async (req, res) => {
         message: 'Customer already exists'
       })
     }
+
+    delete data.store_credit
 
     const customer = new Customer(data)
     const token = await customer.generateVerifyToken('1hr')
@@ -126,11 +129,50 @@ const updateCustomer = async (req, res) => {
   }
 }
 
+const updateCustomersStoreCredit = async (req, res) => {
+  const customerId = req.params.customerId
+  const data = req.body
+  const { type, store_credit } = data
+
+  if (!type) {
+    return res.status(401).send({
+      message: 'Type is required'
+    })
+  }
+
+  if (type && type !== 'customer') {
+    return res.status(401).send({
+      message: 'Correct type is required'
+    })
+  }
+
+  if (isNaN(store_credit)) {
+    return res.status(401).send({
+      message: 'Store credit is required'
+    })
+  }
+
+  if (typeof store_credit !== 'number') {
+    return res.status(401).send({
+      message: 'Store credit requires a number'
+    })
+  }
+
+  try {
+    await Customer.updateCustomersStoreCredit(customerId, store_credit)
+    const customer = await Customer.findOne({ _id: customerId }).select('-password')
+
+    res.status(200).send(customer)
+  } catch (err) {
+    res.status(400).send(err)
+  }
+}
+
 const deleteCustomer = async (req, res) => {
   try {
     await Customer.deleteCustomer(req.params.customerId)
 
-    res.status(204).send({
+    res.status(200).send({
       message: 'Customer successfully deleted'
     })
   } catch (err) {
@@ -224,6 +266,7 @@ module.exports = {
   getCustomers,
   getCustomer,
   updateCustomer,
+  updateCustomersStoreCredit,
   deleteCustomer,
   resendVerificationEmail,
   verifyCustomer

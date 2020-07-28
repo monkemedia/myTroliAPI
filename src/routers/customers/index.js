@@ -6,6 +6,7 @@ const {
   getCustomers,
   getCustomer,
   updateCustomer,
+  updateCustomersStoreCredit,
   deleteCustomer,
   resendVerificationEmail,
   verifyCustomer
@@ -19,6 +20,8 @@ router.get('/customers', auth, (req, res) => getCustomers(req, res))
 router.get('/customers/:customerId', auth, (req, res) => getCustomer(req, res))
 // Update customer
 router.put('/customers/:customerId', auth, (req, res) => updateCustomer(req, res))
+// Update store credit
+router.put('/customers/:customerId/store-credit', auth, (req, res) => updateCustomersStoreCredit(req, res))
 // Delete customer
 router.delete('/customers/:customerId', auth, (req, res) => deleteCustomer(req, res))
 // Resend verification email
