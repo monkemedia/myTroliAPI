@@ -5,6 +5,7 @@ const errorHandler = require('../../utils/errorHandler')
 const customerSchema = require('./schema.js')
 
 // Hash the password before saving the customer model
+// Delete store credit if it exists
 customerSchema.pre('save', async function (next) {
   const customer = this
 
@@ -90,7 +91,7 @@ customerSchema.statics.search = async ({ keyword, page, limit }) => {
 }
 
 // Find customer by email address
-customerSchema.statics.findByCredentials = async (email) => {
+customerSchema.statics.findByEmail = async (email) => {
   const customer = await Customer.findOne({ email }).select('-password')
 
   return customer
@@ -140,14 +141,29 @@ customerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
   } else {
     password = await bcrypt.hash(password, 8)
   }
-
+  delete customerDetails.store_credit
   const customer = await Customer.updateOne({ _id: customerId }, { ...customerDetails, password, updated_at: Date.now() })
   return customer
 }
 
+// Update customers store credit
+customerSchema.statics.updateCustomersStoreCredit = async (customerId, storeCredit) => {
+  const customer = await Customer.updateOne({
+    _id: customerId
+  }, {
+    $inc: {
+      store_credit: storeCredit
+    },
+    updated_at: Date.now()
+  })
+
+  return customer
+}
+
 // Delete customer by id
-customerSchema.statics.deleteCustomer = async (_id) => {
-  const customer = await Customer.deleteOne({ _id })
+customerSchema.statics.deleteCustomer = async (customerId) => {
+  const customer = await Customer.deleteOne({ _id: customerId })
+  console.log('customer', customer)
   return customer
 }
 
