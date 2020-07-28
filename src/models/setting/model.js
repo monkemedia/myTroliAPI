@@ -10,7 +10,12 @@ settingSchema.statics.findSettings = async () => {
 // Update coupon
 settingSchema.statics.updateSettings = async (data) => {
   delete data.type
-  const setting = await Setting.findOneAndUpdate({ type: 'settings ' }, data, { upsert: true })
+  const setting = await Setting.findOneAndUpdate({ type: 'settings ' }, {
+    ...data,
+    updated_at: Date.now()
+  }, {
+    upsert: true
+  })
 
   return setting
 }

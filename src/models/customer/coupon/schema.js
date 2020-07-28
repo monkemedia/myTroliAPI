@@ -17,6 +17,13 @@ const customerCouponSchema = new Schema({
   uses: {
     type: Number,
     required: true
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

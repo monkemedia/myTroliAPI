@@ -33,7 +33,8 @@ productSchema.statics.search = async ({ page, limit, keyword }) => {
   const searchQuery = {
     $or: [
       { name: { $regex: keyword, $options: 'i' } },
-      { sku: { $regex: keyword, $options: 'i' } }
+      { sku: { $regex: keyword, $options: 'i' } },
+      { search_keywords: { $regex: keyword, $options: 'i' } }
     ]
   }
   const products = await Product
@@ -77,12 +78,10 @@ productSchema.statics.getCount = async () => {
 
 // Update product
 productSchema.statics.updateProduct = async (productId, productDetails) => {
-  productDetails.updated_at = new Date()
-  const data = {
-    ...productDetails
-  }
-
-  await Product.updateOne({ _id: productId }, data)
+  await Product.updateOne({ _id: productId }, {
+    ...productDetails,
+    updated_at: Date.now()
+  })
   const product = await Product
     .findOne({ _id: productId })
     .populate('images')

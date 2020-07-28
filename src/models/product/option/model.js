@@ -20,7 +20,10 @@ productOptionSchema.statics.updateProductOption = async (productId, optionId, da
   const productOptions = await ProductOptions.updateOne({
     _id: optionId,
     product_id: productId
-  }, data)
+  }, {
+    ...data,
+    updated_at: Date.now()
+  })
   return productOptions
 }
 

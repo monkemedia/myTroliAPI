@@ -58,6 +58,13 @@ const customerAddressSchema = new Schema({
     type: Boolean,
     required: false,
     default: false
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

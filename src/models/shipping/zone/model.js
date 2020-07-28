@@ -21,7 +21,10 @@ shippingZoneSchema.statics.findZoneByCountryCode = async (countryCode) => {
 
 // Update zone
 shippingZoneSchema.statics.updateZone = async (zoneId, zoneDetails) => {
-  const zone = await ShippingZone.updateOne({ _id: zoneId }, zoneDetails)
+  const zone = await ShippingZone.updateOne({ _id: zoneId }, {
+    ...zoneDetails,
+    updated_at: Date.now()
+  })
   return zone
 }
 

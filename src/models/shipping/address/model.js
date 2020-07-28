@@ -3,7 +3,10 @@ const shippingAddressSchema = require('./schema')
 
 // Update shipping address
 shippingAddressSchema.statics.updateShippingAddress = async (data) => {
-  const shippingAddress = await ShippingAddress.updateOne(data)
+  const shippingAddress = await ShippingAddress.updateOne({
+    ...data,
+    updated_at: Date.now()
+  })
   return shippingAddress
 }
 

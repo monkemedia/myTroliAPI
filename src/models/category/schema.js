@@ -16,16 +16,13 @@ const categorySchema = new Schema({
     unique: true
   },
   description: {
-    type: String,
-    required: false
+    type: String
   },
   parent_id: {
-    type: String,
-    default: null
+    type: String
   },
   status: {
-    type: Object,
-    required: false
+    type: Object
   }
 }, { versionKey: false })
 

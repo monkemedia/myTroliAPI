@@ -81,9 +81,17 @@ couponSchema.statics.updateCoupon = async (couponId, couponDetails) => {
   const incrementUsage = couponDetails.increment_usage
 
   if (incrementUsage) {
-    coupon = await Coupon.updateOne({ _id: couponId }, { $inc: { number_uses: incrementUsage } })
+    coupon = await Coupon.updateOne({ _id: couponId }, {
+      $inc: {
+        number_uses: incrementUsage
+      },
+      updated_at: Date.now()
+    })
   } else {
-    coupon = await Coupon.updateOne({ _id: couponId }, couponDetails)
+    coupon = await Coupon.updateOne({ _id: couponId }, {
+      ...couponDetails,
+      updated_at: Date.now()
+    })
   }
 
   return coupon

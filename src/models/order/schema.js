@@ -24,20 +24,16 @@ const orderSchema = new Schema({
   },
   coupon: {
     id: {
-      type: String,
-      default: ''
+      type: String
     },
     code: {
-      type: String,
-      default: ''
+      type: String
     },
     amount: {
-      type: Number,
-      default: 0
+      type: Number
     },
     coupon_type: {
-      type: String,
-      default: ''
+      type: String
     }
   },
   subtotal_exc_tax: {
@@ -65,8 +61,7 @@ const orderSchema = new Schema({
     default: 0
   },
   shipping_method: {
-    type: String,
-    default: ''
+    type: String
   },
   refunded_shipping: {
     type: Boolean,
@@ -77,24 +72,17 @@ const orderSchema = new Schema({
     default: 'GBP'
   },
   payment_method: {
-    type: String,
-    default: ''
+    type: String
   },
   payment_provider_id: {
-    type: String,
-    default: ''
+    type: String
   },
   payment_status: {
-    type: String,
-    default: ''
+    type: String
   },
   refunded_amount: {
     type: Number,
     default: 0
-  },
-  date_created: {
-    type: Date,
-    default: Date.now
   },
   order_is_digital: {
     type: Boolean,
@@ -105,12 +93,10 @@ const orderSchema = new Schema({
     default: false
   },
   comments: {
-    type: String,
-    default: ''
+    type: String
   },
   staff_notes: {
-    type: String,
-    default: ''
+    type: String
   },
   billing_address: {
     first_name: {
@@ -122,16 +108,14 @@ const orderSchema = new Schema({
       required: true
     },
     company_name: {
-      type: String,
-      default: ''
+      type: String
     },
     line_1: {
       type: String,
       required: true
     },
     line_2: {
-      type: String,
-      default: ''
+      type: String
     },
     city: {
       type: String,
@@ -150,12 +134,10 @@ const orderSchema = new Schema({
       required: true
     },
     email: {
-      type: String,
-      default: ''
+      type: String
     },
     phone_number: {
-      type: String,
-      default: ''
+      type: String
     }
   },
   shipping_address: {
@@ -168,16 +150,14 @@ const orderSchema = new Schema({
       required: true
     },
     company_name: {
-      type: String,
-      default: ''
+      type: String
     },
     line_1: {
       type: String,
       required: true
     },
     line_2: {
-      type: String,
-      default: ''
+      type: String
     },
     city: {
       type: String,
@@ -196,12 +176,10 @@ const orderSchema = new Schema({
       required: true
     },
     email: {
-      type: String,
-      default: ''
+      type: String
     },
     phone_number: {
-      type: String,
-      default: ''
+      type: String
     }
   },
   products: [{
@@ -210,8 +188,7 @@ const orderSchema = new Schema({
       required: true
     },
     variant_id: {
-      type: String,
-      default: null
+      type: String
     },
     track_inventory: {
       type: String,
@@ -246,8 +223,7 @@ const orderSchema = new Schema({
       default: 0
     },
     refund_reason: {
-      type: String,
-      default: ''
+      type: String
     },
     images: {
       type: Array,
@@ -266,7 +242,14 @@ const orderSchema = new Schema({
         }
       }
     ]
-  }]
+  }],
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
+  }
 }, { versionKey: false })
 
 module.exports = orderSchema

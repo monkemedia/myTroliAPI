@@ -30,6 +30,13 @@ const productImageSchema = new Schema({
   is_thumbnail: {
     type: Boolean,
     default: false
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

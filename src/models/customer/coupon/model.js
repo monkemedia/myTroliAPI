@@ -24,7 +24,8 @@ customerCouponSchema.statics.incrementCustomerCoupon = async (customerId, coupon
   }, {
     $inc: {
       uses: 1
-    }
+    },
+    updated_at: Date.now()
   })
 
   return coupon

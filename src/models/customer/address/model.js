@@ -15,7 +15,10 @@ customerAddressSchema.statics.findCustomerAddress = async (addressId) => {
 
 // Update address
 customerAddressSchema.statics.updateCustomerAddress = async (addressId, addressDetails) => {
-  const address = await CustomerAddress.updateOne({ _id: addressId }, addressDetails)
+  const address = await CustomerAddress.updateOne({ _id: addressId }, {
+    ...addressDetails,
+    updated_at: Date.now()
+  })
   return address
 }
 
