@@ -9,6 +9,26 @@ orderSchema.plugin(AutoIncrement, {
   start_seq: 100
 })
 
+async function updateTotalSold (productId, quantity, direction) {
+  let product
+
+  if (direction === 'increase') {
+    product = await Product.updateOne({ _id: productId }, {
+      $inc: {
+        total_sold: quantity
+      }
+    })
+  } else {
+    product = await Product.updateOne({ _id: productId }, {
+      $inc: {
+        total_sold: -quantity
+      }
+    })
+  }
+
+  return product
+}
+
 async function updateProductStock ({ productId, variantId, trackInventory, currentStock, qty }, direction) {
   const newStock = direction === 'decrease' ? currentStock - qty : currentStock + qty
   let update
@@ -56,6 +76,9 @@ orderSchema.pre('save', async function (next) {
     const variantId = orderProduct.variant_id
     const orderQty = orderProduct.quantity
 
+    // Increment total sold field
+    await updateTotalSold(productId, orderQty, 'increase')
+
     if (trackInventory === 'none') {
       return next()
     }
@@ -67,13 +90,14 @@ orderSchema.pre('save', async function (next) {
     }
 
     // There is enough stock, so decrease stock
-    updateProductStock({
+    await updateProductStock({
       currentStock: stockLevel,
       qty: orderQty,
       trackInventory,
       variantId,
       productId
     }, 'decrease')
+
     next()
   })
 
@@ -84,7 +108,7 @@ orderSchema.pre('save', async function (next) {
 orderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
   const orders = await Order
     .find()
-    .sort('-date_created')
+    .sort('-created_at')
     .skip((page - 1) * limit)
     .limit(limit)
 
@@ -111,7 +135,7 @@ orderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => 
     .find()
     .where('status_id')
     .in(statusIdCollection)
-    .sort('-date_created')
+    .sort('-created_at')
     .skip((page - 1) * limit)
     .limit(limit)
 
@@ -185,14 +209,18 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
       const variantId = orderProduct.variant_id
       const stockLevel = await stockLevelHandler(orderProduct)
 
+      console.log(storedOrderProduct)
+
       // Quantity can not be 0 {
       if (orderQty === '' || orderQty === 0) {
         throw new Error(`Product \`${productName}\` quantity needs to be a valid amount`)
       }
 
-      // Client has decreased order quantity, so increase stock level
+      // Client has decreased order quantity, so increase stock level and reduce total solds
       if (orderQty < storedOrderProductQty) {
         const stockToAdd = storedOrderProductQty - orderQty
+        // Increment total sold field
+        await updateTotalSold(productId, stockToAdd, 'decrease')
         updateProductStock({
           currentStock: stockLevel,
           qty: stockToAdd,
@@ -201,9 +229,12 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
         }, 'increase')
       } else if (orderQty > storedOrderProductQty) {
         const stockToRemove = orderQty - storedOrderProductQty
+        // const totalSoldQuantity =
         if (stockToRemove > stockLevel) {
           throw new Error(`Product \`${productName}\` is out of stock`)
         }
+        console.log('stockToRemove', stockToRemove)
+        await updateTotalSold(productId, stockToRemove, 'increase')
         updateProductStock({
           currentStock: stockLevel,
           qty: stockToRemove,

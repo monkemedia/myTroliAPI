@@ -225,6 +225,9 @@ const orderSchema = new Schema({
     refund_reason: {
       type: String
     },
+    total_sold: {
+      type: Number
+    },
     images: {
       type: Array,
       default: []

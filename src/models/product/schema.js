@@ -91,6 +91,10 @@ const productSchema = Schema({
     type: Boolean,
     default: false
   },
+  total_sold: {
+    type: Number,
+    default: 0
+  },
   search_keywords: {
     type: Array
   },
