@@ -63,6 +63,12 @@ const orderSchema = new Schema({
   shipping_method: {
     type: String
   },
+  shipping_method_custom: {
+    type: String
+  },
+  zone_id: {
+    type: String
+  },
   refunded_shipping: {
     type: Boolean,
     default: false
