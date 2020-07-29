@@ -74,6 +74,9 @@ const orderSchema = new Schema({
   payment_method: {
     type: String
   },
+  payment_provider: {
+    type: String
+  },
   payment_provider_id: {
     type: String
   },
