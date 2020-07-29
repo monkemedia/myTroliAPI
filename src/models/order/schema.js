@@ -6,6 +6,16 @@ const orderSchema = new Schema({
     type: String,
     required: true
   },
+  order_source: {
+    type: String,
+    enum: ['manual', 'external']
+  },
+  internal_source: {
+    type: String
+  },
+  external_source: {
+    type: String
+  },
   customer_id: {
     type: Schema.Types.Mixed,
     default: 0
@@ -78,6 +88,9 @@ const orderSchema = new Schema({
     default: 'GBP'
   },
   payment_method: {
+    type: String
+  },
+  payment_description: {
     type: String
   },
   payment_provider: {
