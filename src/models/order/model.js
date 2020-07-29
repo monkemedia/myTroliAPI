@@ -197,8 +197,10 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
       const productName = orderProduct.name
       const productId = orderProduct.product_id
       const variantId = orderProduct.variant_id
-      const totalSold = orderProduct.total_sold
+      const refundedAmount = orderProduct.refunded_amount
+      const storedRefundedAmount = storedOrderProduct.refunded_amount
       const stockLevel = await stockLevelHandler(orderProduct)
+      const priceToUse = orderProduct.on_sale ? orderProduct.sale_price : orderProduct.price
 
       // Quantity can not be 0 {
       if (orderQty === '' || orderQty === 0) {
@@ -232,8 +234,9 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
       }
 
       // When client refunds an item, make sure total sold is updated
-      if (totalSold > 0) {
-        await updateTotalSold(productId, totalSold, 'decrease')
+      if (refundedAmount > storedRefundedAmount) {
+        const amountToDecrease = (refundedAmount - storedRefundedAmount) / priceToUse
+        await updateTotalSold(productId, amountToDecrease, 'decrease')
       }
     })
 
