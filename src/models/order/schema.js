@@ -84,6 +84,9 @@ const orderSchema = new Schema({
     type: Number,
     default: 0
   },
+  refund_reason: {
+    type: String
+  },
   order_is_digital: {
     type: Boolean,
     default: false
@@ -217,12 +220,9 @@ const orderSchema = new Schema({
       type: Boolean,
       default: false
     },
-    refund_amount: {
+    refunded_amount: {
       type: Number,
       default: 0
-    },
-    refund_reason: {
-      type: String
     },
     images: {
       type: Array,

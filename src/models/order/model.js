@@ -189,7 +189,7 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
   if (lineItems) {
     const promise = await lineItems.map(async orderProduct => {
       const storedOrder = await Order.findOne({ id: orderId })
-      const storedOrderProduct = storedOrder.products.find((order) => {
+      const storedOrderProduct = storedOrder.line_items.find((order) => {
         return order._id.toString() === orderProduct._id
       })
       const storedOrderProductQty = storedOrderProduct ? storedOrderProduct.quantity : 0
