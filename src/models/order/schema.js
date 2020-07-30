@@ -20,6 +20,10 @@ const orderSchema = new Schema({
     type: Schema.Types.Mixed,
     default: 0
   },
+  refunded: [{
+    type: Schema.Types.ObjectId,
+    ref: 'OrderRefund'
+  }],
   status_id: {
     type: Number,
     default: 1
@@ -79,10 +83,6 @@ const orderSchema = new Schema({
   zone_id: {
     type: String
   },
-  refunded_shipping: {
-    type: Boolean,
-    default: false
-  },
   currency_code: {
     type: String,
     default: 'GBP'
@@ -100,13 +100,6 @@ const orderSchema = new Schema({
     type: String
   },
   payment_status: {
-    type: String
-  },
-  refunded_amount: {
-    type: Number,
-    default: 0
-  },
-  refund_reason: {
     type: String
   },
   order_is_digital: {
@@ -237,10 +230,6 @@ const orderSchema = new Schema({
     on_sale: {
       type: Boolean,
       default: false
-    },
-    refunded_amount: {
-      type: Number,
-      default: 0
     },
     images: {
       type: Array,
