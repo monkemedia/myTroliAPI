@@ -113,10 +113,6 @@ const orderSchema = new Schema({
     type: Boolean,
     default: false
   },
-  is_email_opt_in: {
-    type: Boolean,
-    default: false
-  },
   comments: {
     type: String
   },
