@@ -14,6 +14,10 @@ const orderRefundSchema = new Schema({
     type: String,
     required: true
   },
+  customer_id: {
+    type: String,
+    required: true
+  },
   reason: {
     type: String
   },
@@ -36,6 +40,27 @@ const orderRefundSchema = new Schema({
       }
     }
   ],
+  payment: {
+    provider: {
+      type: String,
+      required: true
+    },
+    charge_id: {
+      type: String
+    },
+    amount: {
+      type: Number
+    },
+    is_declined: {
+      type: Boolean
+    },
+    declined_message: {
+      type: String
+    },
+    offline: {
+      type: Boolean
+    }
+  },
   created_at: {
     type: Date,
     default: Date.now

@@ -1,19 +1,10 @@
-const Order = require('../../../models/order/index.js')
-const OrderRefund = require('../../../models/order/refunds/index.js')
+const OrderRefund = require('../../../models/order/refund/index.js')
 
 const createOrderRefund = async (req, res) => {
   const data = req.body
   const orderId = req.params.orderId
-  const order = await Order.findOne({ id: orderId })
 
-  // Make sure order exists first
-  if (!order) {
-    return res.status(401).send({
-      message: 'Order does\'nt exist'
-    })
-  }
-
-  const { type, items } = data
+  const { type, items, payment } = data
 
   if (!type) {
     return res.status(401).send({
@@ -39,17 +30,11 @@ const createOrderRefund = async (req, res) => {
     })
   }
 
-  // if (!payments) {
-  //   return res.status(401).send({
-  //     message: 'Payments is required'
-  //   })
-  // }
-
-  // if (payments.length < 1) {
-  //   return res.status(401).send({
-  //     message: 'Payments must be populated'
-  //   })
-  // }
+  if (!payment.provider) {
+    return res.status(401).send({
+      message: 'Payment provider is required'
+    })
+  }
 
   try {
     const orderRefund = new OrderRefund({

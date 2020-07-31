@@ -235,12 +235,6 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
           productId
         }, 'decrease')
       }
-
-      // When client refunds an item, make sure total sold is updated
-      // if (refundedAmount > storedRefundedAmount) {
-      //   const amountToDecrease = (refundedAmount - storedRefundedAmount) / priceToUse
-      //   await updateTotalSold(productId, amountToDecrease, 'decrease')
-      // }
     })
 
     await Promise.all(promise)

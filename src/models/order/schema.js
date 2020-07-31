@@ -96,7 +96,7 @@ const orderSchema = new Schema({
   payment_provider: {
     type: String
   },
-  payment_provider_id: {
+  payment_charge_id: {
     type: String
   },
   payment_status: {
