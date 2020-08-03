@@ -32,6 +32,9 @@ const orderRefundSchema = new Schema({
       item_id: {
         type: String
       },
+      variant_id: {
+        type: String
+      },
       quantity: {
         type: Number
       },
