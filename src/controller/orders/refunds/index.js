@@ -1,3 +1,4 @@
+const Order = require('../../../models/order')
 const OrderRefund = require('../../../models/order/refund/index.js')
 
 const createOrderRefund = async (req, res) => {
@@ -43,6 +44,19 @@ const createOrderRefund = async (req, res) => {
     })
 
     await orderRefund.save()
+
+    const getRefunds = await OrderRefund.find({ order_id: orderId })
+    const order = await Order.findOne({ id: orderId })
+    let totalAmountSum = 0
+
+    getRefunds.map((refund) => {
+      totalAmountSum += refund.total_amount
+    })
+
+    // Updates order status with either 'refunded' or 'partially refunded'
+    order.status_id = totalAmountSum === order.total_inc_tax ? 4 : 14
+
+    await order.save()
 
     res.status(201).send(orderRefund)
   } catch (err) {

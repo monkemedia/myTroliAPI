@@ -38,7 +38,6 @@ const updateOrder = async (orderId, refundId) => {
     $push: {
       refunded: refundId
     },
-    status_id: 4, // (4) - Fully refunded / (14) - Partially refunded
     updated_at: Date.now()
   })
 }
@@ -80,9 +79,9 @@ orderRefundSchema.pre('save', async function (next) {
 
 // Get refunds for order
 orderRefundSchema.statics.findOrderRefunds = async (orderId) => {
-  const orderStatuses = await OrderRefund.find({ order_id: orderId })
+  const orderRefunds = await OrderRefund.find({ order_id: orderId })
 
-  return orderStatuses
+  return orderRefunds
 }
 
 const OrderRefund = mongoose.model('OrderRefund', orderRefundSchema)
