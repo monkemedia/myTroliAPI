@@ -20,7 +20,8 @@ const productOptions = require('./products/options/index.js')
 const productImages = require('./products/images/index.js')
 const performance = require('./performance.js')
 const orders = require('./orders/index.js')
-const orderStatus = require('./orders/orderStatus/index.js')
+const orderStatus = require('./orders/status/index.js')
+const orderRefunds = require('./orders/refunds/index.js')
 
 const router = Router()
 
@@ -46,7 +47,8 @@ router.use(
   productImages,
   performance,
   orders,
-  orderStatus
+  orderStatus,
+  orderRefunds
 )
 
 module.exports = router

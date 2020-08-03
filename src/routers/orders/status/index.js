@@ -7,7 +7,7 @@ const {
   getOrderStatus,
   updateOrderStatus,
   deleteOrderStatus
-} = require('../../../controller/orders/orderStatus')
+} = require('../../../controller/orders/status')
 
 // Create order status
 router.post('/order_status', auth, (req, res) => createOrderStatus(req, res))

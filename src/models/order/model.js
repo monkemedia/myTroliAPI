@@ -98,6 +98,7 @@ orderSchema.pre('save', async function (next) {
 orderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
   const orders = await Order
     .find()
+    .populate('refunded', '-order_id -type -created_at')
     .sort('-created_at')
     .skip((page - 1) * limit)
     .limit(limit)
@@ -125,6 +126,7 @@ orderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => 
     .find()
     .where('status_id')
     .in(statusIdCollection)
+    .populate('refunded', '-order_id -type -created_at')
     .sort('-created_at')
     .skip((page - 1) * limit)
     .limit(limit)
@@ -161,6 +163,7 @@ orderSchema.statics.search = async ({ page, keyword, limit }) => {
   const searchArray = { $or: [{ fullname: searchString }, { id: parseInt(keyword) || null }] }
   const orders = await Order
     .aggregate()
+    .populate('refunded', '-order_id -type -created_at')
     .addFields(searchQuery)
     .match(searchArray)
     .skip((page - 1) * limit)
@@ -231,12 +234,6 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
           variantId,
           productId
         }, 'decrease')
-      }
-
-      // When client refunds an item, make sure total sold is updated
-      if (refundedAmount > storedRefundedAmount) {
-        const amountToDecrease = (refundedAmount - storedRefundedAmount) / priceToUse
-        await updateTotalSold(productId, amountToDecrease, 'decrease')
       }
     })
 

@@ -1,4 +1,4 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const PaymentRefund = require('../models/payment/refund')
 const errorHandler = require('../../../utils/errorHandler')
 
 const createPaymentRefund = async (req, res) => {
@@ -7,7 +7,7 @@ const createPaymentRefund = async (req, res) => {
     type,
     amount
   } = data
-  const charge = req.params.paymentId
+  const charge = req.params.chargeId
 
   if (!type) {
     return res.status(401).send({
@@ -22,10 +22,7 @@ const createPaymentRefund = async (req, res) => {
   }
 
   try {
-    const paymentRefund = await stripe.refunds.create({
-      charge,
-      amount
-    })
+    const paymentRefund = await PaymentRefund.createPaymentRefund(charge, amount)
 
     res.status(200).send(paymentRefund)
   } catch (err) {
@@ -37,7 +34,7 @@ const getPaymentRefund = async (req, res) => {
   const refundId = req.params.refundId
 
   try {
-    const paymentRefund = await stripe.refunds.retrieve(refundId)
+    const paymentRefund = await PaymentRefund.getPaymentRefund(refundId)
 
     res.status(200).send(paymentRefund)
   } catch (err) {

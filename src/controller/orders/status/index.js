@@ -1,4 +1,4 @@
-const OrderStatus = require('../../../models/order/orderStatus/index.js')
+const OrderStatus = require('../../../models/order/status/index.js')
 
 const createOrderStatus = async (req, res) => {
   const data = req.body

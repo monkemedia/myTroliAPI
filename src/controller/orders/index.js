@@ -88,7 +88,9 @@ const getOrder = async (req, res) => {
   if (orderId === 'count') {
     order = await Order.getCount()
   } else {
-    order = await Order.findOne({ id: req.params.orderId })
+    order = await Order
+      .findOne({ id: orderId })
+      .populate('refunded', '-order_id -type -created_at')
   }
 
   res.status(200).send(order)
