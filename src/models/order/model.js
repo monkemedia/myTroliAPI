@@ -200,10 +200,7 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
       const productName = orderProduct.name
       const productId = orderProduct.product_id
       const variantId = orderProduct.variant_id
-      const refundedAmount = orderProduct.refunded_amount
-      const storedRefundedAmount = storedOrderProduct.refunded_amount
       const stockLevel = await stockLevelHandler(orderProduct)
-      const priceToUse = orderProduct.on_sale ? orderProduct.sale_price : orderProduct.price
 
       // Quantity can not be 0 {
       if (orderQty === '' || orderQty === 0) {

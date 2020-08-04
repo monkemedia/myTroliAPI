@@ -1,8 +1,10 @@
 const Order = require('../models/order/index.js')
+const OrderRefund = require('../models/order/refund/index.js')
 
 const getStoreRevenue = async (req, res) => {
   try {
     const orders = await Order.findOrders({})
+    const getRefunds = await OrderRefund.find()
     let totalExcTaxSum = 0
     let totalIncTaxSum = 0
     let shippingCostExcTaxSum = 0
@@ -14,7 +16,10 @@ const getStoreRevenue = async (req, res) => {
       totalIncTaxSum += order.total_inc_tax
       shippingCostExcTaxSum += order.shipping_cost_exc_tax
       shippingCostIncTaxSum += order.shipping_cost_inc_tax
-      refundedAmount += order.refunded_amount
+    })
+
+    getRefunds.map((refund) => {
+      refundedAmount += refund.payment.amount
     })
 
     res.status(200).send({
