@@ -50,7 +50,7 @@ const createOrderRefund = async (req, res) => {
     let totalAmountSum = 0
 
     getRefunds.map((refund) => {
-      totalAmountSum += refund.total_amount
+      totalAmountSum += refund.payment.amount
     })
 
     // Updates order status with either 'refunded' or 'partially refunded'
