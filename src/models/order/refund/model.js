@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const orderRefundSchema = require('./schema')
-const Product = require('../../product/index.js')
 const Order = require('../index.js')
+const Product = require('../../product/index.js')
 const Customer = require('../../customer/index.js')
 const PaymentRefund = require('../../payment/refund/index.js')
 
