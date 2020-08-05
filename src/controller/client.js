@@ -4,7 +4,7 @@ const emailTemplate = require('../utils/emailTemplate')
 const createClient = async (req, res) => {
   const data = req.body
   const { email, name, role, type } = data
-  const clientExists = await Client.findByCredentials(email)
+  const clientExists = await Client.findByEmailAddress(email)
 
   if (!type) {
     return res.status(401).send({

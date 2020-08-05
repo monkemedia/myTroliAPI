@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const errorHandler = require('../../utils/errorHandler')
 const clientSchema = require('./schema')
 
 // Hash the password before saving the Client model
@@ -14,7 +13,7 @@ clientSchema.pre('save', async function (next) {
   next()
 })
 
-// Generatea token
+// Generate token
 clientSchema.methods.generateToken = async function (expiresIn) {
   const client = this
   const accessToken = jwt.sign({
@@ -26,7 +25,7 @@ clientSchema.methods.generateToken = async function (expiresIn) {
 }
 
 // Search for a client by email address
-clientSchema.statics.findByCredentials = async (email) => {
+clientSchema.statics.findByEmailAddress = async (email) => {
   const client = await Client.findOne({ email })
 
   return client

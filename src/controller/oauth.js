@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 const Client = require('../models/client')
 const emailTemplate = require('../utils/emailTemplate')
+const errorHandler = require('../utils/errorHandler')
 
 const accessTokenTime = '24hr'
 const refreshTokenTime = '48hr'
@@ -96,7 +98,16 @@ const accessToken = async (req, res) => {
       })
     }
 
-    const client = await Client.findByCredentials(email)
+    const client = await Client.findByEmailAddress(email)
+
+    if (!client) {
+      return res.status(401).send(errorHandler(401, 'Sorry, we can’t find an account with this email.'))
+    }
+
+    if (!bcrypt.compareSync(password, client.password)) {
+      return res.status(401).send(errorHandler(401, 'Sorry, the password is not right for this account.'))
+    }
+
     const accessToken = await client.generateToken(accessTokenTime)
     const refreshToken = await client.generateToken(refreshTokenTime)
 
@@ -112,7 +123,6 @@ const accessToken = async (req, res) => {
       refresh_token: refreshToken
     })
   } catch (err) {
-    console.log('ERROR', err)
     res.status(err.status).send(err)
   }
 }
@@ -139,7 +149,7 @@ const resetToken = async (req, res) => {
       })
     }
 
-    const client = await Client.findByCredentials(email)
+    const client = await Client.findByEmailAddress(email)
 
     if (!client) {
       // customer doesn't exist but we can't tell users that
