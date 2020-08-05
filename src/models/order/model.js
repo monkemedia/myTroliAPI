@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const orderSchema = require('./schema')
-const OrderRefund = require('./refund/index.js')
+const Refund = require('./refund/index.js')
 const Product = require('../product/index.js')
 const ProductVariants = require('../product/variant/index.js')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
@@ -174,7 +174,7 @@ orderSchema.statics.search = async ({ page, keyword, limit }) => {
     .skip((page - 1) * limit)
     .limit(limit)
 
-  await OrderRefund.populate(orders, {
+  await Refund.populate(orders, {
     path: 'refunded',
     select: '-order_id -type -created_at'
   })
