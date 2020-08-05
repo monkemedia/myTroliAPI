@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const orderSchema = require('./schema')
+const OrderRefund = require('./refund/index.js')
 const Product = require('../product/index.js')
 const ProductVariants = require('../product/variant/index.js')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
@@ -157,19 +158,37 @@ orderSchema.statics.getCount = async () => {
 // Search orders by order id or customer name
 orderSchema.statics.search = async ({ page, keyword, limit }) => {
   const searchString = new RegExp(decodeURIComponent(keyword), 'i')
-  const searchQuery = {
+  const fullname = {
     fullname: { $concat: ['$billing_address.first_name', ' ', '$billing_address.last_name'] }
   }
-  const searchArray = { $or: [{ fullname: searchString }, { id: parseInt(keyword) || null }] }
   const orders = await Order
     .aggregate()
-    .populate('refunded', '-order_id -type -created_at')
-    .addFields(searchQuery)
-    .match(searchArray)
+    .addFields(fullname)
+    .match({
+      $or: [
+        { fullname: searchString },
+        { id: parseInt(keyword) }
+      ]
+    })
+    .sort('-created_at')
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Order.countDocuments(searchArray)
+  await OrderRefund.populate(orders, {
+    path: 'refunded',
+    select: '-order_id -type -created_at'
+  })
+
+  const total = await Order
+    .aggregate()
+    .addFields(fullname)
+    .match({
+      $or: [
+        { fullname: searchString },
+        { id: parseInt(keyword) }
+      ]
+    })
+
   return {
     data: orders,
     meta: {
@@ -178,7 +197,7 @@ orderSchema.statics.search = async ({ page, keyword, limit }) => {
         total: orders.length
       },
       results: {
-        total: total
+        total: total.length
       }
     }
   }
