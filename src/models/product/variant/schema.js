@@ -7,12 +7,11 @@ const productVariantSchema = new Schema({
     required: true
   },
   price: {
-    type: Object,
+    type: Number,
     required: true
   },
   sale_price: {
-    type: Object,
-    required: true
+    type: Number,
   },
   on_sale: {
     type: Boolean,
@@ -31,8 +30,7 @@ const productVariantSchema = new Schema({
     default: 0
   },
   sku: {
-    type: String,
-    default: ''
+    type: String
   },
   product_id: {
     type: String,
@@ -42,20 +40,16 @@ const productVariantSchema = new Schema({
     {
       _id: false,
       id: {
-        type: String,
-        default: ''
+        type: String
       },
       label: {
-        type: String,
-        default: ''
+        type: String
       },
       option_id: {
-        type: String,
-        default: ''
+        type: String
       },
       option_display_name: {
-        type: String,
-        default: ''
+        type: String
       }
     }
   ],

@@ -38,12 +38,11 @@ const productSchema = Schema({
     required: true
   },
   price: {
-    type: Object,
+    type: Number,
     required: true
   },
   sale_price: {
-    type: Object,
-    required: false
+    type: Number,
   },
   on_sale: {
     type: Boolean,
