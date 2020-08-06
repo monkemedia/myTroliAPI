@@ -28,7 +28,7 @@ productSchema.statics.findProducts = async ({ page, limit }) => {
   }
 }
 
-// Search products by Name or SKU
+// Search products by Name, SKU or Search Keywords
 productSchema.statics.search = async ({ page, limit, keyword }) => {
   const searchQuery = {
     $or: [

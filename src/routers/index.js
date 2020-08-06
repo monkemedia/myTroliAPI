@@ -8,6 +8,7 @@ const currencies = require('./currencies.js')
 const products = require('./products/index.js')
 const coupons = require('./coupons.js')
 const categories = require('./categories.js')
+const brands = require('./brands.js')
 const variations = require('./variations.js')
 const store = require('./store.js')
 const shippingAddress = require('./shipping/address/index.js')
@@ -35,6 +36,7 @@ router.use(
   currencies,
   products,
   categories,
+  brands,
   variations,
   store,
   shippingAddress,
