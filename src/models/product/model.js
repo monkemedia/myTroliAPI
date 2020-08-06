@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 const deepPopulate = require('mongoose-deep-populate')(mongoose)
 const productSchema = require('./schema')
+const ProductImage = require('./images')
+const ProductVariant = require('./variant')
+const ProductVariantImage = require('./variant/images')
+const ProductOption = require('./option')
 
 productSchema.plugin(deepPopulate)
 
@@ -91,6 +95,11 @@ productSchema.statics.updateProduct = async (productId, productDetails) => {
 
 // Delete product by id
 productSchema.statics.deleteProduct = async (productId) => {
+  await ProductImage.deleteMany({ product_id: productId })
+  await ProductOption.deleteMany({ product_id: productId })
+  await ProductVariantImage.deleteMany({ product_id: productId })
+  await ProductVariant.deleteMany({ product_id: productId })
+
   const product = await Product.deleteOne({ _id: productId })
   return product
 }

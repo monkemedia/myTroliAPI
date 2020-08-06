@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const errorHandler = require('../../utils/errorHandler')
 const customerSchema = require('./schema.js')
+const CustomerAddress = require('./address')
+const CustomerCoupon = require('./coupon')
 
 // Hash the password before saving the customer model
 // Delete store credit if it exists
@@ -162,6 +164,8 @@ customerSchema.statics.updateCustomersStoreCredit = async (customerId, storeCred
 
 // Delete customer by id
 customerSchema.statics.deleteCustomer = async (customerId) => {
+  await CustomerAddress.deleteMany({ customer_id: customerId })
+  await CustomerCoupon.deleteMany({ customer_id: customerId })
   const customer = await Customer.deleteOne({ _id: customerId })
   return customer
 }
