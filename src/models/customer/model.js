@@ -163,7 +163,6 @@ customerSchema.statics.updateCustomersStoreCredit = async (customerId, storeCred
 // Delete customer by id
 customerSchema.statics.deleteCustomer = async (customerId) => {
   const customer = await Customer.deleteOne({ _id: customerId })
-  console.log('customer', customer)
   return customer
 }
 

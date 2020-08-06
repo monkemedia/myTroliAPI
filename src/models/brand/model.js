@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const brandSchema = require('./schema')
+const Product = require('../product')
 
 // Get brands
 brandSchema.statics.findBrands = async ({ page, limit }) => {
@@ -66,6 +67,8 @@ brandSchema.statics.updateBrand = async (brandId, brandDetails) => {
 
 // Delete brand
 brandSchema.statics.deleteBrand = async (brandId) => {
+  // Delete the brand id from products that have it
+  await Product.updateMany({ brand_id: brandId }, { $unset: { brand_id: 1 }})
   const brand = await Brand.deleteOne({ _id: brandId })
   return brand
 }
