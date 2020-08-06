@@ -50,7 +50,7 @@ categorySchema.statics.search = async ({ page, limit, keyword }) => {
   }
 }
 
-// Get product count
+// Get category count
 categorySchema.statics.getCount = async () => {
   const total = await Category.countDocuments()
   return {

@@ -90,6 +90,9 @@ const productSchema = Schema({
     type: Boolean,
     default: false
   },
+  brand_id: {
+    type: String
+  },
   total_sold: {
     type: Number,
     default: 0
