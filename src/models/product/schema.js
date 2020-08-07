@@ -70,6 +70,12 @@ const productSchema = Schema({
       ref: 'ProductOptions'
     }
   ],
+  facets: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductFacets'
+    }
+  ],
   categories: {
     type: Array
   },
