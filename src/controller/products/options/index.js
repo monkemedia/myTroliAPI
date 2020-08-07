@@ -1,4 +1,5 @@
 const ProductOption = require('../../../models/product/option/index.js')
+const Product = require('../../../models/product')
 
 const createProductOption = async (req, res) => {
   const data = req.body
@@ -40,6 +41,12 @@ const createProductOption = async (req, res) => {
     })
 
     const savedProductOptions = await productOption.save()
+
+    await Product.updateOne({ _id: productId }, {
+      $push: { 
+        options: savedProductOptions
+      }
+    })
 
     res.status(201).send(savedProductOptions)
   } catch (err) {
@@ -98,6 +105,14 @@ const deleteProductOption = async (req, res) => {
   const productId = req.params.productId
   const optionId = req.params.optionId
   try {
+    await Product.updateOne({ _id: productId }, 
+      {
+        $pull: { 
+          options: optionId
+        }
+      }
+    )
+
     await ProductOption.deleteProductOption(productId, optionId)
 
     res.status(200).send({

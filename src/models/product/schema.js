@@ -64,6 +64,12 @@ const productSchema = Schema({
       ref: 'ProductVariants'
     }
   ],
+  options: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductOptions'
+    }
+  ],
   categories: {
     type: Array
   },
