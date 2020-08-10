@@ -43,7 +43,7 @@ const createProductCustomField = async (req, res) => {
 
     await Product.updateOne({ _id: productId }, {
       $push: {
-        facets: productCustomField._id
+        custom_fields: productCustomField._id
       },
       updated_at: Date.now()
     })
@@ -109,7 +109,7 @@ const deleteProductCustomField = async (req, res) => {
     await ProductCustomField.deleteProductCustomField(customFieldId, productId)
 
     res.status(200).send({
-      message: 'Product facet successfully deleted'
+      message: 'Custom field successfully deleted'
     })
   } catch (err) {
     res.status(400).send(err)
