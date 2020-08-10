@@ -70,9 +70,12 @@ const productSchema = Schema({
       ref: 'ProductOptions'
     }
   ],
-  categories: {
-    type: Array
-  },
+  categories: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Categories'
+    }
+  ],
   weight: {
     type: Number
   },
@@ -97,7 +100,8 @@ const productSchema = Schema({
     default: false
   },
   brand_id: {
-    type: String
+    type: Schema.Types.ObjectId,
+    ref: 'Brand'
   },
   total_sold: {
     type: Number,
