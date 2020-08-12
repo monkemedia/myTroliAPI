@@ -76,6 +76,12 @@ const productSchema = Schema({
       ref: 'Categories'
     }
   ],
+  custom_fields: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'CustomFields'
+    }
+  ],
   weight: {
     type: Number
   },

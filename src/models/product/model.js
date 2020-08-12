@@ -5,6 +5,7 @@ const ProductImage = require('./images')
 const ProductVariant = require('./variant')
 const ProductVariantImage = require('./variant/images')
 const ProductOption = require('./option')
+const ProductFacet = require('./option')
 
 productSchema.plugin(deepPopulate)
 
@@ -99,6 +100,7 @@ productSchema.statics.deleteProduct = async (productId) => {
   await ProductOption.deleteMany({ product_id: productId })
   await ProductVariantImage.deleteMany({ product_id: productId })
   await ProductVariant.deleteMany({ product_id: productId })
+  await ProductFacet.deleteMany({ product_id: productId })
 
   const product = await Product.deleteOne({ _id: productId })
   return product

@@ -14,9 +14,6 @@ const createProduct = async (req, res) => {
     stock,
     status,
     description,
-    price,
-    sale_price,
-    on_sale,
     commodity_type
   } = data
 
