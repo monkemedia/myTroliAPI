@@ -117,7 +117,19 @@ productFilteringSchema.statics.findFacets = async () => {
                 count: { $sum: 1 }
               }
             }
-          ]
+          ],
+          is_featured: [
+            { $match: { 'is_featured': { $eq: true } } },
+            { $group: { _id: 'Featured', count: { $sum: 1 } } },
+          ],
+          is_free_shipping: [
+            { $match: { 'is_free_shipping': { $eq: true } } },
+            { $group: { _id: 'Free shipping', count: { $sum: 1 } } }
+          ],
+          on_sale: [
+            { $match: { 'on_sale': { $eq: true } } },
+            { $group: { _id: 'On sale', count: { $sum: 1 } } }
+          ],
         }
       },
       {
@@ -130,7 +142,10 @@ productFilteringSchema.statics.findFacets = async () => {
           sizes: {
             $setUnion: ['$sizes', '$custom_fields_size']
           },
-          custom_fields: 1
+          custom_fields: 1,
+          other: {
+            $setUnion: ['$is_featured', '$is_free_shipping', '$on_sale']
+          }
         }
       }
     ])
