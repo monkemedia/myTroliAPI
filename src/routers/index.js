@@ -20,6 +20,7 @@ const productVariantImages = require('./products/variants/images/index.js')
 const productOptions = require('./products/options/index.js')
 const productImages = require('./products/images/index.js')
 const productCustomFields = require('./products/customFields/index.js')
+const productFiltering = require('./productFiltering.js')
 const performance = require('./performance.js')
 const orders = require('./orders/index.js')
 const orderStatus = require('./orders/status/index.js')
@@ -49,6 +50,7 @@ router.use(
   productOptions,
   productImages,
   productCustomFields,
+  productFiltering,
   performance,
   orders,
   orderStatus,
