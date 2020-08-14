@@ -109,6 +109,15 @@ const productSchema = Schema({
     type: Schema.Types.ObjectId,
     ref: 'Brand'
   },
+  reviews: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'ProductReview'
+    }
+  ],
+  reviews_count: {
+    type: Number
+  },
   total_sold: {
     type: Number,
     default: 0

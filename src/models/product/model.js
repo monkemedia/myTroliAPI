@@ -5,19 +5,49 @@ const ProductImage = require('./images')
 const ProductVariant = require('./variant')
 const ProductVariantImage = require('./variant/images')
 const ProductOption = require('./option')
-const ProductFacet = require('./option')
+
 
 productSchema.plugin(deepPopulate)
 
 // Get all products
 productSchema.statics.findProducts = async ({ page, limit }) => {
   const products = await Product
-    .find({})
-    .sort('-created_at')
-    .populate('images')
-    .deepPopulate('variants.images')
-    .skip((page - 1) * limit)
-    .limit(limit)
+    .aggregate([
+      {
+        $lookup: {
+          from: 'productimages',
+          localField: 'images',
+          foreignField: '_id',
+          as: 'images'
+        }
+      },
+      {
+        $lookup: {
+          from: 'productvariants',
+          localField: 'variants',
+          foreignField: '_id',
+          as: 'variants'
+        }
+      },
+      {
+        $lookup: {
+          from: 'productreviews',
+          localField: 'reviews',
+          foreignField: '_id',
+          as: 'reviews'
+        }
+      },
+      {
+        $addFields: {
+          reviews_rating_sum: { $avg: '$reviews.rating' },
+          reviews_count: { $size: '$reviews' }
+        } 
+      },
+
+      { $sort: {'created_at' : -1} },
+      { $skip: (page - 1) * limit },
+      { $limit: limit }
+    ])
   const total = await Product.countDocuments()
   return {
     data: products,
@@ -100,7 +130,6 @@ productSchema.statics.deleteProduct = async (productId) => {
   await ProductOption.deleteMany({ product_id: productId })
   await ProductVariantImage.deleteMany({ product_id: productId })
   await ProductVariant.deleteMany({ product_id: productId })
-  await ProductFacet.deleteMany({ product_id: productId })
 
   const product = await Product.deleteOne({ _id: productId })
   return product
