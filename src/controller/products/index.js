@@ -1,6 +1,5 @@
 
 const Product = require('../../models/product')
-const currencySymbol = require('currency-symbol-map')
 const errorHandler = require('../../utils/errorHandler')
 
 const createProduct = async (req, res) => {
@@ -121,12 +120,14 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const productId = req.params.productId
-  let product
-  if (productId === 'count') {
-    product = await Product.getCount()
-  } else {
-    product = await Product.findProduct(productId)
-  }
+  const product = await Product.findProduct(productId)
+
+  res.status(200).send(product)
+}
+
+const getProductCount = async (req, res) => {
+  const isRatings = req.query.ratings
+  const product = await Product.getCount(isRatings)
 
   res.status(200).send(product)
 }
@@ -174,6 +175,7 @@ module.exports = {
   createProduct,
   getProducts,
   getProduct,
+  getProductCount,
   updateProduct,
   deleteProduct
 }

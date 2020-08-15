@@ -112,7 +112,7 @@ const productSchema = Schema({
   reviews: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'ProductReview'
+      ref: 'ProductReviews'
     }
   ],
   reviews_count: {

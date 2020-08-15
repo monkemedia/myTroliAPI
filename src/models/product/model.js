@@ -43,7 +43,6 @@ productSchema.statics.findProducts = async ({ page, limit }) => {
           reviews_count: { $size: '$reviews' }
         } 
       },
-
       { $sort: {'created_at' : -1} },
       { $skip: (page - 1) * limit },
       { $limit: limit }
@@ -104,10 +103,42 @@ productSchema.statics.findProduct = async (_id) => {
 }
 
 // Get product count
-productSchema.statics.getCount = async () => {
-  const total = await Product.countDocuments()
+productSchema.statics.getCount = async (isRatings) => {
+  const query = {}
+
+  if (isRatings) {
+    Object.assign(query, {
+      reviews_count: { $gt : 0 }
+    })
+  }
+
+  const product = await Product
+    .aggregate([
+      {
+        $lookup: {
+          from: 'productreviews',
+          localField: 'reviews',
+          foreignField: '_id',
+          as: 'reviews'
+        }
+      },
+      {
+        $addFields: {
+          reviews_rating_sum: { $avg: '$reviews.rating' },
+          reviews_count: { $size: '$reviews' }
+        } 
+      },
+      { $match : query },
+      {
+        $group: {
+          _id: null,
+          count: { $sum: 1 }
+        }
+      }
+    ])
+
   return {
-    count: total
+    count: product[0].count
   }
 }
 
