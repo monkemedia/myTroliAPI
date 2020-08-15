@@ -39,7 +39,7 @@ productSchema.statics.findProducts = async ({ page, limit }) => {
       },
       {
         $addFields: {
-          reviews_rating_sum: { $avg: '$reviews.rating' },
+          reviews_rating_average: { $ifNull: [ { $avg: '$reviews.rating' }, 0 ] },
           reviews_count: { $size: '$reviews' }
         } 
       },
@@ -124,8 +124,8 @@ productSchema.statics.getCount = async (isRatings) => {
       },
       {
         $addFields: {
-          reviews_rating_sum: { $avg: '$reviews.rating' },
-          reviews_count: { $size: '$reviews' }
+          reviews_rating_average: { $ifNull: [ { $avg: '$reviews.rating' }, 0 ] },
+          reviews_count: { $ifNull: [ { $size: '$reviews' }, 0] }
         } 
       },
       { $match : query },
@@ -138,7 +138,7 @@ productSchema.statics.getCount = async (isRatings) => {
     ])
 
   return {
-    count: product[0].count
+    count: product.length > 0 ? product[0].count : 0
   }
 }
 

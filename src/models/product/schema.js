@@ -116,7 +116,12 @@ const productSchema = Schema({
     }
   ],
   reviews_count: {
-    type: Number
+    type: Number,
+    default: 0
+  },
+  reviews_rating_average: {
+    type: Number,
+    default: 0
   },
   total_sold: {
     type: Number,
