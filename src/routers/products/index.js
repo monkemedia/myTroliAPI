@@ -5,6 +5,7 @@ const {
   createProduct,
   getProducts,
   getProduct,
+  getProductCount,
   updateProduct,
   deleteProduct
 } = require('../../controller/products')
@@ -13,6 +14,8 @@ const {
 router.post('/products', auth, (req, res) => createProduct(req, res))
 // Get products
 router.get('/products', auth, (req, res) => getProducts(req, res))
+// Get product count
+router.get('/products/count', auth, (req, res) => getProductCount(req, res))
 // Get product
 router.get('/products/:productId', auth, (req, res) => getProduct(req, res))
 // Update product

@@ -129,7 +129,7 @@ productFilteringSchema.statics.findFacets = async () => {
           on_sale: [
             { $match: { 'on_sale': { $eq: true } } },
             { $group: { _id: 'On sale', count: { $sum: 1 } } }
-          ],
+          ]
         }
       },
       {
