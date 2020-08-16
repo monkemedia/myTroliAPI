@@ -37,6 +37,7 @@ router.use(
   customerCoupons,
   countries,
   currencies,
+  productReviews,
   products,
   categories,
   brands,
@@ -51,7 +52,7 @@ router.use(
   productOptions,
   productImages,
   productCustomFields,
-  productReviews,
+ 
   productFiltering,
   performance,
   orders,

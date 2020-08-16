@@ -4,8 +4,14 @@ const Product = require('../model')
 
 // Get product reviews
 productReviewSchema.statics.findProductReviews = async ({page, limit, productId}) => {
+  const query = {}
+
+  if (productId) {
+    Object.assign(query, { product_id: productId })
+  }
+
   const productReviews = await ProductReviews
-    .find({ product_id: productId })
+    .find(query)
     .sort({ sort_order: 1 })
     .skip((page - 1) * limit)
     .limit(limit)
@@ -23,8 +29,35 @@ productReviewSchema.statics.findProductReviews = async ({page, limit, productId}
       }
     }
   }
+}
 
-  return productReviews
+// Search product reviews by Author or status
+productReviewSchema.statics.search = async ({ page, limit, keyword }) => {
+  const searchQuery = {
+    $or: [
+      { name: { $regex: keyword, $options: 'i' } },
+      { status: { $regex: keyword, $options: 'i' } }
+    ]
+  }
+  const productReviews = await ProductReviews
+    .find(searchQuery)
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .populate('images')
+
+  const total = await Product.countDocuments(searchQuery)
+  return {
+    data: productReviews,
+    meta: {
+      pagination: {
+        current: page,
+        total: productReviews.length
+      },
+      results: {
+        total: total
+      }
+    }
+  }
 }
 
 // Update product review

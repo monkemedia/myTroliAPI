@@ -11,6 +11,8 @@ const {
 
 // Create product review
 router.post('/products/:productId/reviews', auth, (req, res) => createProductReview(req, res))
+// Get All product reviews
+router.get('/products/reviews', auth, (req, res) => getProductReviews(req, res))
 // Get product reviews
 router.get('/products/:productId/reviews', auth, (req, res) => getProductReviews(req, res))
 // Get product review
