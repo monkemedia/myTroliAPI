@@ -121,8 +121,8 @@ productFilteringSchema.statics.findFacets = async () => {
             { $match: { 'is_featured': { $eq: true } } },
             { $group: { _id: 'Featured', count: { $sum: 1 } } },
           ],
-          is_free_shipping: [
-            { $match: { 'is_free_shipping': { $eq: true } } },
+          has_free_shipping: [
+            { $match: { 'has_free_shipping': { $eq: true } } },
             { $group: { _id: 'Free shipping', count: { $sum: 1 } } }
           ],
           on_sale: [
@@ -143,7 +143,7 @@ productFilteringSchema.statics.findFacets = async () => {
           },
           custom_fields: 1,
           other: {
-            $setUnion: ['$is_featured', '$is_free_shipping', '$on_sale']
+            $setUnion: ['$is_featured', '$has_free_shipping', '$on_sale']
           }
         }
       }
