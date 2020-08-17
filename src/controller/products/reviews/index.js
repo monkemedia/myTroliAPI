@@ -51,9 +51,17 @@ const getProductReviews = async (req, res) => {
   const query = req.query
   const page = parseInt(query.page) || 1
   const limit = parseInt(query.limit) || 20
+  const keyword = query && query.keyword
+  let productReviews
+
   try {
     const productId = req.params.productId
-    const productReviews = await ProductReview.findProductReviews({page, limit, productId})
+
+    if (keyword) {
+      productReviews = await ProductReview.search({ page, keyword, limit })
+    } else {
+      productReviews = await ProductReview.findProductReviews({page, limit, productId})
+    }
 
     res.status(200).send(productReviews)
   } catch (err) {
