@@ -36,6 +36,13 @@ const clientSchema = new Schema({
   },
   reset_token: {
     type: String
+  },
+  created_at: {
+    type: Date,
+    default: Date.now
+  },
+  updated_at: {
+    type: Date
   }
 }, { versionKey: false })
 

@@ -74,7 +74,6 @@ productFilteringSchema.statics.findFacets = async () => {
             },
             { $unwind: '$options.option_values' },
             { $group: { _id: '$options.option_values.label', count: { $sum: 1 } } }
-
           ],
           sizes: [
             { $unwind: '$options' },

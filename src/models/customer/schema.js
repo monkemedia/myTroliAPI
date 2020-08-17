@@ -38,6 +38,10 @@ const customerSchema = new Schema({
     type: Number,
     default: 0
   },
+  locked: {
+    type: Boolean,
+    default: false
+  },
   password: {
     type: String,
     required: true,
