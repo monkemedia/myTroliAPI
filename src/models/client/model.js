@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const clientSchema = require('./schema')
+const { getModelByTenant } = require('../../utils/multitenancy');
 
 // Hash the password before saving the Client model
 clientSchema.pre('save', async function (next) {
@@ -65,6 +65,6 @@ clientSchema.statics.deleteClient = async (_id) => {
   return client
 }
 
-const Client = mongoose.model('Client', clientSchema)
+const Client = getModelByTenant('monkey', 'Client', clientSchema)
 
 module.exports = Client
