@@ -12,7 +12,7 @@ const getTenantDB = function getConnections(tenantId, modelName, schema) {
   }
 
   const mongoose = new Mongoose()
-  const url = 'mongodb://localhost:27017/trolify'.replace(/trolify/, `trolify_${tenantId}`)
+  const url = 'mongodb://localhost:27017/trolify'.replace(/trolify/, tenantId)
   mongoose.connect(url)
   multitenantPool[tenantId] = mongoose
   mongoose.model(modelName, schema)
@@ -21,8 +21,7 @@ const getTenantDB = function getConnections(tenantId, modelName, schema) {
   return mongoose
 }
 
-exports.getModelByTenant = (tenantId, modelName, schema) => {
-  console.log(`getModelByTenant tenantId: ${tenantId}.`)
+exports.getModelByTenant = function (tenantId, modelName, schema) {
   const tenantDb = getTenantDB(tenantId, modelName, schema)
   return tenantDb.model(modelName)
 }

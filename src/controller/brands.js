@@ -1,4 +1,4 @@
-const Brand = require('../models/brand')
+const { Brand } = require('../models/brand/model.js')
 
 const createBrand = async (req, res) => {
   const data = req.body
@@ -23,8 +23,7 @@ const createBrand = async (req, res) => {
   }
 
   try {
-    const brands = new Brand(data)
-
+    const brands = Brand().getModel(data)
     await brands.save()
 
     res.status(201).send(brands)
@@ -34,17 +33,20 @@ const createBrand = async (req, res) => {
 }
 
 const getBrands = async (req, res) => {
+  const brand = new Brand()
   const query = req.query
   const page = parseInt(query.page) || 1
   const limit = parseInt(query.limit) || 20
   const keyword = query && query.keyword
   let brands
 
+  console.log('poo', req.header('Authorization'))
+
   try {
     if (keyword) {
-      brands = await Brand.search({ page, limit, keyword })
+      brands = await brand.getModel().search({ page, limit, keyword })
     } else {
-      brands = await Brand.findBrands({ page, limit })
+      brands = await brand.getModel().findBrands({ page, limit })
     }
 
     res.status(200).send(brands)

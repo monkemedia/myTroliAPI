@@ -10,7 +10,7 @@ const bodyParser = require('body-parser')
 const port = process.env.PORT || 3060
 const app = express()
 
-require('./db/db')
+require('./db/masterDb.js')
 
 app.use(cors())
 app.use(bodyParser.json())
