@@ -3,9 +3,6 @@ const Product = require('../product')
 const { getModelByTenant } = require('../../utils/multitenancy');
 
 exports.Brand = function (req) {
-  const tenantId = 'trolify_dutchpot'
-  console.log(this)
-
   // Get brands
   brandSchema.statics.findBrands = async ({ page, limit }) => {
     const getModel = this.getModel()
@@ -13,7 +10,6 @@ exports.Brand = function (req) {
       .find({})
       .skip((page - 1) * limit)
       .limit(limit)
-    
 
     const total = await getModel.countDocuments()
     return {
@@ -80,6 +76,6 @@ exports.Brand = function (req) {
   // }
 
   this.getModel = function () { 
-    return getModelByTenant(tenantId, 'Brand', brandSchema)
+    return getModelByTenant(req, 'Brand', brandSchema)
   }
 }

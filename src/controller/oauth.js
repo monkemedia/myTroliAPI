@@ -119,6 +119,7 @@ const accessToken = async (req, res) => {
       expires_in: 3600,
       access_token: accessToken,
       client_id: client._id,
+      store_hash: client.store_hash,
       token_type: 'Bearer',
       refresh_token: refreshToken
     })

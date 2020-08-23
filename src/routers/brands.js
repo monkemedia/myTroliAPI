@@ -10,14 +10,14 @@ const {
 } = require('../controller/brands')
 
 // Create brand
-router.post('/brands', auth, (req, res) => createBrand(req, res))
+router.post('/:storeHash/brands', auth, (req, res) => createBrand(req, res))
 // Get brands
-router.get('/brands', auth, (req, res) => getBrands(req, res))
+router.get('/:storeHash/brands', auth, (req, res) => getBrands(req, res))
 // Get brand
-router.get('/brands/:brandId', auth, (req, res) => getBrand(req, res))
+router.get('/:storeHash/brands/:brandId', auth, (req, res) => getBrand(req, res))
 // Update brand
-router.put('/brands/:brandId', auth, (req, res) => updateBrand(req, res))
+router.put('/:storeHash/brands/:brandId', auth, (req, res) => updateBrand(req, res))
 // Delete brand
-router.delete('/brands/:brandId', auth, (req, res) => deleteBrand(req, res))
+router.delete('/:storeHash/brands/:brandId', auth, (req, res) => deleteBrand(req, res))
 
 module.exports = router

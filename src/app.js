@@ -16,7 +16,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/oauth/', oauth)
-app.use('/v1/', dbRoutes)
+app.use('/v1', dbRoutes)
 app.use('/v1/images', imageRoute)
 app.use('/v1/payments', paymentRoute)
 

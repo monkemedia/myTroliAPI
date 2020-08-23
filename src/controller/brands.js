@@ -33,14 +33,12 @@ const createBrand = async (req, res) => {
 }
 
 const getBrands = async (req, res) => {
-  const brand = new Brand()
+  const brand = new Brand(req)
   const query = req.query
   const page = parseInt(query.page) || 1
   const limit = parseInt(query.limit) || 20
   const keyword = query && query.keyword
   let brands
-
-  console.log('poo', req.header('Authorization'))
 
   try {
     if (keyword) {

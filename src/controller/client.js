@@ -3,7 +3,7 @@ const emailTemplate = require('../utils/emailTemplate')
 
 const createClient = async (req, res) => {
   const data = req.body
-  const { email, name, role, type } = data
+  const { email, name, role, store_hash, type } = data
   const clientExists = await Client.findByEmailAddress(email)
 
   if (!type) {
@@ -33,6 +33,12 @@ const createClient = async (req, res) => {
   if (!role) {
     return res.status(401).send({
       message: 'Role is required'
+    })
+  }
+
+  if (!store_hash) {
+    return res.status(401).send({
+      message: 'Store hash is required'
     })
   }
 
@@ -74,6 +80,7 @@ const getClients = async (req, res) => {
       email: 1,
       enabled: 1,
       role: 1,
+      store_hash: 1,
       password: { $toBool: '$password' }
     })
 
