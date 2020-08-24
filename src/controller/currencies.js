@@ -1,4 +1,4 @@
-const Currency = require('../models/currency/index.js')
+const Currency = require('../models/currency')
 
 const createCurrencies = async (req, res) => {
   const data = req.body
@@ -35,7 +35,7 @@ const createCurrencies = async (req, res) => {
 
   try {
     const promise = data.map(async obj => {
-      const currency = new Currency(obj)
+      const currency = new Currency()(obj)
       const save = await currency.save()
       return save
     })
@@ -49,7 +49,7 @@ const createCurrencies = async (req, res) => {
 
 const getCurrencies = async (req, res) => {
   try {
-    const currencies = await Currency.findCurrencies()
+    const currencies = await Currency().findCurrencies()
 
     res.status(200).send(currencies)
   } catch (err) {
@@ -59,7 +59,7 @@ const getCurrencies = async (req, res) => {
 
 const getCurrency = async (req, res) => {
   const currencyId = req.params.currencyId
-  const currency = await Currency.findOne({ _id: currencyId })
+  const currency = await Currency().findOne({ _id: currencyId })
 
   res.status(200).send(currency)
 }
@@ -82,8 +82,8 @@ const updateCurrency = async (req, res) => {
   }
 
   try {
-    await Currency.updateCurrency(currencyId, data)
-    const currency = await Currency.findOne({ _id: currencyId })
+    await Currency().updateCurrency(currencyId, data)
+    const currency = await Currency().findOne({ _id: currencyId })
 
     res.status(200).send(currency)
   } catch (err) {
@@ -95,7 +95,7 @@ const deleteCurrency = async (req, res) => {
   try {
     const currencyId = req.params.currencyId
 
-    await Currency.deleteCurrency(currencyId)
+    await Currency().deleteCurrency(currencyId)
 
     res.status(200).send({
       message: 'Currency successfully deleted'

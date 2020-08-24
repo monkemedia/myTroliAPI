@@ -1,25 +1,26 @@
-const mongoose = require('mongoose')
-const currencySchema = require('./schema')
+const CurrencySchema = require('./schema')
+const { tenantModel } = require('../../utils/multitenancy');
 
 // Get currencies
-currencySchema.statics.findCurrencies = async () => {
-  const currencies = await Currency.find({})
+CurrencySchema.statics.findCurrencies = async () => {
+  const currencies = await Currency().find({})
 
   return currencies
 }
 
 // Update currency
-currencySchema.statics.updateCurrency = async (currencyId, currencyDetails) => {
-  const currency = await Currency.updateOne({ _id: currencyId }, currencyDetails)
+CurrencySchema.statics.updateCurrency = async (currencyId, currencyDetails) => {
+  const currency = await Currency().updateOne({ _id: currencyId }, currencyDetails)
   return currency
 }
 
 // Delete currency
-currencySchema.statics.deleteCurrency = async (currencyId) => {
-  const currency = await Currency.deleteOne({ _id: currencyId })
+CurrencySchema.statics.deleteCurrency = async (currencyId) => {
+  const currency = await Currency().deleteOne({ _id: currencyId })
   return currency
 }
 
-const Currency = mongoose.model('Currency', currencySchema)
-
+const Currency = function () {
+  return tenantModel('Currency', CurrencySchema)
+}
 module.exports = Currency
