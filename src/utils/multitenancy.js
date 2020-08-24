@@ -1,7 +1,8 @@
 const { Mongoose } = require('mongoose')
 const multitenantPool = {}
 
-const getTenantDB = function getConnections(storeHash, modelName, schema) {
+const getTenantDB = function getConnections(modelName, schema) {
+  const storeHash = 'trolify_dutchpot'
   // Check connections lookup
   const mCon = multitenantPool[storeHash]
   if (mCon) {
@@ -22,8 +23,7 @@ const getTenantDB = function getConnections(storeHash, modelName, schema) {
   return mongoose
 }
 
-exports.getModelByTenant = function (req, modelName, schema) {
-  const storeHash = req.params.storeHash
-  const tenantDb = getTenantDB(storeHash, modelName, schema)
+exports.tenantModel = function (modelName, schema) {
+  const tenantDb = getTenantDB(modelName, schema)
   return tenantDb.model(modelName)
 }
