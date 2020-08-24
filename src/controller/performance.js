@@ -1,10 +1,10 @@
-const Order = require('../models/order/index.js')
-const OrderRefund = require('../models/order/refund/index.js')
+const Order = require('../models/order')
+const OrderRefund = require('../models/order/refund')
 
 const getStoreRevenue = async (req, res) => {
   try {
-    const orders = await Order.findOrders({})
-    const getRefunds = await OrderRefund.find()
+    const orders = await Order().findOrders({})
+    const getRefunds = await OrderRefund().find()
     let totalExcTaxSum = 0
     let totalIncTaxSum = 0
     let shippingCostExcTaxSum = 0

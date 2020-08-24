@@ -52,7 +52,6 @@ router.use(
   productOptions,
   productImages,
   productCustomFields,
- 
   productFiltering,
   performance,
   orders,
