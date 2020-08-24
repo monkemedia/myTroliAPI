@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const productFilterSchema = new Schema({
+const ProductFilterSchema = new Schema({
   type: {
     type: String
   },
@@ -29,4 +29,4 @@ const productFilterSchema = new Schema({
   
 }, { versionKey: false })
 
-module.exports = productFilterSchema
+module.exports = ProductFilterSchema

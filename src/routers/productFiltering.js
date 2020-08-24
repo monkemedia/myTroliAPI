@@ -9,13 +9,10 @@ const {
 } = require('../controller/productFiltering')
 
 // Update facet settings
-router.put('/product-filtering/settings', auth, (req, res) => updateFacetSettings(req, res))
+router.put('/:storeHash/product-filtering/settings', auth, (req, res) => updateFacetSettings(req, res))
 // Get facet settings
-router.get('/product-filtering/settings', auth, (req, res) => getFacetSettings(req, res))
+router.get('/:storeHash/product-filtering/settings', auth, (req, res) => getFacetSettings(req, res))
 // Get facets
-router.get('/product-filtering', auth, (req, res) => getFacets(req, res))
-
-// Get filter
-// router.get('/product-filters/:filterName', auth, (req, res) => getFilterByName(req, res))
+router.get('/:storeHash/product-filtering', auth, (req, res) => getFacets(req, res))
 
 module.exports = router

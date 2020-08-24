@@ -1,10 +1,10 @@
-const mongoose = require('mongoose')
-const productFilteringSchema = require('./schema')
+const ProductFilteringSchema = require('./schema')
 const Product = require('../product')
+const { tenantModel } = require('../../utils/multitenancy');
 
 // Update facet settings
-productFilteringSchema.statics.updateFacetSettings = async (data) => {
-  const facets = await ProductFiltering.findOneAndUpdate({ type: 'product-filtering' }, {
+ProductFilteringSchema.statics.updateFacetSettings = async (data) => {
+  const facets = await ProductFiltering().findOneAndUpdate({ type: 'product-filtering' }, {
     ...data,
     updated_at: Date.now()
   }, {
@@ -15,13 +15,13 @@ productFilteringSchema.statics.updateFacetSettings = async (data) => {
 }
 
 // Get facet settings
-productFilteringSchema.statics.findFacetSettings = async () => {
-  const facetSettings = await ProductFiltering.findOne({})
+ProductFilteringSchema.statics.findFacetSettings = async () => {
+  const facetSettings = await ProductFiltering().findOne({})
   return facetSettings
 }
 
 // Get facets
-productFilteringSchema.statics.findFacets = async () => {
+ProductFilteringSchema.statics.findFacets = async () => {
   const facets = await Product
     .aggregate([
       {
@@ -152,32 +152,7 @@ productFilteringSchema.statics.findFacets = async () => {
   return facets
 }
 
-// // Get facetsby name
-// productFilteringSchema.statics.findFilterByName = async (filterName) => {
-//   const filter = filterName.toLowerCase()
-//   const facets = await Product
-//     .aggregate([
-//       { $unwind: '$facets' },
-//       {
-//         $match: {
-//           'facets.name': { $regex: new RegExp(filter, 'i') }
-//         }
-//       },
-//       {
-//         $group: {
-//           _id: {
-//             name: '$facets.value',
-//             sort_order: '$facets.sort_order'
-//           },
-//           count: { $sum: 1 }
-//         }
-//       },
-//       { $sort: { '_id.sort_order': 1 } }
-//     ])
-
-//   return facets
-// }
-
-const ProductFiltering = mongoose.model('ProductFiltering', productFilteringSchema)
-
+const ProductFiltering = function () {
+  return tenantModel('ProductFiltering', ProductFilteringSchema)
+}
 module.exports = ProductFiltering
