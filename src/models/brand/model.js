@@ -24,56 +24,55 @@ BrandSchema.statics.findBrands = async ({ page, limit }) => {
   }
 }
 
-// // Search brands by Name or Search Keywords
-// this.brandSchema.statics.search = async ({ page, limit, keyword }) => {
-//   const searchArray = [
-//     { name: { $regex: keyword, $options: 'i' } },
-//     { search_keywords: { $regex: keyword, $options: 'i' } }
-//   ]
-//   const brands = await Brand
-//     .find()
-//     .or(searchArray)
-//     .skip((page - 1) * limit)
-//     .limit(limit)
+// Search brands by Name or Search Keywords
+BrandSchema.statics.search = async ({ page, limit, keyword }) => {
+  const searchArray = [
+    { name: { $regex: keyword, $options: 'i' } },
+    { search_keywords: { $regex: keyword, $options: 'i' } }
+  ]
+  const brands = await Brand()
+    .find()
+    .or(searchArray)
+    .skip((page - 1) * limit)
+    .limit(limit)
 
-//   const total = await Brand.countDocuments(searchArray)
-//   return {
-//     data: brands,
-//     meta: {
-//       pagination: {
-//         current: page,
-//         total: brands.length
-//       },
-//       results: {
-//         total: total
-//       }
-//     }
-//   }
-// }
+  const total = await Brand().countDocuments(searchArray)
+  return {
+    data: brands,
+    meta: {
+      pagination: {
+        current: page,
+        total: brands.length
+      },
+      results: {
+        total: total
+      }
+    }
+  }
+}
 
-// // Get brand count
-// this.brandSchema.statics.getCount = async () => {
-//   const total = await Brand.countDocuments()
-//   return {
-//     count: total
-//   }
-// }
+// Get brand count
+BrandSchema.statics.getCount = async () => {
+  const total = await Brand().countDocuments()
+  return {
+    count: total
+  }
+}
 
-// // Update brand
-// this.brandSchema.statics.updateBrand = async (brandId, brandDetails) => {
-//   const brand = await Brand.updateOne({ _id: brandId }, brandDetails)
-//   return brand
-// }
+// Update brand
+BrandSchema.statics.updateBrand = async (brandId, brandDetails) => {
+  const brand = await Brand().updateOne({ _id: brandId }, brandDetails)
+  return brand
+}
 
-// // Delete brand
-// this.brandSchema.statics.deleteBrand = async (brandId) => {
-//   // Delete the brand id from products that have it
-//   await Product.updateMany({ brand_id: brandId }, { $unset: { brand_id: 1 }})
-//   const brand = await Brand.deleteOne({ _id: brandId })
-//   return brand
-// }
+// Delete brand
+BrandSchema.statics.deleteBrand = async (brandId) => {
+  // Delete the brand id from products that have it
+  await Product.updateMany({ brand_id: brandId }, { $unset: { brand_id: 1 }})
+  const brand = await Brand().deleteOne({ _id: brandId })
+  return brand
+}
 
-// const Brand = tenantModel('Brand', BrandSchema)
 
 const Brand = function () {
   return tenantModel('Brand', BrandSchema)

@@ -1,4 +1,4 @@
-const Brand = require('../models/brand/model.js')
+const Brand = require('../models/brand/index.js')
 
 const createBrand = async (req, res) => {
   const data = req.body
@@ -33,7 +33,6 @@ const createBrand = async (req, res) => {
 }
 
 const getBrands = async (req, res) => {
-  const brand = new Brand()
   const query = req.query
   const page = parseInt(query.page) || 1
   const limit = parseInt(query.limit) || 20
@@ -42,10 +41,9 @@ const getBrands = async (req, res) => {
 
   try {
     if (keyword) {
-      brands = await brand.search({ page, limit, keyword })
+      brands = await Brand().search({ page, limit, keyword })
     } else {
-      console.log(1)
-      brands = await brand.findBrands({ page, limit })
+      brands = await Brand().findBrands({ page, limit })
     }
 
     res.status(200).send(brands)
@@ -58,9 +56,9 @@ const getBrand = async (req, res) => {
   const brandId = req.params.brandId
   let brand
   if (brandId === 'count') {
-    brand = await Brand.getCount()
+    brand = await Brand().getCount()
   } else {
-    brand = await Brand.findOne({ _id: brandId })
+    brand = await Brand().findOne({ _id: brandId })
   }
 
   res.status(200).send(brand)
@@ -84,10 +82,10 @@ const updateBrand = async (req, res) => {
   }
 
   try {
-    await Brand.updateBrand(brandId, data)
-    const brand = await Brand.findOne({ _id: brandId })
+    await Brand().updateBrand(brandId, data)
+    const updatedBrand = await Brand().findOne({ _id: brandId })
 
-    res.status(200).send(brand)
+    res.status(200).send(updatedBrand)
   } catch (err) {
     res.status(400).send(err)
   }
@@ -95,7 +93,7 @@ const updateBrand = async (req, res) => {
 
 const deleteBrand = async (req, res) => {
   try {
-    await Brand.deleteBrand(req.params.brandId)
+    await Brand().deleteBrand(req.params.brandId)
 
     res.status(200).send({
       message: 'Brand successfully deleted'
