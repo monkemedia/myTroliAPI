@@ -1,3 +1,3 @@
-const brand = require('./model')
+const Brand = require('./model')
 
-module.exports = brand
+module.exports = Brand

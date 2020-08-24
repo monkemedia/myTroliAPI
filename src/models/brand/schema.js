@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const brandSchema = new Schema({
+const BrandSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -20,4 +20,4 @@ const brandSchema = new Schema({
   },
 }, { versionKey: false })
 
-module.exports = brandSchema
+module.exports = BrandSchema

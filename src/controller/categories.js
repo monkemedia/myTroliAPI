@@ -35,7 +35,7 @@ const createCategory = async (req, res) => {
   }
 
   try {
-    const categories = new Category(data)
+    const categories = new Category()(data)
 
     await categories.save()
 
@@ -54,9 +54,9 @@ const getCategories = async (req, res) => {
 
   try {
     if (keyword) {
-      categories = await Category.search({ page, limit, keyword })
+      categories = await Category().search({ page, limit, keyword })
     } else {
-      categories = await Category.findCategories({ page, limit })
+      categories = await Category().findCategories({ page, limit })
     }
 
     res.status(200).send(categories)

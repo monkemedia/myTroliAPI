@@ -1,4 +1,4 @@
-const Brand = require('../models/brand/index.js')
+const Brand = require('../models/brand')
 
 const createBrand = async (req, res) => {
   const data = req.body
