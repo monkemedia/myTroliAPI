@@ -1,4 +1,4 @@
-const Country = require('../models/country/index.js')
+const Country = require('../models/country')
 
 const createCountries = async (req, res) => {
   const data = req.body
@@ -17,7 +17,7 @@ const createCountries = async (req, res) => {
 
   try {
     const promise = data.map(async obj => {
-      const country = new Country(obj)
+      const country = new Country()(obj)
       const save = await country.save()
       return save
     })
@@ -31,7 +31,7 @@ const createCountries = async (req, res) => {
 
 const getCountries = async (req, res) => {
   try {
-    const countries = await Country.findCountries()
+    const countries = await Country().findCountries()
 
     res.status(200).send(countries)
   } catch (err) {
@@ -41,7 +41,7 @@ const getCountries = async (req, res) => {
 
 const getCountry = async (req, res) => {
   const countryId = req.params.countryId
-  const country = await Country.findOne({ _id: countryId })
+  const country = await Country().findOne({ _id: countryId })
 
   res.status(200).send(country)
 }
@@ -64,8 +64,8 @@ const updateCountry = async (req, res) => {
   }
 
   try {
-    await Country.updateCountry(countryId, data)
-    const country = await Country.findOne({ _id: countryId })
+    await Country().updateCountry(countryId, data)
+    const country = await Country().findOne({ _id: countryId })
 
     res.status(200).send(country)
   } catch (err) {
@@ -77,7 +77,7 @@ const deleteCountry = async (req, res) => {
   try {
     const countryId = req.params.countryId
 
-    await Country.deleteCountry(countryId)
+    await Country().deleteCountry(countryId)
 
     res.status(200).send({
       message: 'Country successfully deleted'
