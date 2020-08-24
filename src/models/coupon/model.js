@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
-const couponSchema = require('./schema')
+const CouponSchema = require('./schema')
 const errorHandler = require('../../utils/errorHandler')
+const { tenantModel } = require('../../utils/multitenancy');
 
-couponSchema.pre('save', async function (next) {
+CouponSchema.pre('save', async function (next) {
   const coupon = this
 
   coupon.created_at = Date.now()
@@ -10,13 +10,13 @@ couponSchema.pre('save', async function (next) {
 })
 
 // Get coupons
-couponSchema.statics.findCoupons = async ({ page, limit }) => {
-  const coupons = await Coupon
+CouponSchema.statics.findCoupons = async ({ page, limit }) => {
+  const coupons = await Coupon()
     .find({})
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Coupon.countDocuments()
+  const total = await Coupon().countDocuments()
   return {
     data: coupons,
     meta: {
@@ -32,18 +32,18 @@ couponSchema.statics.findCoupons = async ({ page, limit }) => {
 }
 
 // Search coupons by code
-couponSchema.statics.search = async ({ page, limit, keyword }) => {
+CouponSchema.statics.search = async ({ page, limit, keyword }) => {
   const searchArray = [
     { name: { $regex: keyword, $options: 'i' } },
     { code: { $regex: keyword, $options: 'i' } }
   ]
-  const coupons = await Coupon
+  const coupons = await Coupon()
     .find()
     .or(searchArray)
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Coupon.countDocuments(searchArray)
+  const total = await Coupon().countDocuments(searchArray)
   return {
     data: coupons,
     meta: {
@@ -59,8 +59,8 @@ couponSchema.statics.search = async ({ page, limit, keyword }) => {
 }
 
 // Get coupon by code
-couponSchema.statics.findCouponByCode = async (couponCode) => {
-  const coupon = await Coupon.findOne({ code: couponCode })
+CouponSchema.statics.findCouponByCode = async (couponCode) => {
+  const coupon = await Coupon().findOne({ code: couponCode })
 
   // Check to see if coupon exists
   if (!coupon) {
@@ -76,19 +76,19 @@ couponSchema.statics.findCouponByCode = async (couponCode) => {
 }
 
 // Update coupon
-couponSchema.statics.updateCoupon = async (couponId, couponDetails) => {
+CouponSchema.statics.updateCoupon = async (couponId, couponDetails) => {
   let coupon
   const incrementUsage = couponDetails.increment_usage
 
   if (incrementUsage) {
-    coupon = await Coupon.updateOne({ _id: couponId }, {
+    coupon = await Coupon().updateOne({ _id: couponId }, {
       $inc: {
         number_uses: incrementUsage
       },
       updated_at: Date.now()
     })
   } else {
-    coupon = await Coupon.updateOne({ _id: couponId }, {
+    coupon = await Coupon().updateOne({ _id: couponId }, {
       ...couponDetails,
       updated_at: Date.now()
     })
@@ -98,11 +98,12 @@ couponSchema.statics.updateCoupon = async (couponId, couponDetails) => {
 }
 
 // Delete coupon by id
-couponSchema.statics.deleteCoupon = async (_id) => {
-  const coupon = await Coupon.deleteOne({ _id })
+CouponSchema.statics.deleteCoupon = async (_id) => {
+  const coupon = await Coupon().deleteOne({ _id })
   return coupon
 }
 
-const Coupon = mongoose.model('coupon', couponSchema)
-
+const Coupon = function () {
+  return tenantModel('Coupon', CouponSchema)
+}
 module.exports = Coupon
