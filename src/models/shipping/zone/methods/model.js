@@ -1,21 +1,21 @@
-const mongoose = require('mongoose')
-const shippingMethodSchema = require('./schema')
+const ShippingMethodSchema = require('./schema')
+const { tenantModel } = require('../../../../utils/multitenancy');
 
 // Get methods
-shippingMethodSchema.statics.findMethods = async () => {
-  const methods = await ShippingMethods.find({})
+ShippingMethodSchema.statics.findMethods = async () => {
+  const methods = await ShippingMethods().find({})
   return methods
 }
 
 // Get method
-shippingMethodSchema.statics.findMethod = async (methodId) => {
-  const method = await ShippingMethods.findOne({ _id: methodId })
+ShippingMethodSchema.statics.findMethod = async (methodId) => {
+  const method = await ShippingMethods().findOne({ _id: methodId })
   return method
 }
 
 // Update method
-shippingMethodSchema.statics.updateMethod = async (methodId, methodDetails) => {
-  const method = await ShippingMethods.updateOne({ _id: methodId }, {
+ShippingMethodSchema.statics.updateMethod = async (methodId, methodDetails) => {
+  const method = await ShippingMethods().updateOne({ _id: methodId }, {
     ...methodDetails,
     updated_at: Date.now()
   })
@@ -23,11 +23,12 @@ shippingMethodSchema.statics.updateMethod = async (methodId, methodDetails) => {
 }
 
 // Delete method
-shippingMethodSchema.statics.deleteMethod = async (methodId) => {
-  const method = await ShippingMethods.deleteOne({ _id: methodId })
+ShippingMethodSchema.statics.deleteMethod = async (methodId) => {
+  const method = await ShippingMethods().deleteOne({ _id: methodId })
   return method
 }
 
-const ShippingMethods = mongoose.model('ShippingMethods', shippingMethodSchema)
-
-module.exports = ShippingMethods
+const ShippingMethod = function () {
+  return tenantModel('ShippingMethod', ShippingMethodSchema)
+}
+module.exports = ShippingMethod

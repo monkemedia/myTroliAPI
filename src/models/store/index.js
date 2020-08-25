@@ -1,3 +1,3 @@
-const Client = require('./model')
+const Store = require('./model')
 
-module.exports = Client
+module.exports = Store

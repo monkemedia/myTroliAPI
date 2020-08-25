@@ -4,7 +4,7 @@ const createShippingAddress = async (req, res) => {
   const data = req.body
 
   // Lets see if shipping address already exists
-  const shippingAddress = await ShippingAddress.findOne()
+  const shippingAddress = await ShippingAddress().findOne()
 
   if (shippingAddress) {
     return res.status(401).send({
@@ -25,7 +25,7 @@ const createShippingAddress = async (req, res) => {
   }
 
   try {
-    const shippingAddress = new ShippingAddress(data)
+    const shippingAddress = new ShippingAddress()(data)
     const savedShippingAddress = await shippingAddress.save()
 
     res.status(201).send(savedShippingAddress)
@@ -36,7 +36,7 @@ const createShippingAddress = async (req, res) => {
 
 const getShippingAddress = async (req, res) => {
   try {
-    const shippingAddress = await ShippingAddress.findOne()
+    const shippingAddress = await ShippingAddress().findOne()
 
     res.status(200).send(shippingAddress)
   } catch (err) {
@@ -60,8 +60,8 @@ const updateShippingAddress = async (req, res) => {
   }
 
   try {
-    await ShippingAddress.updateShippingAddress(data)
-    const shippingAddress = await ShippingAddress.findOne()
+    await ShippingAddress().updateShippingAddress(data)
+    const shippingAddress = await ShippingAddress().findOne()
 
     res.status(200).send(shippingAddress)
   } catch (err) {
@@ -71,7 +71,7 @@ const updateShippingAddress = async (req, res) => {
 
 const deleteShippingAddress = async (req, res) => {
   try {
-    await ShippingAddress.deleteShippingAddress()
+    await ShippingAddress().deleteShippingAddress()
 
     res.status(200).send({
       message: 'Shipping address successfully deleted'

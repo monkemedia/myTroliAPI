@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const productCustomFieldSchema = new Schema({
+const ProductCustomFieldSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -27,4 +27,4 @@ const productCustomFieldSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = productCustomFieldSchema
+module.exports = ProductCustomFieldSchema

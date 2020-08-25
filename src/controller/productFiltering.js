@@ -17,8 +17,8 @@ const updateFacetSettings = async (req, res) => {
   }
 
   try {
-    await ProductFiltering.updateFacetSettings(data)
-    const facets = await ProductFiltering.findFacetSettings()
+    await ProductFiltering().updateFacetSettings(data)
+    const facets = await ProductFiltering().findFacetSettings()
 
     res.status(200).send(facets)
   } catch (err) {
@@ -28,7 +28,7 @@ const updateFacetSettings = async (req, res) => {
 
 const getFacetSettings = async (req, res) => {
   try {
-    const facets = await ProductFiltering.findFacetSettings()
+    const facets = await ProductFiltering().findFacetSettings()
 
     res.status(200).send(facets)
   } catch (err) {
@@ -38,7 +38,7 @@ const getFacetSettings = async (req, res) => {
 
 const getFacets = async (req, res) => {
   try {
-    const facets = await ProductFiltering.findFacets()
+    const facets = await ProductFiltering().findFacets()
 
     res.status(200).send(facets)
   } catch (err) {

@@ -10,14 +10,14 @@ const {
 } = require('../../../controller/products/options/index.js')
 
 // Create variant option
-router.post('/products/:productId/options', auth, (req, res) => createProductOption(req, res))
+router.post('/:storeHash/products/:productId/options', auth, (req, res) => createProductOption(req, res))
 // Get variant options
-router.get('/products/:productId/options', auth, (req, res) => getProductOptions(req, res))
+router.get('/:storeHash/products/:productId/options', auth, (req, res) => getProductOptions(req, res))
 // Get variant option
-router.get('/products/:productId/options/:optionId', auth, (req, res) => getProductOption(req, res))
+router.get('/:storeHash/products/:productId/options/:optionId', auth, (req, res) => getProductOption(req, res))
 // Update variant option
-router.put('/products/:productId/options/:optionId', auth, (req, res) => updateProductOption(req, res))
+router.put('/:storeHash/products/:productId/options/:optionId', auth, (req, res) => updateProductOption(req, res))
 // Delete variant option
-router.delete('/products/:productId/options/:optionId', auth, (req, res) => deleteProductOption(req, res))
+router.delete('/:storeHash/products/:productId/options/:optionId', auth, (req, res) => deleteProductOption(req, res))
 
 module.exports = router

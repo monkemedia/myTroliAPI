@@ -10,14 +10,14 @@ const {
 } = require('../../../controller/shipping/zones')
 
 // Create shipping zone
-router.post('/shipping/zones', auth, (req, res) => createShippingZone(req, res))
+router.post('/:storeHash/shipping/zones', auth, (req, res) => createShippingZone(req, res))
 // Get shipping zones
-router.get('/shipping/zones', auth, (req, res) => getShippingZones(req, res))
+router.get('/:storeHash/shipping/zones', auth, (req, res) => getShippingZones(req, res))
 // Get shipping zone
-router.get('/shipping/zones/:zoneId', auth, (req, res) => getShippingZone(req, res))
+router.get('/:storeHash/shipping/zones/:zoneId', auth, (req, res) => getShippingZone(req, res))
 // Update shipping zone
-router.put('/shipping/zones/:zoneId', auth, (req, res) => updateShippingZone(req, res))
+router.put('/:storeHash/shipping/zones/:zoneId', auth, (req, res) => updateShippingZone(req, res))
 // Delete shipping zone
-router.delete('/shipping/zones/:zoneId', auth, (req, res) => deleteShippingZone(req, res))
+router.delete('/:storeHash/shipping/zones/:zoneId', auth, (req, res) => deleteShippingZone(req, res))
 
 module.exports = router

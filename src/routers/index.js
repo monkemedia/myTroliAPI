@@ -10,6 +10,7 @@ const coupons = require('./coupons.js')
 const categories = require('./categories.js')
 const brands = require('./brands.js')
 const variations = require('./variations.js')
+const images = require('./images.js')
 const store = require('./store.js')
 const shippingAddress = require('./shipping/address/index.js')
 const shippingZones = require('./shipping/zones/index.js')
@@ -43,6 +44,7 @@ router.use(
   brands,
   variations,
   store,
+  images,
   shippingAddress,
   shippingZones,
   shippingMethods,

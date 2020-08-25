@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const shippingZoneSchema = new Schema({
+const ShippingZoneSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -39,4 +39,4 @@ const shippingZoneSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = shippingZoneSchema
+module.exports = ShippingZoneSchema

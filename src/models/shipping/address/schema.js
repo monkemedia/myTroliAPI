@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const shippingAddressSchema = new Schema({
+const ShippingAddressSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -43,4 +43,4 @@ const shippingAddressSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = shippingAddressSchema
+module.exports = ShippingAddressSchema

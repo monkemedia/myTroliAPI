@@ -22,7 +22,7 @@ ProductFilteringSchema.statics.findFacetSettings = async () => {
 
 // Get facets
 ProductFilteringSchema.statics.findFacets = async () => {
-  const facets = await Product
+  const facets = await Product()
     .aggregate([
       {
         $lookup: {

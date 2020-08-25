@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const productFieldSchema = new Schema({
+const ProductFieldSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -38,4 +38,4 @@ const productFieldSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = productFieldSchema
+module.exports = ProductFieldSchema

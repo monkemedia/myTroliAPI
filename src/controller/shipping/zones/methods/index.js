@@ -40,7 +40,7 @@ const createShippingMethod = async (req, res) => {
   }
 
   try {
-    const shippingMethod = new ShippingMethod(data)
+    const shippingMethod = new ShippingMethod()(data)
     const savedShippingMethod = await shippingMethod.save()
 
     res.status(201).send(savedShippingMethod)
@@ -51,7 +51,7 @@ const createShippingMethod = async (req, res) => {
 
 const getShippingMethods = async (req, res) => {
   try {
-    const shippingMethods = await ShippingMethod.findMethods()
+    const shippingMethods = await ShippingMethod().findMethods()
 
     res.status(200).send(shippingMethods)
   } catch (err) {
@@ -62,7 +62,7 @@ const getShippingMethods = async (req, res) => {
 const getShippingMethod = async (req, res) => {
   const methodId = req.params.methodId
   try {
-    const shippingMethod = await ShippingMethod.findMethod(methodId)
+    const shippingMethod = await ShippingMethod().findMethod(methodId)
 
     res.status(200).send(shippingMethod)
   } catch (err) {
@@ -89,8 +89,8 @@ const updateShippingMethod = async (req, res) => {
   }
 
   try {
-    await ShippingMethod.updateMethod(methodId, data)
-    const shippingMethod = await ShippingMethod.findMethod(methodId)
+    await ShippingMethod().updateMethod(methodId, data)
+    const shippingMethod = await ShippingMethod().findMethod(methodId)
 
     res.status(200).send(shippingMethod)
   } catch (err) {
@@ -101,7 +101,7 @@ const updateShippingMethod = async (req, res) => {
 const deleteShippingMethod = async (req, res) => {
   const methodId = req.params.methodId
   try {
-    await ShippingMethod.deleteMethod(methodId)
+    await ShippingMethod().deleteMethod(methodId)
 
     res.status(200).send({
       message: 'Shipping method successfully deleted'
