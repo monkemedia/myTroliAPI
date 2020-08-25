@@ -1,16 +1,17 @@
-const mongoose = require('mongoose')
-const storeSchema = require('./schema.js')
+const StoreSchema = require('./schema.js')
+const { tenantModel } = require('../../utils/multitenancy');
 
 // Update store
-storeSchema.statics.updateStore = async (data) => {
+StoreSchema.statics.updateStore = async (data) => {
   delete data.type
-  const store = await Store.findOneAndUpdate({ type: 'store' }, {
+  const store = await Store().findOneAndUpdate({ type: 'store' }, {
     ...data,
     updated_at: Date.now()
   }, { upsert: true })
   return store
 }
 
-const Store = mongoose.model('Store', storeSchema)
-
+const Store = function () {
+  return tenantModel('Store', StoreSchema)
+}
 module.exports = Store
