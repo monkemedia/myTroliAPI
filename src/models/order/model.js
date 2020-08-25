@@ -1,16 +1,17 @@
 const mongoose = require('mongoose')
-const orderSchema = require('./schema')
-const Product = require('../product/index.js')
-const ProductVariants = require('../product/variant/index.js')
+const OrderSchema = require('./schema')
+const Product = require('../product')
+const ProductVariants = require('../product/variant')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
+const { tenantModel } = require('../../utils/multitenancy');
 
-orderSchema.plugin(AutoIncrement, {
+OrderSchema.plugin(AutoIncrement, {
   inc_field: 'id',
   start_seq: 100
 })
 
 async function updateTotalSold (productId, quantity, direction) {
-  const product = await Product.updateOne({ _id: productId }, {
+  const product = await Product().updateOne({ _id: productId }, {
     $inc: {
       total_sold: direction === 'increase' ? quantity : -quantity
     }
@@ -24,11 +25,11 @@ async function updateProductStock ({ productId, variantId, trackInventory, curre
   let update
 
   if (trackInventory === 'variant-inventory') {
-    update = await ProductVariants.updateOne({ _id: variantId }, {
+    update = await ProductVariants().updateOne({ _id: variantId }, {
       stock: newStock
     })
   } else if (trackInventory === 'product-inventory') {
-    update = await Product.updateOne({ _id: productId }, {
+    update = await Product().updateOne({ _id: productId }, {
       stock: newStock
     })
   }
@@ -44,10 +45,10 @@ async function stockLevelHandler (product) {
   let stock
 
   if (trackInventory === 'variant-inventory') {
-    const productVariant = await ProductVariants.findOne({ _id: variantId })
+    const productVariant = await ProductVariants().findOne({ _id: variantId })
     stock = productVariant.stock
   } else if (trackInventory === 'product-inventory') {
-    const prod = await Product.findOne({ _id: productId })
+    const prod = await Product().findOne({ _id: productId })
     stock = prod.stock
   }
 
@@ -55,7 +56,7 @@ async function stockLevelHandler (product) {
 }
 
 // Check stock before creating order
-orderSchema.pre('save', async function (next) {
+OrderSchema.pre('save', async function (next) {
   const order = this
   const lineItems = order.line_items
 
@@ -95,7 +96,7 @@ orderSchema.pre('save', async function (next) {
 })
 
 // Get orders
-orderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
+OrderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
   const orders = await Order
     .find()
     .populate('refunded', '-order_id -type -created_at')
@@ -103,7 +104,7 @@ orderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Order.countDocuments()
+  const total = await Order().countDocuments()
   return {
     data: orders,
     meta: {
@@ -119,10 +120,10 @@ orderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
 }
 
 // Get orders by status id
-orderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => {
+OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => {
   const statusIdCollection = statusId ? statusId.split(',') : []
 
-  const orders = await Order
+  const orders = await Order()
     .find()
     .where('status_id')
     .in(statusIdCollection)
@@ -131,7 +132,7 @@ orderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => 
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Order.countDocuments()
+  const total = await Order().countDocuments()
   return {
     data: orders,
     meta: {
@@ -147,20 +148,20 @@ orderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => 
 }
 
 // Get orders count
-orderSchema.statics.getCount = async () => {
-  const total = await Order.countDocuments()
+OrderSchema.statics.getCount = async () => {
+  const total = await Order().countDocuments()
   return {
     count: total
   }
 }
 
 // Search orders by order id or customer name
-orderSchema.statics.search = async ({ page, keyword, limit }) => {
+OrderSchema.statics.search = async ({ page, keyword, limit }) => {
   const searchString = new RegExp(decodeURIComponent(keyword), 'i')
   const fullname = {
     fullname: { $concat: ['$billing_address.first_name', ' ', '$billing_address.last_name'] }
   }
-  const orders = await Order
+  const orders = await Order()
     .aggregate()
     .addFields(fullname)
     .match({
@@ -173,7 +174,7 @@ orderSchema.statics.search = async ({ page, keyword, limit }) => {
     .skip((page - 1) * limit)
     .limit(limit)
 
-  await Order.populate(orders, {
+  await Order().populate(orders, {
     path: 'refunded',
     select: '-order_id -type -created_at'
   })
@@ -203,13 +204,13 @@ orderSchema.statics.search = async ({ page, keyword, limit }) => {
 }
 
 // Update order
-orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
+OrderSchema.statics.updateOrder = async (orderId, orderDetails) => {
   // const currentOrderQty =
   const lineItems = orderDetails.line_items
 
   if (lineItems) {
     const promise = await lineItems.map(async orderProduct => {
-      const storedOrder = await Order.findOne({ id: orderId })
+      const storedOrder = await Order().findOne({ id: orderId })
       const storedOrderProduct = storedOrder.line_items.find((order) => {
         return order._id.toString() === orderProduct._id
       })
@@ -254,7 +255,7 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
 
     await Promise.all(promise)
   }
-  const order = await Order.updateOne({ id: orderId }, {
+  const order = await Order().updateOne({ id: orderId }, {
     ...orderDetails,
     updated_at: Date.now()
   })
@@ -262,11 +263,12 @@ orderSchema.statics.updateOrder = async (orderId, orderDetails) => {
 }
 
 // Delete order
-orderSchema.statics.deleteOrder = async (orderId) => {
-  const order = await Order.deleteOne({ id: orderId })
+OrderSchema.statics.deleteOrder = async (orderId) => {
+  const order = await Order().deleteOne({ id: orderId })
   return order
 }
 
-const Order = mongoose.model('Order', orderSchema)
-
+const Order = function () {
+  return tenantModel('Order', OrderSchema)
+}
 module.exports = Order

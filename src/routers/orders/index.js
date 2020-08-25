@@ -10,14 +10,14 @@ const {
 } = require('../../controller/orders')
 
 // Create order
-router.post('/orders', auth, (req, res) => createOrder(req, res))
+router.post('/:storeHash/orders', auth, (req, res) => createOrder(req, res))
 // Get orders
-router.get('/orders', auth, (req, res) => getOrders(req, res))
+router.get('/:storeHash/orders', auth, (req, res) => getOrders(req, res))
 // Get order
-router.get('/orders/:orderId', auth, (req, res) => getOrder(req, res))
+router.get('/:storeHash/orders/:orderId', auth, (req, res) => getOrder(req, res))
 // Update order
-router.put('/orders/:orderId', auth, (req, res) => updateOrder(req, res))
+router.put('/:storeHash/orders/:orderId', auth, (req, res) => updateOrder(req, res))
 // Delete order
-router.delete('/orders/:orderId', auth, (req, res) => deleteOrder(req, res))
+router.delete('/:storeHash/orders/:orderId', auth, (req, res) => deleteOrder(req, res))
 
 module.exports = router
