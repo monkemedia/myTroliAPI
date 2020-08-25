@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const orderRefundSchema = new Schema({
+const OrderRefundSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -70,4 +70,4 @@ const orderRefundSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = orderRefundSchema
+module.exports = OrderRefundSchema

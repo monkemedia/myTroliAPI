@@ -1,5 +1,5 @@
 const Order = require('../../../models/order')
-const OrderRefund = require('../../../models/order/refund/index.js')
+const OrderRefund = require('../../../models/order/refund')
 
 const createOrderRefund = async (req, res) => {
   const data = req.body
@@ -38,15 +38,15 @@ const createOrderRefund = async (req, res) => {
   }
 
   try {
-    const orderRefund = new OrderRefund({
+    const orderRefund = new OrderRefund()({
       order_id: orderId,
       ...data
     })
 
     await orderRefund.save()
 
-    const getRefunds = await OrderRefund.find({ order_id: orderId })
-    const order = await Order.findOne({ id: orderId })
+    const getRefunds = await OrderRefund().find({ order_id: orderId })
+    const order = await Order().findOne({ id: orderId })
     let totalAmountSum = 0
 
     getRefunds.map((refund) => {
@@ -70,7 +70,7 @@ const getOrderRefunds = async (req, res) => {
   const orderId = req.params.orderId
 
   try {
-    const orderRefunds = await OrderRefund.findOrderRefunds(orderId)
+    const orderRefunds = await OrderRefund().findOrderRefunds(orderId)
 
     res.status(200).send(orderRefunds)
   } catch (err) {
