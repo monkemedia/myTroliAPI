@@ -10,14 +10,14 @@ const {
 } = require('../controller/variations.js')
 
 // Create variation
-router.post('/variations', auth, (req, res) => createVariation(req, res))
+router.post('/:storeHash/variations', auth, (req, res) => createVariation(req, res))
 // Get variations
-router.get('/variations', auth, (req, res) => getVariations(req, res))
+router.get('/:storeHash/variations', auth, (req, res) => getVariations(req, res))
 // Get variation
-router.get('/variations/:variationId', auth, (req, res) => getVariation(req, res))
+router.get('/:storeHash/variations/:variationId', auth, (req, res) => getVariation(req, res))
 // Update variation
-router.put('/variations/:variationId', auth, (req, res) => updateVariation(req, res))
+router.put('/:storeHash/variations/:variationId', auth, (req, res) => updateVariation(req, res))
 // Delete variation
-router.delete('/variations/:variationId', auth, (req, res) => deleteVariation(req, res))
+router.delete('/:storeHash/variations/:variationId', auth, (req, res) => deleteVariation(req, res))
 
 module.exports = router
