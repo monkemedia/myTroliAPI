@@ -1,24 +1,24 @@
-const mongoose = require('mongoose')
-const customerCouponSchema = require('./schema')
+const CustomerCouponSchema = require('./schema')
+const { tenantModel } = require('../../../utils/multitenancy');
 
 // Find customer coupons
-customerCouponSchema.statics.findCustomerCoupons = async (customerId) => {
-  const coupons = await CustomerCoupon.find()
+CustomerCouponSchema.statics.findCustomerCoupons = async () => {
+  const coupons = await CustomerCoupon().find()
   return coupons
 }
 
 // Find customer coupon
-customerCouponSchema.statics.findCustomerCoupon = async (customerId, couponId) => {
-  const coupon = await CustomerCoupon.findOne({
+CustomerCouponSchema.statics.findCustomerCoupon = async (customerId, couponId) => {
+  const coupon = await CustomerCoupon().findOne({
     customer_id: customerId,
-    coupon_id: couponId
+    _id: couponId
   })
   return coupon
 }
 
 // Update customer coupon
-customerCouponSchema.statics.incrementCustomerCoupon = async (customerId, couponId) => {
-  const coupon = await CustomerCoupon.updateOne({
+CustomerCouponSchema.statics.incrementCustomerCoupon = async (customerId, couponId) => {
+  const coupon = await CustomerCoupon().updateOne({
     customer_id: customerId,
     coupon_id: couponId
   }, {
@@ -32,11 +32,12 @@ customerCouponSchema.statics.incrementCustomerCoupon = async (customerId, coupon
 }
 
 // Delete customer coupon
-customerCouponSchema.statics.deleteCustomerCoupon = async (couponId) => {
-  const coupon = await CustomerCoupon.deleteOne({ _id: couponId })
+CustomerCouponSchema.statics.deleteCustomerCoupon = async (couponId) => {
+  const coupon = await CustomerCoupon().deleteOne({ _id: couponId })
   return coupon
 }
 
-const CustomerCoupon = mongoose.model('CustomerCoupon', customerCouponSchema)
-
+const CustomerCoupon = function () {
+  return tenantModel('CustomerCoupon', CustomerCouponSchema)
+}
 module.exports = CustomerCoupon
