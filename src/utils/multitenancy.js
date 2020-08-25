@@ -12,7 +12,6 @@ const getTenantDB = function getConnections(modelName, schema) {
     return mCon
   }
 
-
   const mongoose = new Mongoose()
   const url = 'mongodb://localhost:27017/trolify'.replace(/trolify/, storeHash)
   mongoose.connect(url)

@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
-const settingSchema = require('./schema')
+const SettingSchema = require('./schema')
+const { tenantModel } = require('../../utils/multitenancy');
 
-// Get coupons
-settingSchema.statics.findSettings = async () => {
-  const settings = await Setting.findOne()
+// Get settings
+SettingSchema.statics.findSettings = async () => {
+  const settings = await Setting().findOne()
   return settings
 }
 
-// Update coupon
-settingSchema.statics.updateSettings = async (data) => {
+// Update setting
+SettingSchema.statics.updateSettings = async (data) => {
   delete data.type
-  const setting = await Setting.findOneAndUpdate({ type: 'settings ' }, {
+  const setting = await Setting().findOneAndUpdate({ type: 'settings ' }, {
     ...data,
     updated_at: Date.now()
   }, {
@@ -20,6 +20,7 @@ settingSchema.statics.updateSettings = async (data) => {
   return setting
 }
 
-const Setting = mongoose.model('setting', settingSchema)
-
+const Setting = function () {
+  return tenantModel('Setting', SettingSchema)
+}
 module.exports = Setting
