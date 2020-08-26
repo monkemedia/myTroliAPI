@@ -11,16 +11,16 @@ const {
 } = require('../controller/client')
 
 // Create client
-router.post('/client', (req, res) => createClient(req, res))
+router.post('/:storeHash/client', (req, res) => createClient(req, res))
 // Get clients
-router.get('/client', auth, (req, res) => getClients(req, res))
+router.get('/:storeHash/client', auth, (req, res) => getClients(req, res))
 // Get client
-router.get('/client/:clientId', auth, (req, res) => getClient(req, res))
+router.get('/:storeHash/client/:clientId', auth, (req, res) => getClient(req, res))
 // Update client
-router.put('/client/:clientId', auth, (req, res) => updateClient(req, res))
+router.put('/:storeHash/client/:clientId', auth, (req, res) => updateClient(req, res))
 // Delete client
-router.delete('/client/:clientId', auth, (req, res) => deleteClient(req, res))
+router.delete('/:storeHash/client/:clientId', auth, (req, res) => deleteClient(req, res))
 // Resend activation email
-router.post('/client/resend/:clientId', auth, (req, res) => resendActivationEmail(req, res))
+router.post('/:storeHash/client/resend/:clientId', auth, (req, res) => resendActivationEmail(req, res))
 
 module.exports = router
