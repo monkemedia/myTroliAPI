@@ -2,7 +2,6 @@ const Country = require('../models/country')
 
 const getCountries = async (req, res) => {
   try {
-    console.log('POO')
     const countries = await Country.findCountries()
 
     res.status(200).send(countries)

@@ -97,7 +97,7 @@ OrderSchema.pre('save', async function (next) {
 
 // Get orders
 OrderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
-  const orders = await Order
+  const orders = await Order()
     .find()
     .populate('refunded', '-order_id -type -created_at')
     .sort('-created_at')

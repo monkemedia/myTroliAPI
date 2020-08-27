@@ -98,9 +98,7 @@ const accessToken = async (req, res) => {
       })
     }
 
-    console.log(1)
     const merchant = await Merchant.findByEmailAddress(email)
-    console.log(merchant)
 
     if (!merchant) {
       return res.status(401).send(errorHandler(401, 'Sorry, we can’t find an account with this email.'))
@@ -112,10 +110,9 @@ const accessToken = async (req, res) => {
 
     const accessToken = await merchant.generateToken(accessTokenTime)
     const refreshToken = await merchant.generateToken(refreshTokenTime)
-    console.log(1)
 
     merchant.refresh_token = refreshToken
-    console.log(2, merchant)
+
     await merchant.save()
 
     res.status(200).send({
