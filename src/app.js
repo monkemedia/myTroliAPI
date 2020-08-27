@@ -2,8 +2,8 @@ if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
 
 const express = require('express')
 const cors = require('cors')
-const dbRoutes = require('./routers/index.js')
-const paymentRoute = require('./routers/payments/index.js')
+const dbRoutes = require('./routers')
+const paymentRoute = require('./routers/payments')
 const oauth = require('./routers/oauth.js')
 const bodyParser = require('body-parser')
 const port = process.env.PORT || 3060

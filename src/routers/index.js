@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const client = require('./client.js')
+const merchants = require('./merchants.js')
 const customers = require('./customers/index.js')
 const customerAddresses = require('./customers/addresses/index.js')
 const customerCoupons = require('./customers/coupons/index.js')
@@ -31,7 +31,7 @@ const orderRefunds = require('./orders/refunds/index.js')
 const router = Router()
 
 router.use(
-  client,
+  merchants,
   customers,
   coupons,
   customerAddresses,

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const errorHandler = require('../utils/errorHandler')
-const Client = require('../models/client')
+const Merchant = require('../models/merchant')
 
 
 const auth = async (req, res, next) => {
@@ -15,12 +15,12 @@ const auth = async (req, res, next) => {
 
   try {
     const decodedToken = jwt.verify(token, process.env.API_SECRET)
-    // Now see if the client contains the correct store hash
+    // Now see if the merchant contains the correct store hash
     const storeHash = req.params.storeHash
-    const clientId = decodedToken.client_id
-    const client = await Client.findById(clientId)
+    const merchantId = decodedToken.merchant_id
+    const merchant = await Merchant.findById(merchantId)
 
-    if (client.store_hash !== storeHash) {
+    if (merchant.db_name !== storeHash) {
       return res.status(401).send(errorHandler(401, 'Store hash is not validated'))
     }
 
@@ -31,7 +31,12 @@ const auth = async (req, res, next) => {
       return res.status(401).send(errorHandler(401, 'Token has expired'))
     }
 
-    res.status(err.status).send(err)
+    if (err.message === 'jwt malformed') {
+      return res.status(401).send(errorHandler(401, 'Token has expired'))
+    }
+
+
+    return res.status(err.status).send(errorHandler(err.status, err.meesage))
   }
 }
 

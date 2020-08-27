@@ -226,7 +226,7 @@ OrderSchema.statics.updateOrder = async (orderId, orderDetails) => {
         throw new Error(`Product \`${productName}\` quantity needs to be a valid amount`)
       }
 
-      // Client has decreased order quantity, so increase stock level and reduce total solds
+      // Merchant has decreased order quantity, so increase stock level and reduce total solds
       if (orderQty < storedOrderProductQty) {
         const stockToAdd = storedOrderProductQty - orderQty
         // Increment total sold field
