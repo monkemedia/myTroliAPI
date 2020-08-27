@@ -20,7 +20,7 @@ const auth = async (req, res, next) => {
     const merchantId = decodedToken.merchant_id
     const merchant = await Merchant.findById(merchantId)
 
-    if (merchant.db_name !== storeHash) {
+    if (merchant.store_hash !== storeHash) {
       return res.status(401).send(errorHandler(401, 'Store hash is not validated'))
     }
 

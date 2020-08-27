@@ -19,7 +19,7 @@ const MerchantSchema = new Schema({
     type: String,
     required: true,
   },
-  db_name: {
+  store_hash: {
     type: String,
     required: true,
     unique: true
