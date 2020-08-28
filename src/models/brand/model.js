@@ -1,6 +1,6 @@
 const BrandSchema = require('./schema')
 const Product = require('../product')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Get brands
 BrandSchema.statics.findBrands = async ({ page, limit }) => {
