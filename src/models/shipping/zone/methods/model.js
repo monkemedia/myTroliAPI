@@ -1,5 +1,5 @@
 const ShippingMethodSchema = require('./schema')
-const { tenantModel } = require('../../../../utils/multitenancy');
+const { tenantModel } = require('../../../../utils/multitenancy')
 
 // Get methods
 ShippingMethodSchema.statics.findMethods = async () => {

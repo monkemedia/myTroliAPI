@@ -1,5 +1,5 @@
 const CustomerCouponSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Find customer coupons
 CustomerCouponSchema.statics.findCustomerCoupons = async () => {

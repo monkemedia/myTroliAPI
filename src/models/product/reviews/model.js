@@ -1,6 +1,6 @@
 const ProductReviewSchema = require('./schema')
 const Product = require('../model')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get product reviews
 ProductReviewSchema.statics.findProductReviews = async ({page, limit, productId}) => {

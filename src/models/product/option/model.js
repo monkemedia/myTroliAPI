@@ -1,5 +1,5 @@
 const ProductOptionSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get all product options
 ProductOptionSchema.statics.findProductOptions = async (productId) => {

@@ -3,7 +3,7 @@ const Order = require('../index.js')
 const Product = require('../../product')
 const Customer = require('../../customer')
 const PaymentRefund = require('../../payment/refund')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 const getTotalAmount = (items) => {
   let sum = 0

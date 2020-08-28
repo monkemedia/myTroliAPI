@@ -1,6 +1,6 @@
 const ProductCustomFieldSchema = require('./schema')
 const Product = require('../model')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get product custom fields
 ProductCustomFieldSchema.statics.findProductCustomFields = async (productId) => {

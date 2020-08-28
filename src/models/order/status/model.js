@@ -1,5 +1,5 @@
 const OrderStatusSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get order statuses
 OrderStatusSchema.statics.findOrderStatuses = async () => {

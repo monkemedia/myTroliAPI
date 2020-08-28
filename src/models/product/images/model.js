@@ -1,6 +1,6 @@
 const uniqueArrayPlugin = require('mongoose-unique-array')
 const ProductImageSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 ProductImageSchema.plugin(uniqueArrayPlugin)
 

@@ -1,5 +1,5 @@
 const SettingSchema = require('./schema')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Get settings
 SettingSchema.statics.findSettings = async () => {

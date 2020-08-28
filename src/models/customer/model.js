@@ -4,7 +4,7 @@ const errorHandler = require('../../utils/errorHandler')
 const CustomerSchema = require('./schema.js')
 const CustomerAddress = require('./address')
 const CustomerCoupon = require('./coupon')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Hash the password before saving the customer model
 // Delete store credit if it exists

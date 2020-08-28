@@ -3,7 +3,7 @@ const OrderSchema = require('./schema')
 const Product = require('../product')
 const ProductVariants = require('../product/variant')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 OrderSchema.plugin(AutoIncrement, {
   inc_field: 'id',

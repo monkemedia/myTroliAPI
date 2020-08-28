@@ -1,5 +1,5 @@
 const CustomerAddressSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Find address
 CustomerAddressSchema.statics.findCustomerAddresses = async (customerId) => {

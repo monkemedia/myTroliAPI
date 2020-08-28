@@ -1,5 +1,5 @@
 const ShippingAddressSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Update shipping address
 ShippingAddressSchema.statics.updateShippingAddress = async (data) => {

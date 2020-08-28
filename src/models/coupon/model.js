@@ -1,6 +1,6 @@
 const CouponSchema = require('./schema')
 const errorHandler = require('../../utils/errorHandler')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 CouponSchema.pre('save', async function (next) {
   const coupon = this

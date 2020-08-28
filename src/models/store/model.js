@@ -1,5 +1,5 @@
 const StoreSchema = require('./schema.js')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Update store
 StoreSchema.statics.updateStore = async (data) => {

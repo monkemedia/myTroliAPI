@@ -1,5 +1,5 @@
 const VariationSchema = require('./schema')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Get variations
 VariationSchema.statics.findVariations = async () => {

@@ -1,5 +1,5 @@
 const ShippingZoneSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get zones
 ShippingZoneSchema.statics.findZones = async () => {

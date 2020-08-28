@@ -1,6 +1,6 @@
 const ProductFilteringSchema = require('./schema')
 const Product = require('../product')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Update facet settings
 ProductFilteringSchema.statics.updateFacetSettings = async (data) => {
