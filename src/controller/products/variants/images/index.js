@@ -148,8 +148,8 @@ const deleteProductVariantImage = async (req, res) => {
     await ProductVariantImage().deleteImage(data._id)
     const productVariant = await ProductVariant().findOne({ _id: variantId, product_id: productId })
     if (productVariant) {
-      await Image.deleteImage(data.image_id)
-      await productVariant.images.pull(data._id)
+      await Image().deleteImage(data.image_id)
+      await productVariant().images.pull(data._id)
       productVariant.save()
     }
 

@@ -1,12 +1,25 @@
 const ProductVariantSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy');
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get product variants
 ProductVariantSchema.statics.findProductVariants = async (productId) => {
   const productVariants = await ProductVariant()
-    .find({ product_id: productId })
-    .sort({ sort_order: 1 })
-    .populate('images')
+    .aggregate([
+      {
+        $match: { product_id: productId }
+      },
+      {
+        $sort: { sort_order: 1 }
+      },  
+      {
+        $lookup: {
+          from: 'productvariantimages',
+          localField: 'images',
+          foreignField: '_id',
+          as: 'images'
+        }
+      }
+    ])
 
   return productVariants
 }

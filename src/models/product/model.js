@@ -5,7 +5,7 @@ const ProductImage = require('./images')
 const ProductVariant = require('./variant')
 const ProductVariantImage = require('./variant/images')
 const ProductOption = require('./option')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 ProductSchema.plugin(deepPopulate)
 
@@ -94,12 +94,42 @@ ProductSchema.statics.search = async ({ page, limit, keyword }) => {
 }
 
 // Get product
-ProductSchema.statics.findProduct = async (_id) => {
+ProductSchema.statics.findProduct = async (id) => {
+  console.log(id)
   const product = await Product()
-    .findOne({ _id })
-    .populate('images')
-    .deepPopulate('variants.images')
-  return product
+    .aggregate([
+      {
+        $match: { _id: mongoose.Types.ObjectId(id) }
+      },
+      {
+        $limit: 1
+      },  
+      {
+        $lookup: {
+          from: 'productimages',
+          localField: 'images',
+          foreignField: '_id',
+          as: 'images'
+        }
+      },
+      {
+        $lookup: {
+          from: 'productvariants',
+          localField: 'variants',
+          foreignField: '_id',
+          as: 'variants'
+        }
+      },
+      {
+        $lookup: {
+          from: 'productreviews',
+          localField: 'reviews',
+          foreignField: '_id',
+          as: 'reviews'
+        }
+      }
+    ])
+  return product[0]
 }
 
 // Get product count
@@ -143,24 +173,53 @@ ProductSchema.statics.getCount = async (isRatings) => {
 }
 
 // Update product
-ProductSchema.statics.updateProduct = async (productId, productDetails) => {
-  await Product().updateOne({ _id: productId }, {
+ProductSchema.statics.updateProduct = async (id, productDetails) => {
+  await Product().updateOne({ _id: id }, {
     ...productDetails,
     updated_at: Date.now()
   })
   const product = await Product()
-    .findOne({ _id: productId })
-    .populate('images')
-    .deepPopulate('variants.images')
-  return product
+    .aggregate([
+      {
+        $match: { _id: mongoose.Types.ObjectId(id) }
+      },
+      {
+        $limit: 1
+      },  
+      {
+        $lookup: {
+          from: 'productimages',
+          localField: 'images',
+          foreignField: '_id',
+          as: 'images'
+        }
+      },
+      {
+        $lookup: {
+          from: 'productvariants',
+          localField: 'variants',
+          foreignField: '_id',
+          as: 'variants'
+        }
+      },
+      {
+        $lookup: {
+          from: 'productreviews',
+          localField: 'reviews',
+          foreignField: '_id',
+          as: 'reviews'
+        }
+      }
+    ])
+  return product[0]
 }
 
 // Delete product by id
 ProductSchema.statics.deleteProduct = async (productId) => {
-  await ProductImage.deleteMany({ product_id: productId })
-  await ProductOption.deleteMany({ product_id: productId })
-  await ProductVariantImage.deleteMany({ product_id: productId })
-  await ProductVariant.deleteMany({ product_id: productId })
+  await ProductImage().deleteMany({ product_id: productId })
+  await ProductOption().deleteMany({ product_id: productId })
+  await ProductVariantImage().deleteMany({ product_id: productId })
+  await ProductVariant().deleteMany({ product_id: productId })
 
   const product = await Product().deleteOne({ _id: productId })
   return product

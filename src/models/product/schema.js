@@ -107,7 +107,8 @@ const ProductSchema = Schema({
   },
   brand_id: {
     type: Schema.Types.ObjectId,
-    ref: 'Brand'
+    ref: 'Brand',
+    set: (value) => value || undefined
   },
   reviews: [
     {
