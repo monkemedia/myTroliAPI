@@ -70,7 +70,7 @@ CustomerSchema.statics.search = async ({ keyword, page, limit }) => {
     email: 1
   }
   const searchArray = { $or: [{ fullname: searchString }, { email: searchString }] }
-  const customers = await Customer
+  const customers = await Customer()
     .aggregate()
     .project(searchQuery)
     .match(searchArray)
