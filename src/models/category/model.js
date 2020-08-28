@@ -1,6 +1,6 @@
 
 const CategorySchema = require('./schema')
-const { tenantModel } = require('../../utils/multitenancy');
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Get categories
 CategorySchema.statics.findCategories = async ({ page, limit }) => {
