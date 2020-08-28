@@ -12,7 +12,7 @@ const {
 } = require('../../controller/customers')
 
 // Create customer
-router.post('/:storeHash/customers', (req, res) => createCustomer(req, res))
+router.post('/:storeHash/customers', auth, (req, res) => createCustomer(req, res))
 // Get customers
 router.get('/:storeHash/customers', auth, (req, res) => getCustomers(req, res))
 // Get customer
