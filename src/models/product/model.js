@@ -72,41 +72,41 @@ ProductSchema.statics.search = async ({ page, limit, keyword }) => {
     ]
   }
   const products = await Product()
-  .aggregate([
-    {
-      $lookup: {
-        from: 'productimages',
-        localField: 'images',
-        foreignField: '_id',
-        as: 'images'
-      }
-    },
-    {
-      $lookup: {
-        from: 'productvariants',
-        localField: 'variants',
-        foreignField: '_id',
-        as: 'variants'
-      }
-    },
-    {
-      $lookup: {
-        from: 'productreviews',
-        localField: 'reviews',
-        foreignField: '_id',
-        as: 'reviews'
-      }
-    },
-    {
-      $addFields: {
-        reviews_rating_average: { $ifNull: [ { $avg: '$reviews.rating' }, 0 ] },
-        reviews_count: { $size: '$reviews' }
-      } 
-    },
-    { $sort: {'created_at' : -1} },
-    { $skip: (page - 1) * limit },
-    { $limit: limit }
-  ])
+    .aggregate([
+      {
+        $lookup: {
+          from: 'productimages',
+          localField: 'images',
+          foreignField: '_id',
+          as: 'images'
+        }
+      },
+      {
+        $lookup: {
+          from: 'productvariants',
+          localField: 'variants',
+          foreignField: '_id',
+          as: 'variants'
+        }
+      },
+      {
+        $lookup: {
+          from: 'productreviews',
+          localField: 'reviews',
+          foreignField: '_id',
+          as: 'reviews'
+        }
+      },
+      {
+        $addFields: {
+          reviews_rating_average: { $ifNull: [ { $avg: '$reviews.rating' }, 0 ] },
+          reviews_count: { $size: '$reviews' }
+        } 
+      },
+      { $sort: {'created_at' : -1} },
+      { $skip: (page - 1) * limit },
+      { $limit: limit }
+    ])
 
   const total = await Product().countDocuments(searchQuery)
   return {

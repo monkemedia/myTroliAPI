@@ -61,8 +61,8 @@ const createOrder = async (req, res) => {
 const getOrders = async (req, res) => {
   try {
     const query = req.query
-    const page = parseInt(query.page)
-    const limit = parseInt(query.limit)
+    const page = parseInt(query.page) || 1
+    const limit = parseInt(query.limit) || 20
     const keyword = query.keyword
     const statusId = query.status_id
     let orders
@@ -88,9 +88,7 @@ const getOrder = async (req, res) => {
   if (orderId === 'count') {
     order = await Order().getCount()
   } else {
-    order = await Order()
-      .findOne({ id: orderId })
-      .populate('refunded', '-order_id -type -created_at')
+    order = await Order().findOrder(orderId)
   }
 
   res.status(200).send(order)

@@ -96,13 +96,21 @@ OrderSchema.pre('save', async function (next) {
 })
 
 // Get orders
-OrderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
+OrderSchema.statics.findOrders = async ({ page, limit }) => {
   const orders = await Order()
-    .find()
-    .populate('refunded', '-order_id -type -created_at')
-    .sort('-created_at')
-    .skip((page - 1) * limit)
-    .limit(limit)
+    .aggregate([
+      {
+        $lookup: {
+          from: 'orderrefunds',
+          localField: 'refunded',
+          foreignField: '_id',
+          as: 'refunded'
+        }
+      },
+      { $sort: {'created_at' : -1} },
+      { $skip: (page - 1) * limit },
+      { $limit: limit }
+    ])
 
   const total = await Order().countDocuments()
   return {
@@ -119,18 +127,51 @@ OrderSchema.statics.findOrders = async ({ page = null, limit = null }) => {
   }
 }
 
+// Get order
+OrderSchema.statics.findOrder = async (id) => {
+  const order = await Order()
+    .aggregate([
+      {
+        $match: { id: parseInt(id) }
+      },
+      {
+        $limit: 1
+      }, 
+      {
+        $lookup: {
+          from: 'orderrefunds',
+          localField: 'refunded',
+          foreignField: '_id',
+          as: 'refunded'
+        }
+      }
+    ])
+
+  return order[0]
+}
+
 // Get orders by status id
 OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => {
   const statusIdCollection = statusId ? statusId.split(',') : []
+  const convertToNumbers = statusIdCollection.length > 0 ? statusIdCollection.map(val => parseInt(val)) : []
 
   const orders = await Order()
-    .find()
-    .where('status_id')
-    .in(statusIdCollection)
-    .populate('refunded', '-order_id -type -created_at')
-    .sort('-created_at')
-    .skip((page - 1) * limit)
-    .limit(limit)
+    .aggregate([
+      {
+        $match: { status_id: { $in: convertToNumbers } }
+      },
+      {
+        $lookup: {
+          from: 'orderrefunds',
+          localField: 'refunded',
+          foreignField: '_id',
+          as: 'refunded'
+        }
+      },
+      { $sort: {'created_at' : -1} },
+      { $skip: (page - 1) * limit },
+      { $limit: limit }
+    ])
 
   const total = await Order().countDocuments()
   return {
@@ -174,12 +215,7 @@ OrderSchema.statics.search = async ({ page, keyword, limit }) => {
     .skip((page - 1) * limit)
     .limit(limit)
 
-  await Order().populate(orders, {
-    path: 'refunded',
-    select: '-order_id -type -created_at'
-  })
-
-  const total = await Order
+  const total = await Order()
     .aggregate()
     .addFields(fullname)
     .match({
