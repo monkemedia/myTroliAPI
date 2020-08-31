@@ -52,7 +52,6 @@ const createShippingMethod = async (req, res) => {
 const getShippingMethods = async (req, res) => {
   try {
     const shippingMethods = await ShippingMethod().findMethods()
-
     res.status(200).send(shippingMethods)
   } catch (err) {
     res.status(400).send(err)
