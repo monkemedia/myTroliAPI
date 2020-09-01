@@ -4,12 +4,14 @@ const { tenantModel } = require('../../utils/multitenancy')
 
 // Get brands
 BrandSchema.statics.findBrands = async ({ page, limit }) => {
-  const brands = await Brand()
+  const brand = new Brand()
+  const brands = await brand
     .find({})
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Brand().countDocuments()
+  const total = await brand.countDocuments()
+  
   return {
     data: brands,
     meta: {
@@ -30,13 +32,14 @@ BrandSchema.statics.search = async ({ page, limit, keyword }) => {
     { name: { $regex: keyword, $options: 'i' } },
     { search_keywords: { $regex: keyword, $options: 'i' } }
   ]
-  const brands = await Brand()
+  const brand = new Brand()
+  const brands = await brand
     .find()
     .or(searchArray)
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Brand().countDocuments(searchArray)
+  const total = await brand.countDocuments(searchArray)
   return {
     data: brands,
     meta: {

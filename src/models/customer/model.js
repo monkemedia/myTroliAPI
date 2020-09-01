@@ -39,13 +39,14 @@ CustomerSchema.methods.generateAccessToken = async function () {
 
 // Get customers
 CustomerSchema.statics.findCustomers = async ({ page, limit }) => {
-  const customers = await Customer()
+  const customer = new Customer()
+  const customers = await customer
     .find({})
     .skip((page - 1) * limit)
     .limit(limit)
     .select('-password')
 
-  const total = await Customer().countDocuments()
+  const total = await customer.countDocuments()
   return {
     data: customers,
     meta: {
@@ -70,14 +71,15 @@ CustomerSchema.statics.search = async ({ keyword, page, limit }) => {
     email: 1
   }
   const searchArray = { $or: [{ fullname: searchString }, { email: searchString }] }
-  const customers = await Customer()
+  const customer = new Customer()
+  const customers = await customer
     .aggregate()
     .project(searchQuery)
     .match(searchArray)
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Customer().countDocuments(searchArray)
+  const total = await customer.countDocuments(searchArray)
   return {
     data: customers,
     meta: {
@@ -138,7 +140,8 @@ CustomerSchema.statics.getCount = async () => {
 // Update customer
 CustomerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
   let { password } = customerDetails
-  const savedPassword = await Customer().findOne({ _id: customerId }).select('password')
+  const customer = new Customer()
+  const savedPassword = await customer.findOne({ _id: customerId }).select('password')
 
   if (!password) {
     password = savedPassword.password
@@ -146,8 +149,8 @@ CustomerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
     password = await bcrypt.hash(password, 8)
   }
   delete customerDetails.store_credit
-  const customer = await Customer().updateOne({ _id: customerId }, { ...customerDetails, password, updated_at: Date.now() })
-  return customer
+  const customerResp = await customer.updateOne({ _id: customerId }, { ...customerDetails, password, updated_at: Date.now() })
+  return customerResp
 }
 
 // Update customers store credit

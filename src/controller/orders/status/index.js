@@ -35,7 +35,7 @@ const createOrderStatus = async (req, res) => {
 
   try {
     const promise = data.map(async obj => {
-      const orderStatus = new OrderStatus()(obj)
+      const orderStatus = new OrderStatus(obj)
       const save = await orderStatus.save()
       return save
     })
@@ -49,7 +49,7 @@ const createOrderStatus = async (req, res) => {
 
 const getOrderStatuses = async (req, res) => {
   try {
-    const orders = await OrderStatus().findOrderStatuses()
+    const orders = await OrderStatus.findOrderStatuses()
 
     res.status(200).send(orders)
   } catch (err) {
@@ -58,7 +58,7 @@ const getOrderStatuses = async (req, res) => {
 }
 
 const getOrderStatus = async (req, res) => {
-  const orderStatus = await OrderStatus().findOne({ status_id: req.params.orderStatusId })
+  const orderStatus = await OrderStatus.findOne({ status_id: req.params.orderStatusId })
 
   res.status(200).send(orderStatus)
 }
@@ -99,8 +99,8 @@ const updateOrderStatus = async (req, res) => {
   }
 
   try {
-    await OrderStatus().updateOrderStatus(orderStatusId, data)
-    const orderStatus = await OrderStatus().findOne({ status_id: orderStatusId })
+    await OrderStatus.updateOrderStatus(orderStatusId, data)
+    const orderStatus = await OrderStatus.findOne({ status_id: orderStatusId })
 
     res.status(200).send(orderStatus)
   } catch (err) {

@@ -9,13 +9,13 @@ ProductReviewSchema.statics.findProductReviews = async ({page, limit, productId}
   if (productId) {
     Object.assign(query, { product_id: productId })
   }
-
-  const productReviews = await ProductReview()
+  const productReview = new ProductReview()
+  const productReviews = await productReview
     .find(query)
     .sort({ sort_order: 1 })
     .skip((page - 1) * limit)
     .limit(limit)
-  const total = await ProductReview().countDocuments()
+  const total = await productReview.countDocuments()
 
   return {
     data: productReviews,
@@ -39,13 +39,14 @@ ProductReviewSchema.statics.search = async ({ page, limit, keyword }) => {
       { status: { $regex: keyword, $options: 'i' } }
     ]
   }
-  const productReviews = await ProductReview()
+  const productReview = new ProductReview()
+  const productReviews = await productReview
     .find(searchQuery)
     .skip((page - 1) * limit)
     .limit(limit)
     .populate('images')
 
-  const total = await Product().countDocuments(searchQuery)
+  const total = await productReview.countDocuments(searchQuery)
   return {
     data: productReviews,
     meta: {

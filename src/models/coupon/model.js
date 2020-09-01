@@ -11,12 +11,13 @@ CouponSchema.pre('save', async function (next) {
 
 // Get coupons
 CouponSchema.statics.findCoupons = async ({ page, limit }) => {
-  const coupons = await Coupon()
+  const coupon = new Coupon()
+  const coupons = await coupon
     .find({})
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Coupon().countDocuments()
+  const total = await coupon.countDocuments()
   return {
     data: coupons,
     meta: {
@@ -37,13 +38,14 @@ CouponSchema.statics.search = async ({ page, limit, keyword }) => {
     { name: { $regex: keyword, $options: 'i' } },
     { code: { $regex: keyword, $options: 'i' } }
   ]
-  const coupons = await Coupon()
+  const coupon = new Coupon()
+  const coupons = await coupon
     .find()
     .or(searchArray)
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Coupon().countDocuments(searchArray)
+  const total = await coupon.countDocuments(searchArray)
   return {
     data: coupons,
     meta: {
@@ -77,24 +79,25 @@ CouponSchema.statics.findCouponByCode = async (couponCode) => {
 
 // Update coupon
 CouponSchema.statics.updateCoupon = async (couponId, couponDetails) => {
-  let coupon
+  let couponResp
   const incrementUsage = couponDetails.increment_usage
+  const coupon = new Coupon()
 
   if (incrementUsage) {
-    coupon = await Coupon().updateOne({ _id: couponId }, {
+    couponResp = await coupon.updateOne({ _id: couponId }, {
       $inc: {
         number_uses: incrementUsage
       },
       updated_at: Date.now()
     })
   } else {
-    coupon = await Coupon().updateOne({ _id: couponId }, {
+    couponResp = await coupon.updateOne({ _id: couponId }, {
       ...couponDetails,
       updated_at: Date.now()
     })
   }
 
-  return coupon
+  return couponResp
 }
 
 // Delete coupon by id

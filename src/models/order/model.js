@@ -97,7 +97,8 @@ OrderSchema.pre('save', async function (next) {
 
 // Get orders
 OrderSchema.statics.findOrders = async ({ page, limit }) => {
-  const orders = await Order()
+  const order = new Order()
+  const orders = await order
     .aggregate([
       {
         $lookup: {
@@ -112,7 +113,7 @@ OrderSchema.statics.findOrders = async ({ page, limit }) => {
       { $limit: limit }
     ])
 
-  const total = await Order().countDocuments()
+  const total = await order.countDocuments()
   return {
     data: orders,
     meta: {
@@ -154,8 +155,8 @@ OrderSchema.statics.findOrder = async (id) => {
 OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => {
   const statusIdCollection = statusId ? statusId.split(',') : []
   const convertToNumbers = statusIdCollection.length > 0 ? statusIdCollection.map(val => parseInt(val)) : []
-
-  const orders = await Order()
+  const order = new Order()
+  const orders = await order
     .aggregate([
       {
         $match: { status_id: { $in: convertToNumbers } }
@@ -173,7 +174,7 @@ OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => 
       { $limit: limit }
     ])
 
-  const total = await Order().countDocuments()
+  const total = await order.countDocuments()
   return {
     data: orders,
     meta: {
@@ -202,7 +203,8 @@ OrderSchema.statics.search = async ({ page, keyword, limit }) => {
   const fullname = {
     fullname: { $concat: ['$billing_address.first_name', ' ', '$billing_address.last_name'] }
   }
-  const orders = await Order()
+  const order = new Order()
+  const orders = await order
     .aggregate()
     .addFields(fullname)
     .match({
@@ -215,7 +217,7 @@ OrderSchema.statics.search = async ({ page, keyword, limit }) => {
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Order()
+  const total = await order
     .aggregate()
     .addFields(fullname)
     .match({
@@ -243,10 +245,11 @@ OrderSchema.statics.search = async ({ page, keyword, limit }) => {
 OrderSchema.statics.updateOrder = async (orderId, orderDetails) => {
   // const currentOrderQty =
   const lineItems = orderDetails.line_items
+  const order = new Order()
 
   if (lineItems) {
     const promise = await lineItems.map(async orderProduct => {
-      const storedOrder = await Order().findOne({ id: orderId })
+      const storedOrder = await order.findOne({ id: orderId })
       const storedOrderProduct = storedOrder.line_items.find((order) => {
         return order._id.toString() === orderProduct._id
       })
@@ -291,11 +294,11 @@ OrderSchema.statics.updateOrder = async (orderId, orderDetails) => {
 
     await Promise.all(promise)
   }
-  const order = await Order().updateOne({ id: orderId }, {
+  const orderResp = await order.updateOne({ id: orderId }, {
     ...orderDetails,
     updated_at: Date.now()
   })
-  return order
+  return orderResp
 }
 
 // Delete order

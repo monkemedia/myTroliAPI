@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const errorHandler = require('../utils/errorHandler')
 const Merchant = require('../models/merchant')
+const { createNamespace } = require('continuation-local-storage')
+const session = createNamespace('session');
 
 
 const auth = async (req, res, next) => {
@@ -24,7 +26,13 @@ const auth = async (req, res, next) => {
       return res.status(401).send(errorHandler(401, 'Store hash is not validated'))
     }
 
-    next()
+    session.bindEmitter(req)
+    session.bindEmitter(res)
+
+    session.run(() => {
+      session.set('store_hash', storeHash);
+      next()
+    })
 
   } catch (err) {
     if (err.message === 'jwt expired') {

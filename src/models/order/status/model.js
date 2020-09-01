@@ -1,16 +1,16 @@
+const mongoose = require('mongoose')
 const OrderStatusSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get order statuses
 OrderStatusSchema.statics.findOrderStatuses = async () => {
-  const orderStatuses = await OrderStatus().find({})
+  const orderStatuses = await OrderStatus.find({})
 
   return orderStatuses
 }
 
 // Update order status
 OrderStatusSchema.statics.updateOrderStatus = async (statusOrderId, orderStatusDetails) => {
-  const orderStatus = await OrderStatus().updateOne({ status_id: statusOrderId }, {
+  const orderStatus = await OrderStatus.updateOne({ status_id: statusOrderId }, {
     ...orderStatusDetails,
     updated_at: Date.now()
   })
@@ -19,11 +19,10 @@ OrderStatusSchema.statics.updateOrderStatus = async (statusOrderId, orderStatusD
 
 // Delete order status
 OrderStatusSchema.statics.deleteOrderStatus = async (orderStatusId) => {
-  const orderStatus = await OrderStatus().deleteOne({ status_id: orderStatusId })
+  const orderStatus = await OrderStatus.deleteOne({ status_id: orderStatusId })
   return orderStatus
 }
 
-const OrderStatus = function () {
-  return tenantModel('OrderStatus', OrderStatusSchema)
-}
+const OrderStatus = mongoose.model('OrderStatus', OrderStatusSchema)
+
 module.exports = OrderStatus

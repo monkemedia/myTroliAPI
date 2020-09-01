@@ -1,8 +1,8 @@
+const cls = require('continuation-local-storage')
 const { Mongoose } = require('mongoose')
 const multitenantPool = {}
 
-const getTenantDB = function getConnections(modelName, schema) {
-  const storeHash = 'trolify_dutchpot'
+const getTenantDB = function getConnections(storeHash, modelName, schema) {
   // Check connections lookup
   const mCon = multitenantPool[storeHash]
   if (mCon) {
@@ -12,10 +12,12 @@ const getTenantDB = function getConnections(modelName, schema) {
     return mCon
   }
 
+
   const mongoose = new Mongoose()
-  const url = 'mongodb://localhost:27017/trolify'.replace(/trolify/, storeHash)
+  const url = process.env.MONGODB_BASE_URL + '/' + storeHash
   const options = {
     useNewUrlParser: true,
+    useCreateIndex: true,
     useUnifiedTopology: true
   }
   mongoose.connect(url, options)
@@ -27,6 +29,8 @@ const getTenantDB = function getConnections(modelName, schema) {
 }
 
 exports.tenantModel = function (modelName, schema) {
-  const tenantDb = getTenantDB(modelName, schema)
+  const session = cls.getNamespace('session')
+  const storeHash = session.get('store_hash')
+  const tenantDb = getTenantDB(storeHash, modelName, schema)
   return tenantDb.model(modelName)
 }

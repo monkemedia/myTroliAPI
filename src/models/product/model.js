@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const deepPopulate = require('mongoose-deep-populate')(mongoose)
 const ProductSchema = require('./schema')
 const ProductImage = require('./images')
 const ProductVariant = require('./variant')
@@ -7,11 +6,10 @@ const ProductVariantImage = require('./variant/images')
 const ProductOption = require('./option')
 const { tenantModel } = require('../../utils/multitenancy')
 
-ProductSchema.plugin(deepPopulate)
-
 // Get all products
 ProductSchema.statics.findProducts = async ({ page, limit }) => {
-  const products = await Product()
+  const product = new Product()
+  const products = await product
     .aggregate([
       {
         $lookup: {
@@ -47,7 +45,7 @@ ProductSchema.statics.findProducts = async ({ page, limit }) => {
       { $skip: (page - 1) * limit },
       { $limit: limit }
     ])
-  const total = await Product().countDocuments()
+  const total = await product.countDocuments()
   return {
     data: products,
     meta: {
@@ -71,7 +69,8 @@ ProductSchema.statics.search = async ({ page, limit, keyword }) => {
       { search_keywords: { $regex: keyword, $options: 'i' } }
     ]
   }
-  const products = await Product()
+  const product = new Product()
+  const products = await product
     .aggregate([
       {
         $lookup: {
@@ -108,7 +107,7 @@ ProductSchema.statics.search = async ({ page, limit, keyword }) => {
       { $limit: limit }
     ])
 
-  const total = await Product().countDocuments(searchQuery)
+  const total = await product.countDocuments(searchQuery)
   return {
     data: products,
     meta: {
@@ -125,7 +124,6 @@ ProductSchema.statics.search = async ({ page, limit, keyword }) => {
 
 // Get product
 ProductSchema.statics.findProduct = async (id) => {
-  console.log(id)
   const product = await Product()
     .aggregate([
       {
@@ -204,11 +202,12 @@ ProductSchema.statics.getCount = async (isRatings) => {
 
 // Update product
 ProductSchema.statics.updateProduct = async (id, productDetails) => {
-  await Product().updateOne({ _id: id }, {
+  const product = new Product()
+  await product.updateOne({ _id: id }, {
     ...productDetails,
     updated_at: Date.now()
   })
-  const product = await Product()
+  const productResp = await product
     .aggregate([
       {
         $match: { _id: mongoose.Types.ObjectId(id) }
@@ -241,7 +240,7 @@ ProductSchema.statics.updateProduct = async (id, productDetails) => {
         }
       }
     ])
-  return product[0]
+  return productResp[0]
 }
 
 // Delete product by id

@@ -4,12 +4,13 @@ const { tenantModel } = require('../../utils/multitenancy')
 
 // Get categories
 CategorySchema.statics.findCategories = async ({ page, limit }) => {
-  const categories = await Category()
+  const category = new Category()
+  const categories = await category
     .find({})
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Category().countDocuments()
+  const total = await category.countDocuments()
   return {
     data: categories,
     meta: {
@@ -30,13 +31,14 @@ CategorySchema.statics.search = async ({ page, limit, keyword }) => {
     { name: { $regex: keyword, $options: 'i' } },
     { slug: { $regex: keyword, $options: 'i' } }
   ]
-  const categories = await Category()
+  const category = new Category()
+  const categories = await category
     .find()
     .or(searchArray)
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Category().countDocuments(searchArray)
+  const total = await category.countDocuments(searchArray)
   return {
     data: categories,
     meta: {
