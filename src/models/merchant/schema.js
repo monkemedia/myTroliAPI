@@ -1,12 +1,25 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const clientSchema = new Schema({
+const MerchantSchema = new Schema({
   type: {
     type: String,
     required: true
   },
   email: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  store_name: {
+    type: String,
+    required: true,
+  },
+  store_hash: {
     type: String,
     required: true,
     unique: true
@@ -28,9 +41,6 @@ const clientSchema = new Schema({
   image_url: {
     type: String
   },
-  password: {
-    type: Schema.Types.Mixed
-  },
   refresh_token: {
     type: String
   },
@@ -46,4 +56,4 @@ const clientSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = clientSchema
+module.exports = MerchantSchema

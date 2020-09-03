@@ -1,19 +1,19 @@
-const mongoose = require('mongoose')
 const uniqueArrayPlugin = require('mongoose-unique-array')
-const productVariantImageSchema = require('./schema')
+const ProductVariantImageSchema = require('./schema')
+const { tenantModel } = require('../../../../utils/multitenancy')
 
-productVariantImageSchema.plugin(uniqueArrayPlugin)
+ProductVariantImageSchema.plugin(uniqueArrayPlugin)
 
 // Get all product variant images
-productVariantImageSchema.statics.findAllProductVariantImages = async (productId, variantId) => {
-  const productVariantImages = await ProductVariantImage
+ProductVariantImageSchema.statics.findAllProductVariantImages = async (productId, variantId) => {
+  const productVariantImages = await ProductVariantImage()
     .find({ product_id: productId, variant_id: variantId })
   return productVariantImages
 }
 
 // Get product variant images by query
-productVariantImageSchema.statics.findProductVariantImagesByQuery = async (productId, variantId, query) => {
-  const productVariantImages = await ProductVariantImage
+ProductVariantImageSchema.statics.findProductVariantImagesByQuery = async (productId, variantId, query) => {
+  const productVariantImages = await ProductVariantImage()
     .find({
       product_id: productId,
       variant_id: variantId,
@@ -23,8 +23,9 @@ productVariantImageSchema.statics.findProductVariantImagesByQuery = async (produ
 }
 
 // Update product variant images
-productVariantImageSchema.statics.updateProductVariantImage = async (productId, variantId, data) => {
-  const productVariantImage = await ProductVariantImage.updateOne({
+ProductVariantImageSchema.statics.updateProductVariantImage = async (productId, variantId, data) => {
+  const productVariantImage = await ProductVariantImage()
+    .updateOne({
     _id: data._id,
     product_id: productId,
     variant_id: variantId
@@ -33,17 +34,19 @@ productVariantImageSchema.statics.updateProductVariantImage = async (productId, 
 }
 
 // Get product variant image
-productVariantImageSchema.statics.findProductVariantImage = async (productId, variantId, imageId) => {
-  const productVariantImage = await ProductVariantImage.findOne({ product_id: productId, variant_id: variantId, _id: imageId })
+ProductVariantImageSchema.statics.findProductVariantImage = async (productId, variantId, imageId) => {
+  const productVariantImage = await ProductVariantImage()
+    .findOne({ product_id: productId, variant_id: variantId, _id: imageId })
   return productVariantImage
 }
 
 // Delete file
-productVariantImageSchema.statics.deleteImage = async (id) => {
-  const image = await ProductVariantImage.deleteOne({ _id: id })
+ProductVariantImageSchema.statics.deleteImage = async (id) => {
+  const image = await ProductVariantImage().deleteOne({ _id: id })
   return image
 }
 
-const ProductVariantImage = mongoose.model('ProductVariantImage', productVariantImageSchema)
-
+const ProductVariantImage = function () {
+  return tenantModel('ProductVariantImage', ProductVariantImageSchema)
+}
 module.exports = ProductVariantImage

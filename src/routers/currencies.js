@@ -10,14 +10,14 @@ const {
 } = require('../controller/currencies.js')
 
 // Create currencies
-router.post('/currencies', auth, (req, res) => createCurrencies(req, res))
+router.post('/:storeHash/currencies', auth, (req, res) => createCurrencies(req, res))
 // Get currencies
-router.get('/currencies', auth, (req, res) => getCurrencies(req, res))
+router.get('/:storeHash/currencies', auth, (req, res) => getCurrencies(req, res))
 // Get currency
-router.get('/currencies/:currencyId', auth, (req, res) => getCurrency(req, res))
+router.get('/:storeHash/currencies/:currencyId', auth, (req, res) => getCurrency(req, res))
 // Update currency
-router.put('/currencies/:currencyId', auth, (req, res) => updateCurrency(req, res))
+router.put('/:storeHash/currencies/:currencyId', auth, (req, res) => updateCurrency(req, res))
 // Delete currency
-router.delete('/currencies/:currencyId', auth, (req, res) => deleteCurrency(req, res))
+router.delete('/:storeHash/currencies/:currencyId', auth, (req, res) => deleteCurrency(req, res))
 
 module.exports = router

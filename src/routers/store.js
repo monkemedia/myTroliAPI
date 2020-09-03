@@ -7,8 +7,8 @@ const {
 } = require('../controller/store')
 
 // Get store
-router.get('/store', auth, (req, res) => getStore(req, res))
+router.get('/:storeHash/store', auth, (req, res) => getStore(req, res))
 // Update store
-router.put('/store', auth, (req, res) => updateStore(req, res))
+router.put('/:storeHash/store', auth, (req, res) => updateStore(req, res))
 
 module.exports = router

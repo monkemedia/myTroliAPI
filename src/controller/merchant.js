@@ -1,10 +1,10 @@
-const Client = require('../models/client')
+const Merchant = require('../models/merchant')
 const emailTemplate = require('../utils/emailTemplate')
 
-const createClient = async (req, res) => {
+const createMerchant = async (req, res) => {
   const data = req.body
-  const { email, name, role, type } = data
-  const clientExists = await Client.findByEmailAddress(email)
+  const { email, name, role, store_hash, type } = data
+  const merchantExists = await Merchant.findByEmailAddress(email)
 
   if (!type) {
     return res.status(401).send({
@@ -12,7 +12,7 @@ const createClient = async (req, res) => {
     })
   }
 
-  if (type !== 'client_credentials') {
+  if (type !== 'merchant_credentials') {
     return res.status(401).send({
       message: 'Correct type is required'
     })
@@ -36,71 +36,78 @@ const createClient = async (req, res) => {
     })
   }
 
-  if (clientExists) {
+  if (!store_hash) {
     return res.status(401).send({
-      message: 'Client already exists'
+      message: 'Store hash is required'
+    })
+  }
+
+  if (merchantExists) {
+    return res.status(401).send({
+      message: 'Merchant already exists'
     })
   }
 
   try {
-    const client = new Client(data)
-    const activateToken = await client.generateToken('1hr')
+    const merchant = new Merchant(data)
+    const activateToken = await merchant.generateToken('1hr')
 
-    client.reset_token = activateToken
-    await client.save()
+    merchant.reset_token = activateToken
+    await merchant.save()
 
     emailTemplate.activateAccount({
       email,
       name,
       activateToken
     })
-    await client.save()
+    await merchant.save()
 
-    const clientCopy = Object.assign(data, {
+    const merchantCopy = Object.assign(data, {
       password: false
     })
 
-    res.status(201).send(clientCopy)
+    res.status(201).send(merchantCopy)
   } catch (err) {
     res.status(err.status).send(err)
   }
 }
 
-const getClients = async (req, res) => {
-  const client = await Client
+const getMerchants = async (req, res) => {
+  const merchant = await Merchant
     .aggregate()
     .project({
       name: 1,
       email: 1,
       enabled: 1,
       role: 1,
+      store_hash: 1,
       password: { $toBool: '$password' }
     })
 
-  res.status(200).send(client)
+  res.status(200).send(merchant)
 }
 
-const getClient = async (req, res) => {
+const getMerchant = async (req, res) => {
   try {
-    const client = await Client.findOne({ _id: req.params.clientId }).select('-reset_token -refresh_token')
+    const merchant = await Merchant.findOne({ _id: req.params.merchantId }).select('-reset_token -refresh_token')
 
-    if (!client) {
+    if (!merchant) {
       return res.status(401).send({
-        message: 'Client does not exist'
+        message: 'Merchant does not exist'
       })
     }
-    const clientClone = Object.assign(client, {
-      password: !!client.password
+    const merchantClone = Object.assign(merchant, {
+      password: !!merchant.password
     })
 
-    res.status(200).send(clientClone)
+    res.status(200).send(merchantClone)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
-const updateClient = async (req, res) => {
-  const clientId = req.params.clientId
+const updateMerchant = async (req, res) => {
+  const merchantId = req.params.merchantId
   const data = req.body
   const { type } = data
 
@@ -110,7 +117,7 @@ const updateClient = async (req, res) => {
     })
   }
 
-  if (type !== 'client_credentials') {
+  if (type !== 'merchant_credentials') {
     return res.status(401).send({
       message: 'Correct type is required'
     })
@@ -118,29 +125,29 @@ const updateClient = async (req, res) => {
 
   try {
     if (data.password) {
-      await Client.updateClientWithPassword(clientId, data)
+      await Merchant.updateMerchantWithPassword(merchantId, data)
     } else {
-      await Client.updateClient(clientId, data)
+      await Merchant.updateMerchant(merchantId, data)
     }
-    const client = await Client.findOne({ _id: clientId })
+    const merchant = await Merchant.findOne({ _id: merchantId })
       .select('-reset_token -refresh_token')
 
-    const clientClone = Object.assign(client, {
-      password: !!client.password
+    const merchantClone = Object.assign(merchant, {
+      password: !!merchant.password
     })
 
-    res.status(200).send(clientClone)
+    res.status(200).send(merchantClone)
   } catch (err) {
     res.status(400).send(err)
   }
 }
 
-const deleteClient = async (req, res) => {
+const deleteMerchant = async (req, res) => {
   try {
-    await Client.deleteClient(req.params.clientId)
+    await Merchant.deleteMerchant(req.params.merchantId)
 
     res.status(200).send({
-      message: 'Client successfully deleted'
+      message: 'Merchant successfully deleted'
     })
   } catch (err) {
     res.status(400).send(err)
@@ -158,17 +165,17 @@ const resendActivationEmail = async (req, res) => {
       })
     }
 
-    if (type !== 'client_credentials') {
+    if (type !== 'merchant_credentials') {
       return res.status(401).send({
         message: 'Correct type is required'
       })
     }
 
-    const client = await Client.findOne({ _id: req.params.clientId }).select('-password')
-    const activateToken = await client.generateToken('1hr')
+    const merchant = await Merchant.findOne({ _id: req.params.merchantId }).select('-password')
+    const activateToken = await merchant.generateToken('1hr')
 
-    client.reset_token = activateToken
-    await client.save()
+    merchant.reset_token = activateToken
+    await merchant.save()
     emailTemplate.activateAccount({
       email,
       name,
@@ -183,10 +190,10 @@ const resendActivationEmail = async (req, res) => {
 }
 
 module.exports = {
-  createClient,
-  getClients,
-  getClient,
-  updateClient,
-  deleteClient,
+  createMerchant,
+  getMerchants,
+  getMerchant,
+  updateMerchant,
+  deleteMerchant,
   resendActivationEmail
 }

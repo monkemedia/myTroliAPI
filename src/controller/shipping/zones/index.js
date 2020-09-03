@@ -29,13 +29,13 @@ const createShippingZone = async (req, res) => {
 
   try {
     // Check to see if zone already exists
-    const zoneExists = await ShippingZone.findZoneByCountryCode(data.country_code)
+    const zoneExists = await ShippingZone().findZoneByCountryCode(data.country_code)
     if (zoneExists) {
       return res.status(401).send({
         message: 'Zone already exists'
       })
     }
-    const shippingZone = new ShippingZone(data)
+    const shippingZone = new ShippingZone()(data)
     const savedShippingZone = await shippingZone.save()
 
     res.status(201).send(savedShippingZone)
@@ -46,7 +46,7 @@ const createShippingZone = async (req, res) => {
 
 const getShippingZones = async (req, res) => {
   try {
-    const shippingZones = await ShippingZone.findZones()
+    const shippingZones = await ShippingZone().findZones()
 
     res.status(200).send(shippingZones)
   } catch (err) {
@@ -57,7 +57,7 @@ const getShippingZones = async (req, res) => {
 const getShippingZone = async (req, res) => {
   const zoneId = req.params.zoneId
   try {
-    const shippingZone = await ShippingZone.findZone(zoneId)
+    const shippingZone = await ShippingZone().findZone(zoneId)
 
     res.status(200).send(shippingZone)
   } catch (err) {
@@ -82,8 +82,8 @@ const updateShippingZone = async (req, res) => {
   }
 
   try {
-    await ShippingZone.updateZone(zoneId, data)
-    const shippingZone = await ShippingZone.findZone(zoneId)
+    await ShippingZone().updateZone(zoneId, data)
+    const shippingZone = await ShippingZone().findZone(zoneId)
 
     res.status(200).send(shippingZone)
   } catch (err) {
@@ -94,7 +94,7 @@ const updateShippingZone = async (req, res) => {
 const deleteShippingZone = async (req, res) => {
   const zoneId = req.params.zoneId
   try {
-    await ShippingZone.deleteZone(zoneId)
+    await ShippingZone().deleteZone(zoneId)
 
     res.status(200).send({
       message: 'Shipping zone successfully deleted'

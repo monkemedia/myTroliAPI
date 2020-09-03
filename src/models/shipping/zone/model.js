@@ -1,27 +1,27 @@
-const mongoose = require('mongoose')
-const shippingZoneSchema = require('./schema')
+const ShippingZoneSchema = require('./schema')
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get zones
-shippingZoneSchema.statics.findZones = async () => {
-  const zones = await ShippingZone.find({})
+ShippingZoneSchema.statics.findZones = async () => {
+  const zones = await ShippingZone().find({})
   return zones
 }
 
 // Get zone
-shippingZoneSchema.statics.findZone = async (zoneId) => {
-  const zone = await ShippingZone.findOne({ _id: zoneId })
+ShippingZoneSchema.statics.findZone = async (zoneId) => {
+  const zone = await ShippingZone().findOne({ _id: zoneId })
   return zone
 }
 
 // Get zone by country code
-shippingZoneSchema.statics.findZoneByCountryCode = async (countryCode) => {
-  const zone = await ShippingZone.findOne({ country_code: countryCode })
+ShippingZoneSchema.statics.findZoneByCountryCode = async (countryCode) => {
+  const zone = await ShippingZone().findOne({ country_code: countryCode })
   return zone
 }
 
 // Update zone
-shippingZoneSchema.statics.updateZone = async (zoneId, zoneDetails) => {
-  const zone = await ShippingZone.updateOne({ _id: zoneId }, {
+ShippingZoneSchema.statics.updateZone = async (zoneId, zoneDetails) => {
+  const zone = await ShippingZone().updateOne({ _id: zoneId }, {
     ...zoneDetails,
     updated_at: Date.now()
   })
@@ -29,11 +29,12 @@ shippingZoneSchema.statics.updateZone = async (zoneId, zoneDetails) => {
 }
 
 // Delete zone
-shippingZoneSchema.statics.deleteZone = async (zoneId) => {
-  const zone = await ShippingZone.deleteOne({ _id: zoneId })
+ShippingZoneSchema.statics.deleteZone = async (zoneId) => {
+  const zone = await ShippingZone().deleteOne({ _id: zoneId })
   return zone
 }
 
-const ShippingZone = mongoose.model('ShippingZone', shippingZoneSchema)
-
+const ShippingZone = function () {
+  return tenantModel('ShippingZone', ShippingZoneSchema)
+}
 module.exports = ShippingZone

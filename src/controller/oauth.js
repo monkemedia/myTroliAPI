@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const Client = require('../models/client')
+const Merchant = require('../models/merchant')
 const emailTemplate = require('../utils/emailTemplate')
 const errorHandler = require('../utils/errorHandler')
 
@@ -29,28 +29,28 @@ const refreshToken = async (req, res) => {
       })
     }
 
-    const client = await Client.findByRefreshToken(refresh_token)
+    const merchant = await Merchant.findByRefreshToken(refresh_token)
 
-    if (client === null) {
+    if (merchant === null) {
       return res.status(401).send({
-        message: 'Client doesn\'t exist'
+        message: 'Merchant doesn\'t exist'
       })
     }
 
-    if (client.refresh_token !== refresh_token) {
+    if (merchant.refresh_token !== refresh_token) {
       return res.status(401).send({
         message: 'Not authorized'
       })
     }
 
     try {
-      jwt.verify(client.refresh_token, process.env.API_SECRET)
+      jwt.verify(merchant.refresh_token, process.env.API_SECRET)
 
-      const accessToken = await client.generateToken(accessTokenTime)
-      const refreshToken = await client.generateToken(refreshTokenTime)
+      const accessToken = await merchant.generateToken(accessTokenTime)
+      const refreshToken = await merchant.generateToken(refreshTokenTime)
 
-      client.refresh_token = refreshToken
-      await client.save()
+      merchant.refresh_token = refreshToken
+      await merchant.save()
 
       res.status(200).send({
         access_token: accessToken,
@@ -92,33 +92,35 @@ const accessToken = async (req, res) => {
       })
     }
 
-    if (type !== 'client_credentials') {
+    if (type !== 'merchant_credentials') {
       return res.status(401).send({
         message: 'Correct type is required'
       })
     }
 
-    const client = await Client.findByEmailAddress(email)
+    const merchant = await Merchant.findByEmailAddress(email)
 
-    if (!client) {
+    if (!merchant) {
       return res.status(401).send(errorHandler(401, 'Sorry, we can’t find an account with this email.'))
     }
 
-    if (!bcrypt.compareSync(password, client.password)) {
+    if (!bcrypt.compareSync(password, merchant.password)) {
       return res.status(401).send(errorHandler(401, 'Sorry, the password is not right for this account.'))
     }
 
-    const accessToken = await client.generateToken(accessTokenTime)
-    const refreshToken = await client.generateToken(refreshTokenTime)
+    const accessToken = await merchant.generateToken(accessTokenTime)
+    const refreshToken = await merchant.generateToken(refreshTokenTime)
 
-    client.refresh_token = refreshToken
-    await client.save()
+    merchant.refresh_token = refreshToken
+
+    await merchant.save()
 
     res.status(200).send({
-      type: 'client_credentials',
+      type: 'merchant_credentials',
       expires_in: 3600,
       access_token: accessToken,
-      client_id: client._id,
+      merchant_id: merchant._id,
+      store_hash: merchant.store_hash,
       token_type: 'Bearer',
       refresh_token: refreshToken
     })
@@ -149,19 +151,19 @@ const resetToken = async (req, res) => {
       })
     }
 
-    const client = await Client.findByEmailAddress(email)
+    const merchant = await Merchant.findByEmailAddress(email)
 
-    if (!client) {
+    if (!merchant) {
       // customer doesn't exist but we can't tell users that
       return res.status(200).send({
         message: 'Reset email is on it\'s way'
       })
     }
 
-    const resetToken = await client.generateToken('1hr')
+    const resetToken = await merchant.generateToken('1hr')
 
-    client.reset_token = resetToken
-    await client.save()
+    merchant.reset_token = resetToken
+    await merchant.save()
 
     emailTemplate.forgottenPasswordEmail({
       email,
@@ -208,16 +210,16 @@ const resetPassword = async (req, res) => {
     try {
       jwt.verify(reset_token, process.env.API_SECRET)
 
-      const client = await Client.findByResetToken(reset_token)
+      const merchant = await Merchant.findByResetToken(reset_token)
 
-      if (!client) {
+      if (!merchant) {
         // customer doesn't exist but we can't tell users that
         return res.status(401).send({
-          message: 'Client does not exist'
+          message: 'Merchant does not exist'
         })
       }
 
-      await Client.updateClientWithPassword(client._id, password)
+      await Merchant.updateMerchantWithPassword(merchant._id, password)
 
       res.status(200).send({
         message: 'Password has been updated'

@@ -1,7 +1,7 @@
-const Variation = require('../models/variation/index.js')
-const Product = require('../models/product/index.js')
-const ProductVariant = require('../models/product/variant/index.js')
-const ProductOption = require('../models/product/option/index.js')
+const Variation = require('../models/variation')
+const Product = require('../models/product')
+const ProductVariant = require('../models/product/variant')
+const ProductOption = require('../models/product/option')
 
 const createVariation = async (req, res) => {
   const data = req.body
@@ -26,7 +26,7 @@ const createVariation = async (req, res) => {
   }
 
   try {
-    const variation = new Variation(data)
+    const variation = new Variation()(data)
 
     await variation.save()
 
@@ -38,7 +38,7 @@ const createVariation = async (req, res) => {
 
 const getVariations = async (req, res) => {
   try {
-    const variation = await Variation.findVariations()
+    const variation = await Variation().findVariations()
 
     res.status(200).send(variation)
   } catch (err) {
@@ -47,7 +47,7 @@ const getVariations = async (req, res) => {
 }
 
 const getVariation = async (req, res) => {
-  const variation = await Variation.findOne({ _id: req.params.variationId })
+  const variation = await Variation().findOne({ _id: req.params.variationId })
 
   res.status(200).send(variation)
 }
@@ -70,8 +70,8 @@ const updateVariation = async (req, res) => {
   }
 
   try {
-    await Variation.updateVariation(variationId, data)
-    const variation = await Variation.findOne({ _id: variationId })
+    await Variation().updateVariation(variationId, data)
+    const variation = await Variation().findOne({ _id: variationId })
 
     res.status(200).send(variation)
   } catch (err) {
@@ -83,13 +83,13 @@ const deleteVariation = async (req, res) => {
   try {
     const variationId = req.params.variationId
     // Delete all Variants which contain variationId
-    const productVariant = await ProductVariant.find({ name: variationId })
+    const productVariant = await ProductVariant().find({ name: variationId })
     // Map through options and delete
     productVariant.map(async variant => {
       variant.options.map(async option => {
-        await ProductOption.deleteOne({ _id: option._id })
+        await ProductOption().deleteOne({ _id: option._id })
       })
-      await ProductVariant.deleteOne({ _id: variant._id })
+      await ProductVariant().deleteOne({ _id: variant._id })
 
       const products = await Product.find({ variants: variant._id })
 
@@ -100,7 +100,7 @@ const deleteVariation = async (req, res) => {
     })
 
     // Now delete variation
-    await Variation.deleteVariation(req.params.variationId)
+    await Variation().deleteVariation(req.params.variationId)
 
     res.status(200).send({
       message: 'Variation successfully deleted'

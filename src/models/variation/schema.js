@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const variantSchema = new Schema({
+const VariantSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -19,4 +19,4 @@ const variantSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = variantSchema
+module.exports = VariantSchema

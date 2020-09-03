@@ -1,21 +1,21 @@
-const mongoose = require('mongoose')
-const customerAddressSchema = require('./schema')
+const CustomerAddressSchema = require('./schema')
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Find address
-customerAddressSchema.statics.findCustomerAddresses = async (customerId) => {
-  const addresses = await CustomerAddress.find({ customer_id: customerId })
+CustomerAddressSchema.statics.findCustomerAddresses = async (customerId) => {
+  const addresses = await CustomerAddress().find({ customer_id: customerId })
   return addresses
 }
 
 // Find address
-customerAddressSchema.statics.findCustomerAddress = async (addressId) => {
-  const address = await CustomerAddress.findOne({ _id: addressId })
+CustomerAddressSchema.statics.findCustomerAddress = async (addressId) => {
+  const address = await CustomerAddress().findOne({ _id: addressId })
   return address
 }
 
 // Update address
-customerAddressSchema.statics.updateCustomerAddress = async (addressId, addressDetails) => {
-  const address = await CustomerAddress.updateOne({ _id: addressId }, {
+CustomerAddressSchema.statics.updateCustomerAddress = async (addressId, addressDetails) => {
+  const address = await CustomerAddress().updateOne({ _id: addressId }, {
     ...addressDetails,
     updated_at: Date.now()
   })
@@ -23,11 +23,12 @@ customerAddressSchema.statics.updateCustomerAddress = async (addressId, addressD
 }
 
 // Delete address
-customerAddressSchema.statics.deleteCustomerAddress = async (addressId) => {
-  const address = await CustomerAddress.deleteOne({ _id: addressId })
+CustomerAddressSchema.statics.deleteCustomerAddress = async (addressId) => {
+  const address = await CustomerAddress().deleteOne({ _id: addressId })
   return address
 }
 
-const CustomerAddress = mongoose.model('CustomerAddress', customerAddressSchema)
-
+const CustomerAddress = function () {
+  return tenantModel('CustomerAddress', CustomerAddressSchema)
+}
 module.exports = CustomerAddress

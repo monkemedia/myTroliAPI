@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
-const orderRefundSchema = require('./schema')
+const OrderRefundSchema = require('./schema')
 const Order = require('../index.js')
-const Product = require('../../product/index.js')
-const Customer = require('../../customer/index.js')
-const PaymentRefund = require('../../payment/refund/index.js')
+const Product = require('../../product')
+const Customer = require('../../customer')
+const PaymentRefund = require('../../payment/refund')
+const { tenantModel } = require('../../../utils/multitenancy')
 
 const getTotalAmount = (items) => {
   let sum = 0
@@ -19,7 +19,7 @@ const updateProductsTotalSold = async (items) => {
     if (item.item_type === 'product') {
       const productId = item.item_id
       const quantity = item.quantity
-      const product = await Product.updateOne({ _id: productId }, {
+      const product = await Product().updateOne({ _id: productId }, {
         $inc: {
           total_sold: -quantity
         }
@@ -34,7 +34,7 @@ const updateProductsTotalSold = async (items) => {
 }
 
 const updateOrder = async (orderId, refundId) => {
-  await Order.updateOne({ id: orderId }, {
+  await Order().updateOne({ id: orderId }, {
     $push: {
       refunded: refundId
     },
@@ -47,13 +47,13 @@ const refundMonies = async (payment, customerId, orderRefund) => {
   const chargeId = payment.charge_id
 
   if (paymentProvider === 'store_credit') {
-    await Customer.updateCustomersStoreCredit(customerId, payment.amount)
+    await Customer().updateCustomersStoreCredit(customerId, payment.amount)
   } else if (paymentProvider === 'stripe') {
-    await PaymentRefund.createPaymentRefund(chargeId, payment.amount)
+    await PaymentRefund().createPaymentRefund(chargeId, payment.amount)
   }
 }
 
-orderRefundSchema.pre('save', async function (next) {
+OrderRefundSchema.pre('save', async function (next) {
   const orderRefund = this
   const refundId = orderRefund._id
   const orderId = orderRefund.order_id
@@ -78,12 +78,12 @@ orderRefundSchema.pre('save', async function (next) {
 })
 
 // Get refunds for order
-orderRefundSchema.statics.findOrderRefunds = async (orderId) => {
-  const orderRefunds = await OrderRefund.find({ order_id: orderId })
-
+OrderRefundSchema.statics.findOrderRefunds = async (orderId) => {
+  const orderRefunds = await OrderRefund().find({ order_id: orderId })
   return orderRefunds
 }
 
-const OrderRefund = mongoose.model('OrderRefund', orderRefundSchema)
-
+const OrderRefund = function () {
+  return tenantModel('OrderRefund', OrderRefundSchema)
+}
 module.exports = OrderRefund

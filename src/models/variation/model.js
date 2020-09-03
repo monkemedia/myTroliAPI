@@ -1,16 +1,16 @@
-const mongoose = require('mongoose')
-const variationSchema = require('./schema')
+const VariationSchema = require('./schema')
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Get variations
-variationSchema.statics.findVariations = async () => {
-  const variations = await Variation.find({})
+VariationSchema.statics.findVariations = async () => {
+  const variations = await Variation().find({})
 
   return variations
 }
 
 // Update Variation
-variationSchema.statics.updateVariation = async (variationId, variationDetails) => {
-  const variation = await Variation.updateOne({ _id: variationId }, {
+VariationSchema.statics.updateVariation = async (variationId, variationDetails) => {
+  const variation = await Variation().updateOne({ _id: variationId }, {
     ...variationDetails,
     updated_at: Date.now()
   })
@@ -18,11 +18,12 @@ variationSchema.statics.updateVariation = async (variationId, variationDetails) 
 }
 
 // Delete variation
-variationSchema.statics.deleteVariation = async (variationId) => {
-  const variation = await Variation.deleteOne({ _id: variationId })
+VariationSchema.statics.deleteVariation = async (variationId) => {
+  const variation = await Variation().deleteOne({ _id: variationId })
   return variation
 }
 
-const Variation = mongoose.model('Variation', variationSchema)
-
+const Variation = function () {
+  return tenantModel('Variation', VariationSchema)
+}
 module.exports = Variation

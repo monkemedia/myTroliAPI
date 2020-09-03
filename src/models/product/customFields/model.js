@@ -1,10 +1,10 @@
-const mongoose = require('mongoose')
-const productCustomFieldSchema = require('./schema')
+const ProductCustomFieldSchema = require('./schema')
 const Product = require('../model')
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get product custom fields
-productCustomFieldSchema.statics.findProductCustomFields = async (productId) => {
-  const productCustomFields = await ProductCustomFields
+ProductCustomFieldSchema.statics.findProductCustomFields = async (productId) => {
+  const productCustomFields = await ProductCustomField()
     .find({ product_id: productId })
     .sort({ sort_order: 1 })
 
@@ -12,8 +12,8 @@ productCustomFieldSchema.statics.findProductCustomFields = async (productId) => 
 }
 
 // Update product custome field
-productCustomFieldSchema.statics.updateProductCustomField = async (customFieldId, productCustomFieldDetails) => {
-  const productCustomField = await ProductCustomFields.updateOne({ _id: customFieldId }, {
+ProductCustomFieldSchema.statics.updateProductCustomField = async (customFieldId, productCustomFieldDetails) => {
+  const productCustomField = await ProductCustomField().updateOne({ _id: customFieldId }, {
     ...productCustomFieldDetails,
     updated_at: Date.now()
   })
@@ -21,17 +21,18 @@ productCustomFieldSchema.statics.updateProductCustomField = async (customFieldId
 }
 
 // Delete product custome field
-productCustomFieldSchema.statics.deleteProductCustomField = async (customFieldId, productId) => {
-  await Product.updateOne({ _id: productId }, {
+ProductCustomFieldSchema.statics.deleteProductCustomField = async (customFieldId, productId) => {
+  await Product().updateOne({ _id: productId }, {
     $pull: {
       custom_fields: customFieldId
     },
     updated_at: Date.now()
   })
-  const productCustomField = await ProductCustomFields.deleteOne({ _id: customFieldId })
+  const productCustomField = await ProductCustomField().deleteOne({ _id: customFieldId })
   return productCustomField
 }
 
-const ProductCustomFields = mongoose.model('ProductCustomFields', productCustomFieldSchema)
-
-module.exports = ProductCustomFields
+const ProductCustomField = function () {
+  return tenantModel('ProductCustomField', ProductCustomFieldSchema)
+}
+module.exports = ProductCustomField

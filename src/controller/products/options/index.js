@@ -1,4 +1,4 @@
-const ProductOption = require('../../../models/product/option/index.js')
+const ProductOption = require('../../../models/product/option')
 const Product = require('../../../models/product')
 
 const createProductOption = async (req, res) => {
@@ -35,14 +35,14 @@ const createProductOption = async (req, res) => {
   }
 
   try {
-    var productOption = new ProductOption({
+    var productOption = new ProductOption()({
       ...data,
       product_id: productId
     })
 
     const savedProductOptions = await productOption.save()
 
-    await Product.updateOne({ _id: productId }, {
+    await Product().updateOne({ _id: productId }, {
       $push: { 
         options: savedProductOptions
       }
@@ -57,7 +57,7 @@ const createProductOption = async (req, res) => {
 const getProductOptions = async (req, res) => {
   try {
     const productId = req.params.productId
-    const productOptions = await ProductOption.findProductOptions(productId)
+    const productOptions = await ProductOption().findProductOptions(productId)
 
     res.status(200).send(productOptions)
   } catch (err) {
@@ -68,7 +68,7 @@ const getProductOptions = async (req, res) => {
 const getProductOption = async (req, res) => {
   const productId = req.params.productId
   const optionId = req.params.optionId
-  const productOption = await ProductOption.findProductOption(productId, optionId)
+  const productOption = await ProductOption().findProductOption(productId, optionId)
 
   res.status(200).send(productOption)
 }
@@ -92,8 +92,8 @@ const updateProductOption = async (req, res) => {
   }
 
   try {
-    await ProductOption.updateProductOption(productId, optionId, data)
-    const productOption = await ProductOption.findProductOption(productId, optionId)
+    await ProductOption().updateProductOption(productId, optionId, data)
+    const productOption = await ProductOption().findProductOption(productId, optionId)
 
     res.status(200).send(productOption)
   } catch (err) {
@@ -105,7 +105,7 @@ const deleteProductOption = async (req, res) => {
   const productId = req.params.productId
   const optionId = req.params.optionId
   try {
-    await Product.updateOne({ _id: productId }, 
+    await Product().updateOne({ _id: productId }, 
       {
         $pull: { 
           options: optionId
@@ -113,7 +113,7 @@ const deleteProductOption = async (req, res) => {
       }
     )
 
-    await ProductOption.deleteProductOption(productId, optionId)
+    await ProductOption().deleteProductOption(productId, optionId)
 
     res.status(200).send({
       message: 'Product variant option successfully deleted'

@@ -1,3 +1,3 @@
-const OrderStatus = require('./model')
+const OrderRefund = require('./model')
 
-module.exports = OrderStatus
+module.exports = OrderRefund

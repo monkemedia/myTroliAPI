@@ -1,23 +1,23 @@
-const mongoose = require('mongoose')
-const productOptionSchema = require('./schema')
+const ProductOptionSchema = require('./schema')
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get all product options
-productOptionSchema.statics.findProductOptions = async (productId) => {
-  const productOptions = await ProductOptions.find({ product_id: productId })
+ProductOptionSchema.statics.findProductOptions = async (productId) => {
+  const productOptions = await ProductOption().find({ product_id: productId })
 
   return productOptions
 }
 
 // Get a product option
-productOptionSchema.statics.findProductOption = async (productId, optionId) => {
-  const productOptions = await ProductOptions.findOne({ product_id: productId, _id: optionId })
+ProductOptionSchema.statics.findProductOption = async (productId, optionId) => {
+  const productOptions = await ProductOption().findOne({ product_id: productId, _id: optionId })
 
   return productOptions
 }
 
 // Update product option
-productOptionSchema.statics.updateProductOption = async (productId, optionId, data) => {
-  const productOptions = await ProductOptions.updateOne({
+ProductOptionSchema.statics.updateProductOption = async (productId, optionId, data) => {
+  const productOptions = await ProductOption().updateOne({
     _id: optionId,
     product_id: productId
   }, {
@@ -28,11 +28,12 @@ productOptionSchema.statics.updateProductOption = async (productId, optionId, da
 }
 
 // Delete product option
-productOptionSchema.statics.deleteProductOption = async (productId, optionId) => {
-  const productOptions = await ProductOptions.deleteOne({ product_id: productId, _id: optionId })
+ProductOptionSchema.statics.deleteProductOption = async (productId, optionId) => {
+  const productOptions = await ProductOption().deleteOne({ product_id: productId, _id: optionId })
   return productOptions
 }
 
-const ProductOptions = mongoose.model('ProductOptions', productOptionSchema)
-
-module.exports = ProductOptions
+const ProductOption = function () {
+  return tenantModel('ProductOption', ProductOptionSchema)
+}
+module.exports = ProductOption

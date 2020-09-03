@@ -1,18 +1,18 @@
-const mongoose = require('mongoose')
 const uniqueArrayPlugin = require('mongoose-unique-array')
-const productImageSchema = require('./schema')
+const ProductImageSchema = require('./schema')
+const { tenantModel } = require('../../../utils/multitenancy')
 
-productImageSchema.plugin(uniqueArrayPlugin)
+ProductImageSchema.plugin(uniqueArrayPlugin)
 
 // Get all product images
-productImageSchema.statics.findAllProductImages = async (productId) => {
-  const productImages = await ProductImage.find({ product_id: productId })
+ProductImageSchema.statics.findAllProductImages = async (productId) => {
+  const productImages = await ProductImage().find({ product_id: productId })
   return productImages
 }
 
 // Get product images by query
-productImageSchema.statics.findProductImagesByQuery = async (productId, query) => {
-  const productImages = await ProductImage.find({
+ProductImageSchema.statics.findProductImagesByQuery = async (productId, query) => {
+  const productImages = await ProductImage().find({
     product_id: productId,
     ...query
   })
@@ -20,14 +20,14 @@ productImageSchema.statics.findProductImagesByQuery = async (productId, query) =
 }
 
 // Get a product image
-productImageSchema.statics.findProductImage = async (productId, imageId) => {
-  const productImage = await ProductImage.findOne({ product_id: productId, _id: imageId })
+ProductImageSchema.statics.findProductImage = async (productId, imageId) => {
+  const productImage = await ProductImage().findOne({ product_id: productId, _id: imageId })
   return productImage
 }
 
 // Update product image
-productImageSchema.statics.updateProductImage = async (productId, imageId, data) => {
-  const productImage = await ProductImage.updateOne({
+ProductImageSchema.statics.updateProductImage = async (productId, imageId, data) => {
+  const productImage = await ProductImage().updateOne({
     _id: imageId,
     product_id: productId
   }, {
@@ -38,11 +38,12 @@ productImageSchema.statics.updateProductImage = async (productId, imageId, data)
 }
 
 // Delete file
-productImageSchema.statics.deleteImage = async (_id) => {
-  const image = await ProductImage.deleteOne({ _id })
+ProductImageSchema.statics.deleteImage = async (_id) => {
+  const image = await ProductImage().deleteOne({ _id })
   return image
 }
 
-const ProductImage = mongoose.model('ProductImage', productImageSchema)
-
+const ProductImage = function () {
+  return tenantModel('ProductImage', ProductImageSchema)
+}
 module.exports = ProductImage

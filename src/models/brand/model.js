@@ -1,15 +1,17 @@
-const mongoose = require('mongoose')
-const brandSchema = require('./schema')
+const BrandSchema = require('./schema')
 const Product = require('../product')
+const { tenantModel } = require('../../utils/multitenancy')
 
 // Get brands
-brandSchema.statics.findBrands = async ({ page, limit }) => {
-  const brands = await Brand
+BrandSchema.statics.findBrands = async ({ page, limit }) => {
+  const brand = new Brand()
+  const brands = await brand
     .find({})
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Brand.countDocuments()
+  const total = await brand.countDocuments()
+  
   return {
     data: brands,
     meta: {
@@ -25,18 +27,19 @@ brandSchema.statics.findBrands = async ({ page, limit }) => {
 }
 
 // Search brands by Name or Search Keywords
-brandSchema.statics.search = async ({ page, limit, keyword }) => {
+BrandSchema.statics.search = async ({ page, limit, keyword }) => {
   const searchArray = [
     { name: { $regex: keyword, $options: 'i' } },
     { search_keywords: { $regex: keyword, $options: 'i' } }
   ]
-  const brands = await Brand
+  const brand = new Brand()
+  const brands = await brand
     .find()
     .or(searchArray)
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await Brand.countDocuments(searchArray)
+  const total = await brand.countDocuments(searchArray)
   return {
     data: brands,
     meta: {
@@ -52,27 +55,29 @@ brandSchema.statics.search = async ({ page, limit, keyword }) => {
 }
 
 // Get brand count
-brandSchema.statics.getCount = async () => {
-  const total = await Brand.countDocuments()
+BrandSchema.statics.getCount = async () => {
+  const total = await Brand().countDocuments()
   return {
     count: total
   }
 }
 
 // Update brand
-brandSchema.statics.updateBrand = async (brandId, brandDetails) => {
-  const brand = await Brand.updateOne({ _id: brandId }, brandDetails)
+BrandSchema.statics.updateBrand = async (brandId, brandDetails) => {
+  const brand = await Brand().updateOne({ _id: brandId }, brandDetails)
   return brand
 }
 
 // Delete brand
-brandSchema.statics.deleteBrand = async (brandId) => {
+BrandSchema.statics.deleteBrand = async (brandId) => {
   // Delete the brand id from products that have it
   await Product.updateMany({ brand_id: brandId }, { $unset: { brand_id: 1 }})
-  const brand = await Brand.deleteOne({ _id: brandId })
+  const brand = await Brand().deleteOne({ _id: brandId })
   return brand
 }
 
-const Brand = mongoose.model('Brand', brandSchema)
 
+const Brand = function () {
+  return tenantModel('Brand', BrandSchema)
+}
 module.exports = Brand

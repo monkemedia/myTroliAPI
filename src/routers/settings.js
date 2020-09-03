@@ -7,8 +7,8 @@ const {
 } = require('../controller/settings')
 
 // Get settings
-router.get('/settings', auth, (req, res) => getSettings(req, res))
+router.get('/:storeHash/settings', auth, (req, res) => getSettings(req, res))
 // Update settings
-router.put('/settings', auth, (req, res) => updateSettings(req, res))
+router.put('/:storeHash/settings', auth, (req, res) => updateSettings(req, res))
 
 module.exports = router

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const countrySchema = new Schema({
+const CountrySchema = new Schema({
   type: {
     type: String,
     required: true
@@ -16,4 +16,4 @@ const countrySchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = countrySchema
+module.exports = CountrySchema

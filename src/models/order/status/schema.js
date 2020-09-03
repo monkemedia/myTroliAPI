@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const orderStatusSchema = new Schema({
+const OrderStatusSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -33,4 +33,4 @@ const orderStatusSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = orderStatusSchema
+module.exports = OrderStatusSchema

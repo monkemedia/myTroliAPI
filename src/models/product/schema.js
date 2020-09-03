@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const productSchema = Schema({
+const ProductSchema = Schema({
   type: {
     type: String,
     required: true
@@ -107,7 +107,8 @@ const productSchema = Schema({
   },
   brand_id: {
     type: Schema.Types.ObjectId,
-    ref: 'Brand'
+    ref: 'Brand',
+    set: (value) => value || undefined
   },
   reviews: [
     {
@@ -139,4 +140,4 @@ const productSchema = Schema({
   }
 }, { versionKey: false })
 
-module.exports = productSchema
+module.exports = ProductSchema

@@ -9,12 +9,12 @@ const {
 } = require('../../../controller/shipping/address')
 
 // Create shipping address
-router.post('/shipping/address', auth, (req, res) => createShippingAddress(req, res))
+router.post('/:storeHash/shipping/address', auth, (req, res) => createShippingAddress(req, res))
 // Get shipping address
-router.get('/shipping/address', auth, (req, res) => getShippingAddress(req, res))
+router.get('/:storeHash/shipping/address', auth, (req, res) => getShippingAddress(req, res))
 // Update shipping address
-router.put('/shipping/address', auth, (req, res) => updateShippingAddress(req, res))
+router.put('/:storeHash/shipping/address', auth, (req, res) => updateShippingAddress(req, res))
 // Delete shipping address
-router.delete('/shipping/address', auth, (req, res) => deleteShippingAddress(req, res))
+router.delete('/:storeHash/shipping/address', auth, (req, res) => deleteShippingAddress(req, res))
 
 module.exports = router

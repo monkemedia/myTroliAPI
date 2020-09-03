@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
-const shippingAddressSchema = require('./schema')
+const ShippingAddressSchema = require('./schema')
+const { tenantModel } = require('../../../utils/multitenancy')
 
 // Update shipping address
-shippingAddressSchema.statics.updateShippingAddress = async (data) => {
-  const shippingAddress = await ShippingAddress.updateOne({
+ShippingAddressSchema.statics.updateShippingAddress = async (data) => {
+  const shippingAddress = await ShippingAddress().updateOne({
     ...data,
     updated_at: Date.now()
   })
@@ -11,11 +11,12 @@ shippingAddressSchema.statics.updateShippingAddress = async (data) => {
 }
 
 // Delete shipping address
-shippingAddressSchema.statics.deleteShippingAddress = async () => {
-  const shippingAddress = await ShippingAddress.deleteOne()
+ShippingAddressSchema.statics.deleteShippingAddress = async () => {
+  const shippingAddress = await ShippingAddress().deleteOne()
   return shippingAddress
 }
 
-const ShippingAddress = mongoose.model('ShippingAddress', shippingAddressSchema)
-
+const ShippingAddress = function () {
+  return tenantModel('ShippingAddress', ShippingAddressSchema)
+}
 module.exports = ShippingAddress

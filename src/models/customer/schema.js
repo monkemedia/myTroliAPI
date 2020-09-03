@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 const validator = require('validator')
 const errorHandler = require('../../utils/errorHandler')
 
-const customerSchema = new Schema({
+const CustomerSchema = new Schema({
   type: {
     type: String,
     required: true
@@ -56,4 +56,4 @@ const customerSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = customerSchema
+module.exports = CustomerSchema

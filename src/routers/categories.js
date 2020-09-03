@@ -10,14 +10,14 @@ const {
 } = require('../controller/categories')
 
 // Create category
-router.post('/categories', auth, (req, res) => createCategory(req, res))
+router.post('/:storeHash/categories', auth, (req, res) => createCategory(req, res))
 // Get categories
-router.get('/categories', auth, (req, res) => getCategories(req, res))
+router.get('/:storeHash/categories', auth, (req, res) => getCategories(req, res))
 // Get category
-router.get('/categories/:categoryId', auth, (req, res) => getCategory(req, res))
+router.get('/:storeHash/categories/:categoryId', auth, (req, res) => getCategory(req, res))
 // Update category
-router.put('/categories/:categoryId', auth, (req, res) => updateCategory(req, res))
+router.put('/:storeHash/categories/:categoryId', auth, (req, res) => updateCategory(req, res))
 // Delete category
-router.delete('/categories/:categoryId', auth, (req, res) => deleteCategory(req, res))
+router.delete('/:storeHash/categories/:categoryId', auth, (req, res) => deleteCategory(req, res))
 
 module.exports = router

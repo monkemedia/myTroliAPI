@@ -11,16 +11,16 @@ const {
 } = require('../controller/coupons')
 
 // Create coupon
-router.post('/coupons', auth, (req, res) => createCoupon(req, res))
+router.post('/:storeHash/coupons', auth, (req, res) => createCoupon(req, res))
 // Get coupons
-router.get('/coupons', auth, (req, res) => getCoupons(req, res))
+router.get('/:storeHash/coupons', auth, (req, res) => getCoupons(req, res))
 // Get couponByCode
-router.get('/coupons/code/:couponCode', auth, (req, res) => getCouponByCode(req, res))
+router.get('/:storeHash/coupons/code/:couponCode', auth, (req, res) => getCouponByCode(req, res))
 // Get coupon
-router.get('/coupons/:couponId', auth, (req, res) => getCoupon(req, res))
+router.get('/:storeHash/coupons/:couponId', auth, (req, res) => getCoupon(req, res))
 // Update coupon
-router.put('/coupons/:couponId', auth, (req, res) => updateCoupon(req, res))
+router.put('/:storeHash/coupons/:couponId', auth, (req, res) => updateCoupon(req, res))
 // Delete coupon
-router.delete('/coupons/:couponId', auth, (req, res) => deleteCoupon(req, res))
+router.delete('/:storeHash/coupons/:couponId', auth, (req, res) => deleteCoupon(req, res))
 
 module.exports = router

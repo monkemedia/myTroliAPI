@@ -1,5 +1,5 @@
 const { Router } = require('express')
-const client = require('./client.js')
+const merchants = require('./merchants.js')
 const customers = require('./customers/index.js')
 const customerAddresses = require('./customers/addresses/index.js')
 const customerCoupons = require('./customers/coupons/index.js')
@@ -10,11 +10,13 @@ const coupons = require('./coupons.js')
 const categories = require('./categories.js')
 const brands = require('./brands.js')
 const variations = require('./variations.js')
+const images = require('./images.js')
 const store = require('./store.js')
 const shippingAddress = require('./shipping/address/index.js')
 const shippingZones = require('./shipping/zones/index.js')
 const shippingMethods = require('./shipping/zones/methods/index.js')
 const settings = require('./settings.js')
+const payments = require('./payments/index.js')
 const productVariants = require('./products/variants/index.js')
 const productVariantImages = require('./products/variants/images/index.js')
 const productOptions = require('./products/options/index.js')
@@ -30,7 +32,7 @@ const orderRefunds = require('./orders/refunds/index.js')
 const router = Router()
 
 router.use(
-  client,
+  merchants,
   customers,
   coupons,
   customerAddresses,
@@ -43,16 +45,17 @@ router.use(
   brands,
   variations,
   store,
+  images,
   shippingAddress,
   shippingZones,
   shippingMethods,
   settings,
+  payments,
   productVariants,
   productVariantImages,
   productOptions,
   productImages,
   productCustomFields,
- 
   productFiltering,
   performance,
   orders,

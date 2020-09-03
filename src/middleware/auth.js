@@ -1,5 +1,9 @@
 const jwt = require('jsonwebtoken')
 const errorHandler = require('../utils/errorHandler')
+const Merchant = require('../models/merchant')
+const { createNamespace } = require('continuation-local-storage')
+const session = createNamespace('session')
+
 
 const auth = async (req, res, next) => {
   let token = req.header('Authorization')
@@ -12,15 +16,34 @@ const auth = async (req, res, next) => {
   token = token.replace('Bearer ', '')
 
   try {
-    jwt.verify(token, process.env.API_SECRET)
+    const decodedToken = jwt.verify(token, process.env.API_SECRET)
+    // Now see if the merchant contains the correct store hash
+    const storeHash = req.params.storeHash
+    const merchantId = decodedToken.merchant_id
+    const merchant = await Merchant.findById(merchantId)
 
-    next()
+    if (merchant.store_hash !== storeHash) {
+      return res.status(401).send(errorHandler(401, 'Store hash is not validated'))
+    }
+
+    session.bindEmitter(req)
+    session.bindEmitter(res)
+
+    session.run(() => {
+      session.set('store_hash', storeHash);
+      next()
+    })
+
   } catch (err) {
     if (err.message === 'jwt expired') {
       return res.status(401).send(errorHandler(401, 'Token has expired'))
     }
 
-    res.status(err.status).send(err)
+    if (err.message === 'jwt malformed') {
+      return res.status(401).send(errorHandler(401, 'Token has expired'))
+    }
+
+    return res.status(err.status).send(errorHandler(err.status, err.meesage))
   }
 }
 

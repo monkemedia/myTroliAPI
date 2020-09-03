@@ -1,3 +1,3 @@
-const Image = require('./model')
+const ProductImage = require('./model')
 
-module.exports = Image
+module.exports = ProductImage

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const currencySchema = new Schema({
+const CurrencySchema = new Schema({
   type: {
     type: String,
     required: true
@@ -26,4 +26,4 @@ const currencySchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = currencySchema
+module.exports = CurrencySchema

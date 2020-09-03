@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
-
-mongoose.connect(process.env.MONGODB_URL, {
+const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true
-})
+}
+
+mongoose.connect(process.env.MONGODB_BASE_URL + '/trolify_master', options)

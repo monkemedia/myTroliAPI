@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const couponSchema = Schema({
+const SettingSchema = Schema({
   type: {
     type: String,
     required: true
@@ -18,4 +18,4 @@ const couponSchema = Schema({
   }
 }, { versionKey: false })
 
-module.exports = couponSchema
+module.exports = SettingSchema

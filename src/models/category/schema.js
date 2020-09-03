@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const categorySchema = new Schema({
+const CategorySchema = new Schema({
   type: {
     type: String,
     required: true
@@ -26,4 +26,4 @@ const categorySchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = categorySchema
+module.exports = CategorySchema
