@@ -8,11 +8,11 @@ const {
 } = require('../../controller/payments')
 
 // Create new Payment Account
-router.post('/', auth, (req, res) => createPayment(req, res))
+router.post('/:storeHash/payments', auth, (req, res) => createPayment(req, res))
 
 // Get payment
-router.get('/:chargeId', auth, (req, res) => getPayment(req, res))
+router.get('/:storeHash/payments/:chargeId', auth, (req, res) => getPayment(req, res))
 // delete image
-router.put('/:chargeId', auth, (req, res) => updatePayment(req, res))
+router.put('/:storeHash/payments/:chargeId', auth, (req, res) => updatePayment(req, res))
 
 module.exports = router

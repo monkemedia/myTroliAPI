@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const errorHandler = require('../utils/errorHandler')
 const Merchant = require('../models/merchant')
 const { createNamespace } = require('continuation-local-storage')
-const session = createNamespace('session');
+const session = createNamespace('session')
 
 
 const auth = async (req, res, next) => {
@@ -42,7 +42,6 @@ const auth = async (req, res, next) => {
     if (err.message === 'jwt malformed') {
       return res.status(401).send(errorHandler(401, 'Token has expired'))
     }
-
 
     return res.status(err.status).send(errorHandler(err.status, err.meesage))
   }

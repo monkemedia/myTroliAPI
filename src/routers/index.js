@@ -16,6 +16,7 @@ const shippingAddress = require('./shipping/address/index.js')
 const shippingZones = require('./shipping/zones/index.js')
 const shippingMethods = require('./shipping/zones/methods/index.js')
 const settings = require('./settings.js')
+const payments = require('./payments/index.js')
 const productVariants = require('./products/variants/index.js')
 const productVariantImages = require('./products/variants/images/index.js')
 const productOptions = require('./products/options/index.js')
@@ -49,6 +50,7 @@ router.use(
   shippingZones,
   shippingMethods,
   settings,
+  payments,
   productVariants,
   productVariantImages,
   productOptions,
