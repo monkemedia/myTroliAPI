@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const cls = require('cls-hooked')
+const session = cls.getNamespace('session')
 const errorHandler = require('../../utils/errorHandler')
 const CustomerSchema = require('./schema.js')
 const CustomerAddress = require('./address')
@@ -20,8 +22,10 @@ CustomerSchema.pre('save', async function (next) {
 // Generate customer verify token
 CustomerSchema.methods.generateVerifyToken = async function (expiresIn) {
   const customer = this
+  const storeHash = session.get('store_hash')
   const verifyToken = jwt.sign({
-    email: customer.email
+    email: customer.email,
+    store_hash: storeHash,
   }, process.env.VERIFY_SECRET, { expiresIn: expiresIn || '24hrs' })
 
   return verifyToken
@@ -104,8 +108,8 @@ CustomerSchema.statics.findByEmail = async (email) => {
 }
 
 // Find customer by verify token
-CustomerSchema.statics.verifyToken = async (verify_token) => {
-  const customer = await Customer().updateOne({ verify_token }, {
+CustomerSchema.statics.verifyToken = async (hash, verify_token) => {
+  const customer = await Customer(hash).updateOne({ verify_token }, {
     verified: true,
     verify_token: null
   }).select('-password')
@@ -175,7 +179,8 @@ CustomerSchema.statics.deleteCustomer = async (customerId) => {
   return customer
 }
 
-const Customer = function () {
-  return tenantModel('Customer', CustomerSchema)
+const Customer = function (storeHash) {
+  console.log('ted', storeHash)
+  return tenantModel('Customer', CustomerSchema, storeHash)
 }
 module.exports = Customer

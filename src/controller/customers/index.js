@@ -195,9 +195,9 @@ const verifyCustomer = async (req, res) => {
     }
 
     try {
-      jwt.verify(verify_token, process.env.VERIFY_SECRET)
+      const decode = jwt.verify(verify_token, process.env.VERIFY_SECRET)
 
-      const customer = await Customer().verifyToken(verify_token)
+      const customer = await Customer(decode.store_hash).verifyToken(decode.store_hash, verify_token)
 
       if (!customer) {
         // customer doesn't exist but we can't tell users that

@@ -24,6 +24,6 @@ router.delete('/:storeHash/customers/:customerId', auth, (req, res) => deleteCus
 // Resend verification email
 router.post('/:storeHash/customers/resend/:customerId', auth, (req, res) => resendVerificationEmail(req, res))
 // Verify customer email address
-router.post('/:storeHash/customers/verify', (req, res) => verifyCustomer(req, res))
+router.post('/customers/verify', (req, res) => verifyCustomer(req, res))
 
 module.exports = router

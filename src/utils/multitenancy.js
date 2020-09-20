@@ -1,7 +1,6 @@
 const cls = require('cls-hooked')
 const { Mongoose } = require('mongoose')
 const multitenantPool = {}
-
 const session = cls.getNamespace('session')
 
 const getTenantDB = function getConnections(storeHash, modelName, schema) {
@@ -30,8 +29,15 @@ const getTenantDB = function getConnections(storeHash, modelName, schema) {
   return mongoose
 }
 
-exports.tenantModel = function (modelName, schema) {
-  const storeHash = session.get('store_hash')
+exports.tenantModel = function (modelName, schema, hash) {
+  let storeHash
+  if (hash) {
+    storeHash = hash
+  } else {
+    storeHash = session.get('store_hash')
+  }
+
+  console.log('store hash', storeHash)
   const tenantDb = getTenantDB(storeHash, modelName, schema)
   return tenantDb.model(modelName)
 }
