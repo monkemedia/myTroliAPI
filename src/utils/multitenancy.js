@@ -1,6 +1,8 @@
-const cls = require('continuation-local-storage')
+const cls = require('cls-hooked')
 const { Mongoose } = require('mongoose')
 const multitenantPool = {}
+
+const session = cls.getNamespace('session')
 
 const getTenantDB = function getConnections(storeHash, modelName, schema) {
   // Check connections lookup
@@ -29,7 +31,6 @@ const getTenantDB = function getConnections(storeHash, modelName, schema) {
 }
 
 exports.tenantModel = function (modelName, schema) {
-  const session = cls.getNamespace('session')
   const storeHash = session.get('store_hash')
   const tenantDb = getTenantDB(storeHash, modelName, schema)
   return tenantDb.model(modelName)

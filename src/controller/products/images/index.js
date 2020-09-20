@@ -31,21 +31,16 @@ const createProductImage = async (req, res) => {
   }
 
   try {
+    const product = await Product().findById(productId)
     const promise = data.map(async obj => {
       obj.product_id = productId
       const images = new ProductImage()(obj)
       const save = await images.save()
+      product.images.push(save)
+      await product.save()
       return save
     })
     const savedProductImage = await Promise.all(promise)
-
-    const product = await Product().findById(productId)
-
-    savedProductImage.map(spi => {
-      product.images.push(spi)
-    })
-
-    await product.save()
 
     res.status(201).send(savedProductImage)
   } catch (err) {

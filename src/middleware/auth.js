@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const errorHandler = require('../utils/errorHandler')
 const Merchant = require('../models/merchant')
-const { createNamespace } = require('continuation-local-storage')
+const { createNamespace } = require('cls-hooked')
 const session = createNamespace('session')
 
 
