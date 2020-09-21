@@ -52,6 +52,10 @@ const StoreSchema = new Schema({
     type: String,
     default: ''
   },
+  stripe_secret_key: {
+    type: String,
+    default: ''
+  },
   language: {
     type: String
   },

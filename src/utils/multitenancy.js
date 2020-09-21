@@ -37,7 +37,6 @@ exports.tenantModel = function (modelName, schema, hash) {
     storeHash = session.get('store_hash')
   }
 
-  console.log('store hash', storeHash)
   const tenantDb = getTenantDB(storeHash, modelName, schema)
   return tenantDb.model(modelName)
 }

@@ -180,7 +180,6 @@ CustomerSchema.statics.deleteCustomer = async (customerId) => {
 }
 
 const Customer = function (storeHash) {
-  console.log('ted', storeHash)
   return tenantModel('Customer', CustomerSchema, storeHash)
 }
 module.exports = Customer

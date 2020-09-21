@@ -49,7 +49,7 @@ const refundMonies = async (payment, customerId, orderRefund) => {
   if (paymentProvider === 'store_credit') {
     await Customer().updateCustomersStoreCredit(customerId, payment.amount)
   } else if (paymentProvider === 'stripe') {
-    await PaymentRefund().createPaymentRefund(chargeId, payment.amount)
+    await PaymentRefund.createPaymentRefund(chargeId, payment.amount)
   }
 }
 
