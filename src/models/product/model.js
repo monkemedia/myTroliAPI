@@ -73,6 +73,9 @@ ProductSchema.statics.search = async ({ page, limit, keyword }) => {
   const products = await product
     .aggregate([
       {
+        $match: searchQuery
+      },
+      {
         $lookup: {
           from: 'productimages',
           localField: 'images',
