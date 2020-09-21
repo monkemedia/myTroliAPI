@@ -205,7 +205,16 @@ OrderSchema.statics.search = async ({ page, keyword, limit }) => {
   }
   const order = new Order()
   const orders = await order
-    .aggregate()
+    .aggregate([
+      {
+        $lookup: {
+          from: 'orderrefunds',
+          localField: 'refunded',
+          foreignField: '_id',
+          as: 'refunded'
+        }
+      }
+    ])
     .addFields(fullname)
     .match({
       $or: [
