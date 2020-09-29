@@ -34,13 +34,6 @@ const createProductReview = async (req, res) => {
     })
     await productReview.save()
 
-    await Product().updateOne({ _id: productId }, {
-      $push: {
-        reviews: productReview._id
-      },
-      updated_at: Date.now()
-    })
-
     res.status(201).send(productReview)
   } catch (err) {
     res.status(400).send(err)
@@ -79,7 +72,7 @@ const getProductReview = async (req, res) => {
 
 const updateProductReview = async (req, res) => {
   const data = req.body
-  const { type } = data
+  const { type, status } = data
   const productId = req.params.productId
   const reviewId = req.params.reviewId
 
@@ -98,6 +91,16 @@ const updateProductReview = async (req, res) => {
   try {
     await ProductReview().updateProductReview(reviewId, data)
     const productReview = await ProductReview().findOne({ _id: reviewId, product_id: productId })
+    let pushPull
+
+    status === 'approved' ? pushPull = '$push' : pushPull = '$pull'
+
+    await Product().updateOne({ _id: productId }, {
+      [pushPull]: {
+        reviews: productReview._id
+      },
+      updated_at: Date.now()
+    })
 
     res.status(200).send(productReview)
   } catch (err) {
