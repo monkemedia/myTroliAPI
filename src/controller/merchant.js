@@ -1,9 +1,10 @@
+const mongoose = require('mongoose')
 const Merchant = require('../models/merchant')
 const emailTemplate = require('../utils/emailTemplate')
 
 const createMerchant = async (req, res) => {
   const data = req.body
-  const { email, name, role, store_hash, type } = data
+  const { email, name, store_hash, store_name, role, type } = data
   const merchantExists = await Merchant.findByEmailAddress(email)
 
   if (!type) {
@@ -30,15 +31,21 @@ const createMerchant = async (req, res) => {
     })
   }
 
-  if (!role) {
-    return res.status(401).send({
-      message: 'Role is required'
-    })
-  }
-
   if (!store_hash) {
     return res.status(401).send({
       message: 'Store hash is required'
+    })
+  }
+
+  if (!store_name) {
+    return res.status(401).send({
+      message: 'Store name is required'
+    })
+  }
+
+  if (!role) {
+    return res.status(401).send({
+      message: 'Role is required'
     })
   }
 
@@ -60,7 +67,6 @@ const createMerchant = async (req, res) => {
       name,
       activateToken
     })
-    await merchant.save()
 
     const merchantCopy = Object.assign(data, {
       password: false
@@ -81,6 +87,7 @@ const getMerchants = async (req, res) => {
       enabled: 1,
       role: 1,
       store_hash: 1,
+      store_name: 1,
       password: { $toBool: '$password' }
     })
 
@@ -89,18 +96,26 @@ const getMerchants = async (req, res) => {
 
 const getMerchant = async (req, res) => {
   try {
-    const merchant = await Merchant.findOne({ _id: req.params.merchantId }).select('-reset_token -refresh_token')
+    const merchant = await Merchant
+      .aggregate()
+      .match({ _id: mongoose.Types.ObjectId(req.params.merchantId) })
+      .project({
+        name: 1,
+        email: 1,
+        enabled: 1,
+        role: 1,
+        store_hash: 1,
+        store_name: 1,
+        password: { $toBool: '$password' }
+      })
 
-    if (!merchant) {
+    if (merchant.length < 1) {
       return res.status(401).send({
         message: 'Merchant does not exist'
       })
     }
-    const merchantClone = Object.assign(merchant, {
-      password: !!merchant.password
-    })
 
-    res.status(200).send(merchantClone)
+    res.status(200).send(merchant[0])
   } catch (err) {
     res.status(400).send(err)
   }

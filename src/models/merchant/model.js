@@ -6,7 +6,6 @@ const MerchantSchema = require('./schema')
 // Hash the password before saving the Merchant model
 MerchantSchema.pre('save', async function (next) {
   const merchant = this
-
   if (merchant.isModified('password')) {
     merchant.password = await bcrypt.hash(merchant.password, 8)
   }

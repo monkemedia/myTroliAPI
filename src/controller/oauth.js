@@ -104,6 +104,14 @@ const accessToken = async (req, res) => {
       return res.status(401).send(errorHandler(401, 'Sorry, we can’t find an account with this email.'))
     }
 
+    if (!merchant.enabled) {
+      return res.status(401).send(errorHandler(401, 'Sorry, this account has been disabled.'))
+    }
+
+    if (!merchant.password) {
+      return res.status(401).send(errorHandler(401, 'Sorry, account has not been activated.'))
+    }
+
     if (!bcrypt.compareSync(password, merchant.password)) {
       return res.status(401).send(errorHandler(401, 'Sorry, the password is not right for this account.'))
     }
