@@ -4,6 +4,7 @@ const auth = require('../../middleware/auth')
 const {
   createOrder,
   getOrders,
+  getOrderCount,
   getOrder,
   updateOrder,
   deleteOrder
@@ -13,6 +14,8 @@ const {
 router.post('/:storeHash/orders', auth, (req, res) => createOrder(req, res))
 // Get orders
 router.get('/:storeHash/orders', auth, (req, res) => getOrders(req, res))
+// Get order count
+router.get('/:storeHash/orders/count', auth, (req, res) => getOrderCount(req, res))
 // Get order
 router.get('/:storeHash/orders/:orderId', auth, (req, res) => getOrder(req, res))
 // Update order

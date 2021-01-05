@@ -81,15 +81,17 @@ const getOrders = async (req, res) => {
   }
 }
 
+const getOrderCount = async (req, res) => {
+  const query = req.query
+  const statusId = query.status_id
+  const order = await Order().getCount(statusId)
+
+  res.status(200).send(order)
+}
+
 const getOrder = async (req, res) => {
   const orderId = req.params.orderId
-
-  let order
-  if (orderId === 'count') {
-    order = await Order().getCount()
-  } else {
-    order = await Order().findOrder(orderId)
-  }
+  const order = await Order().findOrder(orderId)
 
   res.status(200).send(order)
 }
@@ -145,6 +147,7 @@ const deleteOrder = async (req, res) => {
 module.exports = {
   createOrder,
   getOrders,
+  getOrderCount,
   getOrder,
   updateOrder,
   deleteOrder
