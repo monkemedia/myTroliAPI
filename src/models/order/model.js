@@ -190,8 +190,13 @@ OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => 
 }
 
 // Get orders count
-OrderSchema.statics.getCount = async () => {
-  const total = await Order().countDocuments()
+OrderSchema.statics.getCount = async (statusId) => {
+  let total
+  if (!statusId) {
+    total = await Order().countDocuments({ })
+  } else {
+    total = await Order().countDocuments({ status_id: statusId })
+  }
   return {
     count: total
   }
