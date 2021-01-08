@@ -1,6 +1,47 @@
 const Order = require('../models/order')
 const OrderRefund = require('../models/order/refund')
 
+const { google } = require('googleapis')
+const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
+
+const jwt = new google.auth.JWT(process.env.GA_EMAIL_ADDRESS, null, process.env.GA_API_KEY.replace(new RegExp("\\\\n", "\g"), "\n"), scopes)
+
+async function getData(metric, start, end) {
+  await jwt.authorize()
+  const result = await google.analytics('v3').data.ga.get({
+    'auth': jwt,
+    'ids': 'ga:235433600',
+    'start-date': start,
+    'end-date': end,
+    'metrics': `ga:${metric}`
+  })
+
+  return result
+}
+
+const getPercentChange = (currentNumber, previousNumber) => {  
+  return parseFloat((((currentNumber - previousNumber) / currentNumber) * 100).toFixed(2))
+} 
+
+const getStorePerformance = async (req, res) => {
+  try {
+    const TRANSACTION_REVENUE = 'transactionRevenue'
+    const currentWeekRevenue = await getData(TRANSACTION_REVENUE, '7daysAgo', 'today')
+    const lastWeekRevenue = await getData(TRANSACTION_REVENUE, '14daysAgo', '8daysAgo')
+    const currentWeekResult = parseFloat(parseFloat(currentWeekRevenue.data.totalsForAllResults['ga:transactionRevenue']).toFixed(2))
+    const lastWeekResult = parseFloat(parseFloat(lastWeekRevenue.data.totalsForAllResults['ga:transactionRevenue']).toFixed(2))
+    const difference = getPercentChange(currentWeekResult, 41)
+    return res.status(200).send({
+      current_week_revenue: currentWeekResult,
+      last_week_revenue: lastWeekResult,
+      difference
+    })
+  } catch (err) {
+    console.log(err)
+    res.status(400).send(err)
+  }
+}
+
 const getStoreRevenue = async (req, res) => {
   try {
     const query = req.query
@@ -38,5 +79,6 @@ const getStoreRevenue = async (req, res) => {
 }
 
 module.exports = {
+  getStorePerformance,
   getStoreRevenue
 }
