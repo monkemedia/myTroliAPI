@@ -6,41 +6,186 @@ const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
 
 const jwt = new google.auth.JWT(process.env.GA_EMAIL_ADDRESS, null, process.env.GA_API_KEY.replace(new RegExp("\\\\n", "\g"), "\n"), scopes)
 
-async function getData(metric, start, end) {
-  await jwt.authorize()
-  const result = await google.analytics('v3').data.ga.get({
-    'auth': jwt,
-    'ids': 'ga:235433600',
-    'start-date': start,
-    'end-date': end,
-    'metrics': `ga:${metric}`
-  })
-
-  return result
-}
-
 const getPercentChange = (currentNumber, previousNumber) => {  
   return parseFloat((((currentNumber - previousNumber) / currentNumber) * 100).toFixed(2))
 } 
 
+let i = 0
+
+async function getData({ name, id, metric, dimensions, filters, start, end }) {
+  await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](
+    Math.trunc(1000 * Math.random()),
+  ) // 3 sec
+  await jwt.authorize()
+  const result = await google.analytics('v3').data.ga.get({
+    'auth': jwt,
+    'ids': `ga:${id}`,
+    'start-date': start,
+    'end-date': end,
+    'metrics': metric,
+    'dimensions': dimensions,
+    'filters': filters
+  })
+
+  const res = {}
+  res[name] = {
+    value: Math.round(result.data.totalsForAllResults[metric] * 100) / 100,
+    start,
+    end,
+  }
+  return res
+}
+
 const getStorePerformance = async (req, res) => {
   try {
-    const TRANSACTION_REVENUE = 'transactionRevenue'
-    const currentWeekRevenue = await getData(TRANSACTION_REVENUE, '7daysAgo', 'today')
-    const lastWeekRevenue = await getData(TRANSACTION_REVENUE, '14daysAgo', '8daysAgo')
-    const currentWeekResult = parseFloat(parseFloat(currentWeekRevenue.data.totalsForAllResults['ga:transactionRevenue']).toFixed(2))
-    const lastWeekResult = parseFloat(parseFloat(lastWeekRevenue.data.totalsForAllResults['ga:transactionRevenue']).toFixed(2))
-    const difference = getPercentChange(currentWeekResult, 41)
-    return res.status(200).send({
-      current_week_revenue: currentWeekResult,
-      last_week_revenue: lastWeekResult,
-      difference
+    const promises = []
+    const ECOMMERCE_ID = '235433600'
+    const TRANSACTIONS = 'ga:transactions'
+    const TRANSACTION_REVENUE = 'ga:transactionRevenue'
+    const data = [
+      {
+        name: 'revenue_current',
+        id: ECOMMERCE_ID,
+        metric: TRANSACTION_REVENUE,
+        start: '7daysAgo',
+        end: 'today'
+      },
+      {
+        name: 'revenue_previous',
+        id: ECOMMERCE_ID,
+        metric: TRANSACTION_REVENUE,
+        start: '14daysAgo',
+        end: '8daysAgo'
+      },
+      {
+        name: 'transactions_current',
+        id: ECOMMERCE_ID,
+        metric: TRANSACTIONS,
+        start: '7daysAgo',
+        end: 'today'
+      },
+      {
+        name: 'transactions_previous',
+        id: ECOMMERCE_ID,
+        metric: TRANSACTIONS,
+        start: '14daysAgo',
+        end: '8daysAgo'
+      },
+      {
+        name: 'conversion_current',
+        id: ECOMMERCE_ID,
+        metric: 'ga:transactionsPerSession',
+        start: '7daysAgo',
+        end: 'today'
+      },
+      {
+        name: 'conversion_previous',
+        id: ECOMMERCE_ID,
+        metric: 'ga:transactionsPerSession',
+        start: '14daysAgo',
+        end: '8daysAgo'
+      },
+      {
+        name: 'registations_current',
+        id: ECOMMERCE_ID,
+        metric: 'ga:totalEvents',
+        start: '7daysAgo',
+        end: 'today',
+        dimensions: 'ga:eventAction',
+        filters: 'ga:eventAction==registration'
+      },
+      {
+        name: 'registations_previous',
+        id: ECOMMERCE_ID,
+        metric: 'ga:totalEvents',
+        start: '14daysAgo',
+        end: '8daysAgo',
+        dimensions: 'ga:eventAction',
+        filters: 'ga:eventAction==registration'
+      },
+      {
+        name: 'visits_current',
+        id: ECOMMERCE_ID,
+        metric: 'ga:totalEvents',
+        start: '14daysAgo',
+        end: '8daysAgo',
+        dimensions: 'ga:eventAction',
+        filters: 'ga:eventAction==registration'
+      },
+    ]
+    
+    data.forEach(el => {
+      promises.push(getData(el))
     })
+
+    const promise = await Promise.all(promises)
+    console.log('promise', promise)
+    // console.log(getCurrentWeek)
+    // const getPreviousWeek = await getData('235433600', `${TRANSACTION_REVENUE}, ${TRANSACTIONS}`, '14daysAgo', '8daysAgo')
+    // const getOrderCurrentWeek = await getData('235500072', 'ga:users', '7daysAgo', 'today')
+
+    // console.log('poo', getOrderCurrentWeek)
+    // const currentWeekRevenue = parseFloat(parseFloat(getCurrentWeek.data.totalsForAllResults[TRANSACTION_REVENUE]).toFixed(2))
+    // const previousWeekRevenue = parseFloat(parseFloat(getPreviousWeek.data.totalsForAllResults[TRANSACTION_REVENUE]).toFixed(2))
+    // const currentWeekOrders = parseFloat(getCurrentWeek.data.totalsForAllResults[TRANSACTIONS])
+    // const previousWeekOrders = parseFloat(getPreviousWeek.data.totalsForAllResults[TRANSACTIONS])
+    // return res.status(200).send({
+    //   revenue: {
+    //     current_week: currentWeekRevenue,
+    //     previous_week: previousWeekRevenue,
+    //     difference: getPercentChange(currentWeekRevenue, previousWeekRevenue)
+    //   },
+    //   orders: {
+    //     current_week: currentWeekOrders,
+    //     previous_week: previousWeekOrders,
+    //     difference: getPercentChange(currentWeekOrders, previousWeekOrders)
+    //   },
+    //   getCurrentWeek
+
+    // })
+    return res.status(200).send(promise)
   } catch (err) {
     console.log(err)
     res.status(400).send(err)
   }
 }
+
+// const getStorePerformance = async (req, res) => {
+//   try {
+//     const TRANSACTIONS = 'ga:transactions'
+//     const TRANSACTION_REVENUE = 'ga:transactionRevenue'
+//     console.log('triggered')
+//     const getCurrentWeekRevenue = await getData(TRANSACTION_REVENUE, '7daysAgo', 'today')
+//     console.log(1)
+//     const getPreviousWeekRevenue = await getData(TRANSACTION_REVENUE, '14daysAgo', '8daysAgo')
+//     console.log(2)
+//     const getCurrentWeekOrder = await getData(TRANSACTIONS, '7daysAgo', 'today')
+//     console.log('poo', getCurrentWeekOrder)
+//     const getPreviousWeekOrder = await getData(TRANSACTIONS, '14daysAgo', '8daysAgo')
+//     console.log(4)
+ 
+//     const currentWeekRevenue = parseFloat(parseFloat(getCurrentWeekRevenue.data.totalsForAllResults[TRANSACTION_REVENUE]).toFixed(2))
+//     const previousWeekRevenue = parseFloat(parseFloat(getPreviousWeekRevenue.data.totalsForAllResults[TRANSACTION_REVENUE]).toFixed(2))
+//     const currentWeekOrders = parseFloat(getCurrentWeekOrder.data.totalsForAllResults[TRANSACTIONS])
+//     const previousWeekOrders = parseFloat(getPreviousWeekOrder.data.totalsForAllResults[TRANSACTIONS])
+//     return res.status(200).send({
+//       revenue: {
+//         current_week: currentWeekRevenue,
+//         previous_week: previousWeekRevenue,
+//         difference: getPercentChange(currentWeekRevenue, previousWeekRevenue)
+//       },
+//       orders: {
+//         current_week: currentWeekOrders,
+//         previous_week: previousWeekOrders,
+//         difference: getPercentChange(currentWeekOrders, previousWeekOrders)
+//       }
+
+//     })
+//   } catch (err) {
+//     console.log(err)
+//     res.status(400).send(err)
+//   }
+// }
 
 const getStoreRevenue = async (req, res) => {
   try {
