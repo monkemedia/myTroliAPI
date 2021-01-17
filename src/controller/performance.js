@@ -1,6 +1,6 @@
 const { google } = require('googleapis')
 const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
-const getPercentChange = require('../utils/helpers').getPercentChange
+const { getPercentChange } = require('../utils/helpers')
 
 const jwt = new google.auth.JWT(process.env.GA_EMAIL_ADDRESS, null, process.env.GA_API_KEY.replace(new RegExp("\\\\n", "\g"), "\n"), scopes)
 
@@ -19,14 +19,17 @@ async function getData({ name, id, metric, dimensions, filters, start, end }) {
     'filters': filters
   })
 
+
   let res = {}
   res = {
     value: Math.round(result.data.totalsForAllResults[metric] * 100) / 100,
+    rows: result.data.rows,
     metric,
     name,
     start,
-    end,
+    end
   }
+
   return res
 }
 
@@ -42,42 +45,48 @@ const getStorePerformance = async (req, res) => {
         id: ECOMMERCE_ID,
         metric: TRANSACTION_REVENUE,
         start: '7daysAgo',
-        end: 'today'
+        end: 'today',
+        dimensions: 'ga:date' // Gets values per day for chart plotting
       },
       {
         name: 'revenue',
         id: ECOMMERCE_ID,
         metric: TRANSACTION_REVENUE,
         start: '14daysAgo',
-        end: '8daysAgo'
+        end: '8daysAgo',
+        dimensions: 'ga:date'
       },
       {
         name: 'transactions',
         id: ECOMMERCE_ID,
         metric: TRANSACTIONS,
         start: '7daysAgo',
-        end: 'today'
+        end: 'today',
+        dimensions: 'ga:date'
       },
       {
         name: 'transactions',
         id: ECOMMERCE_ID,
         metric: TRANSACTIONS,
         start: '14daysAgo',
-        end: '8daysAgo'
+        end: '8daysAgo',
+        dimensions: 'ga:date'
       },
       {
         name: 'conversion',
         id: ECOMMERCE_ID,
         metric: 'ga:transactionsPerSession',
         start: '7daysAgo',
-        end: 'today'
+        end: 'today',
+        dimensions: 'ga:date'
       },
       {
         name: 'conversion',
         id: ECOMMERCE_ID,
         metric: 'ga:transactionsPerSession',
         start: '14daysAgo',
-        end: '8daysAgo'
+        end: '8daysAgo',
+        dimensions: 'ga:date'
       },
       {
         name: 'registrations',
@@ -86,7 +95,8 @@ const getStorePerformance = async (req, res) => {
         start: '7daysAgo',
         end: 'today',
         dimensions: 'ga:eventAction',
-        filters: 'ga:eventAction==registration'
+        filters: 'ga:eventAction==registration',
+        dimensions: 'ga:date'
       },
       {
         name: 'registrations',
@@ -95,7 +105,8 @@ const getStorePerformance = async (req, res) => {
         start: '14daysAgo',
         end: '8daysAgo',
         dimensions: 'ga:eventAction',
-        filters: 'ga:eventAction==registration'
+        filters: 'ga:eventAction==registration',
+        dimensions: 'ga:date'
       }
     ]
     
@@ -106,16 +117,27 @@ const getStorePerformance = async (req, res) => {
     const promise = await Promise.all(promises)
 
     const obj = {}
-    promise.forEach(({ value, name }) => {
+    promise.forEach(({ value, name, rows }) => {
+      const val = isMoney(value, name)
       if (obj[name]) {
-        obj[name].previous = value
-        obj[name].difference = getPercentChange(obj[name].current, value)
+        obj[name].previous = val
+        obj[name].difference = getPercentChange(obj[name].current, val)
+        obj[name].rows = rows
       } else {
         obj[name] = {
-          current: value
+          current: val,
+          rows: rows
         }
       }
     })
+
+    function isMoney (val, n) {
+      const v = parseInt(val)
+      if (n === 'revenue') {
+        return v * 100
+      }
+      return v
+    }
 
     return res.status(200).send(obj)
   } catch (err) {
