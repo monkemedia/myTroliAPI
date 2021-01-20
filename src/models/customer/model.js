@@ -173,10 +173,14 @@ CustomerSchema.statics.updateCustomersStoreCredit = async (customerId, storeCred
 
 // Delete customer by id
 CustomerSchema.statics.deleteCustomer = async (customerId) => {
-  await CustomerAddress.deleteMany({ customer_id: customerId })
-  await CustomerCoupon.deleteMany({ customer_id: customerId })
-  const customer = await Customer().deleteOne({ _id: customerId })
-  return customer
+  try {
+    await CustomerAddress().deleteMany({ customer_id: customerId })
+    await CustomerCoupon().deleteMany({ customer_id: customerId })
+    const customer = await Customer().deleteOne({ _id: customerId })
+    return customer
+  } catch (err) {
+    throw new Error(err)
+  }
 }
 
 const Customer = function (storeHash) {
