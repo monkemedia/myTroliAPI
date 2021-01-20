@@ -140,8 +140,7 @@ const OrderSchema = new Schema({
       required: true
     },
     country: {
-      type: String,
-      required: true
+      type: String
     },
     country_code: {
       type: String,
@@ -182,8 +181,7 @@ const OrderSchema = new Schema({
       required: true
     },
     country: {
-      type: String,
-      required: true
+      type: String
     },
     country_code: {
       type: String,
