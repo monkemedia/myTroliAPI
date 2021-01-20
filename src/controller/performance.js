@@ -1,4 +1,5 @@
 const { google } = require('googleapis')
+const moment = require('moment')
 const scopes = 'https://www.googleapis.com/auth/analytics.readonly'
 const { getPercentChange } = require('../utils/helpers')
 
@@ -89,7 +90,7 @@ const getStorePerformance = async (req, res) => {
         dimensions: 'ga:date'
       },
       {
-        name: 'registrations',
+        name: 'customers',
         id: ECOMMERCE_ID,
         metric: 'ga:totalEvents',
         start: '7daysAgo',
@@ -99,7 +100,7 @@ const getStorePerformance = async (req, res) => {
         dimensions: 'ga:date'
       },
       {
-        name: 'registrations',
+        name: 'customers',
         id: ECOMMERCE_ID,
         metric: 'ga:totalEvents',
         start: '14daysAgo',
@@ -118,18 +119,31 @@ const getStorePerformance = async (req, res) => {
 
     const obj = {}
     promise.forEach(({ value, name, rows }) => {
+      const [series, categories] = mapSeries(rows)
       const val = isMoney(value, name)
       if (obj[name]) {
         obj[name].previous = val
         obj[name].difference = getPercentChange(obj[name].current, val)
-        obj[name].rows = rows
       } else {
         obj[name] = {
           current: val,
-          rows: rows
+          series: series,
+          categories: categories
         }
       }
     })
+
+    function mapSeries (rows) {
+      const categories = []
+      const series = []
+      rows.forEach(row => {
+        const [category, data] = row
+        categories.push(moment(category))
+        series.push(Math.round(data * 100) / 100)
+
+      })
+      return [series, categories]
+    }
 
     function isMoney (val, n) {
       const v = parseInt(val)
