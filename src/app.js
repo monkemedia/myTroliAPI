@@ -10,9 +10,7 @@ const app = express()
 
 require('./db/masterDb.js')
 
-app.use(cors({
-  origin: '*'
-}))
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/oauth/', oauth)
