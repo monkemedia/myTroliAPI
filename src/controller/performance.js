@@ -23,7 +23,7 @@ async function getData({ name, id, metric, dimensions, filters, start, end }) {
 
   let res = {}
   res = {
-    value: Math.round(result.data.totalsForAllResults[metric] * 100) / 100,
+    value: result.data.totalsForAllResults[metric],
     rows: result.data.rows,
     metric,
     name,
@@ -146,11 +146,10 @@ const getStorePerformance = async (req, res) => {
     }
 
     function isMoney (val, n) {
-      const v = parseInt(val)
       if (n === 'revenue') {
-        return v * 100
+        return val * 100
       }
-      return v
+      return val
     }
 
     return res.status(200).send(obj)

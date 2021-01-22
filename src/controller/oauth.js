@@ -74,8 +74,6 @@ const accessToken = async (req, res) => {
   try {
     const { type, email, password } = req.body
 
-    console.log('MONKEY')
-
     if (!email) {
       return res.status(401).send({
         message: 'Email is required'
