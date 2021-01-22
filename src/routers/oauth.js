@@ -8,7 +8,7 @@ const {
   resetPassword
 } = require('../controller/oauth')
 const option = {
-  origin: 'https://my-trolify.herokuapp.com/'
+  origin: 'https://my-trolify.herokuapp.com'
 }
 
 // Get access token from refresh token
