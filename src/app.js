@@ -13,7 +13,7 @@ require('./db/masterDb.js')
 app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use('/oauth/', oauth)
+app.use('/oauth', oauth)
 app.use('/v1', dbRoutes)
 
 app.listen(port, () => {
