@@ -35,7 +35,7 @@ const createProductCustomField = async (req, res) => {
   }
 
   try {
-    const productCustomField = new ProductCustomField()({
+    const productCustomField = new ProductCustomField({
       product_id: productId,
       ...data
     })
@@ -57,7 +57,7 @@ const createProductCustomField = async (req, res) => {
 const getProductCustomFields = async (req, res) => {
   try {
     const productId = req.params.productId
-    const productCustomFields = await ProductCustomField().findProductCustomFields(productId)
+    const productCustomFields = await ProductCustomField.findProductCustomFields(productId)
 
     res.status(200).send(productCustomFields)
   } catch (err) {
@@ -68,7 +68,7 @@ const getProductCustomFields = async (req, res) => {
 const getProductCustomField = async (req, res) => {
   const customFieldId = req.params.customFieldId
   const productId = req.params.productId
-  const productCustomField = await ProductCustomField().findOne({ _id: customFieldId, product_id: productId })
+  const productCustomField = await ProductCustomField.findOne({ _id: customFieldId, product_id: productId })
 
   res.status(200).send(productCustomField)
 }
@@ -92,8 +92,8 @@ const updateProductCustomField = async (req, res) => {
   }
 
   try {
-    await ProductCustomField().updateProductCustomField(customFieldId, data)
-    const productCustomField = await ProductCustomField().findOne({ _id: customFieldId, product_id: productId })
+    await ProductCustomField.updateProductCustomField(customFieldId, data)
+    const productCustomField = await ProductCustomField.findOne({ _id: customFieldId, product_id: productId })
 
     res.status(200).send(productCustomField)
   } catch (err) {
@@ -106,7 +106,7 @@ const deleteProductCustomField = async (req, res) => {
     const customFieldId = req.params.customFieldId
     const productId = req.params.productId
 
-    await ProductCustomField().deleteProductCustomField(customFieldId, productId)
+    await ProductCustomField.deleteProductCustomField(customFieldId, productId)
 
     res.status(200).send({
       message: 'Custom field successfully deleted'

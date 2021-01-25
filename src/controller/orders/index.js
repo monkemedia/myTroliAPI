@@ -40,7 +40,7 @@ const createOrder = async (req, res) => {
   }
 
   try {
-    const order = new Order()(data)
+    const order = new Order(data)
 
     await order.save()
 
@@ -68,11 +68,11 @@ const getOrders = async (req, res) => {
     let orders
 
     if (keyword) {
-      orders = await Order().search({ page, keyword, limit })
+      orders = await Order.search({ page, keyword, limit })
     } else if (statusId) {
-      orders = await Order().findOrdersByStatusId({ page, limit, statusId })
+      orders = await Order.findOrdersByStatusId({ page, limit, statusId })
     } else {
-      orders = await Order().findOrders({ page, limit })
+      orders = await Order.findOrders({ page, limit })
     }
 
     res.status(200).send(orders)
@@ -84,14 +84,14 @@ const getOrders = async (req, res) => {
 const getOrderCount = async (req, res) => {
   const query = req.query
   const statusId = query.status_id
-  const order = await Order().getCount(statusId)
+  const order = await Order.getCount(statusId)
 
   res.status(200).send(order)
 }
 
 const getOrder = async (req, res) => {
   const orderId = req.params.orderId
-  const order = await Order().findOrder(orderId)
+  const order = await Order.findOrder(orderId)
 
   res.status(200).send(order)
 }
@@ -100,7 +100,7 @@ const updateOrder = async (req, res) => {
   const orderId = req.params.orderId
   const data = req.body
   const { type, billing_address, status_id } = data
-  const currentOrder = await Order().findOne({ id: req.params.orderId })
+  const currentOrder = await Order.findOne({ id: req.params.orderId })
 
   if (!type) {
     return res.status(401).send({
@@ -115,8 +115,8 @@ const updateOrder = async (req, res) => {
   }
 
   try {
-    await Order().updateOrder(orderId, data)
-    const order = await Order().findOne({ id: orderId })
+    await Order.updateOrder(orderId, data)
+    const order = await Order.findOne({ id: orderId })
 
     if (currentOrder.status_id !== status_id) {
       // Status Id has changed so email customer
@@ -134,7 +134,7 @@ const updateOrder = async (req, res) => {
 const deleteOrder = async (req, res) => {
   const orderId = req.params.orderId
   try {
-    await Order().deleteOrder(orderId)
+    await Order.deleteOrder(orderId)
 
     res.status(200).send({
       message: 'Order successfully deleted'

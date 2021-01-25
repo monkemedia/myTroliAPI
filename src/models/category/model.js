@@ -1,6 +1,6 @@
 
+const mongoose = require('mongoose')
 const CategorySchema = require('./schema')
-const { tenantModel } = require('../../utils/multitenancy')
 
 // Get categories
 CategorySchema.statics.findCategories = async ({ page, limit }) => {
@@ -73,7 +73,6 @@ CategorySchema.statics.deleteCategory = async (categoryId) => {
   return category
 }
 
-const Category = function () {
-  return tenantModel('Category', CategorySchema)
-}
+const Category = mongoose.model('Category', CategorySchema)
+
 module.exports = Category

@@ -4,7 +4,6 @@ const ProductImage = require('./images')
 const ProductVariant = require('./variant')
 const ProductVariantImage = require('./variant/images')
 const ProductOption = require('./option')
-const { tenantModel } = require('../../utils/multitenancy')
 
 // Get all products
 ProductSchema.statics.findProducts = async ({ page, limit }) => {
@@ -127,7 +126,7 @@ ProductSchema.statics.search = async ({ page, limit, keyword }) => {
 
 // Get product
 ProductSchema.statics.findProduct = async (id) => {
-  const product = await Product()
+  const product = await Product
     .aggregate([
       {
         $match: { _id: mongoose.Types.ObjectId(id) }
@@ -173,7 +172,7 @@ ProductSchema.statics.getCount = async (isRatings) => {
     })
   }
 
-  const product = await Product()
+  const product = await Product
     .aggregate([
       {
         $lookup: {
@@ -257,7 +256,6 @@ ProductSchema.statics.deleteProduct = async (productId) => {
   return product
 }
 
-const Product = function () {
-  return tenantModel('Product', ProductSchema)
-}
+const Product = mongoose.model('Product', ProductSchema)
+
 module.exports = Product

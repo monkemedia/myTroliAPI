@@ -2,7 +2,7 @@ const Setting = require('../models/setting')
 
 const getSettings = async (req, res) => {
   try {
-    const settings = await Setting().findSettings()
+    const settings = await Setting.findSettings()
 
     res.status(200).send(settings)
   } catch (err) {
@@ -27,8 +27,8 @@ const updateSettings = async (req, res) => {
   }
 
   try {
-    await Setting().updateSettings(data)
-    const settings = await Setting().findSettings()
+    await Setting.updateSettings(data)
+    const settings = await Setting.findSettings()
 
     res.status(200).send(settings)
   } catch (err) {

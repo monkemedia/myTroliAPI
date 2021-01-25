@@ -75,7 +75,7 @@ const createCoupon = async (req, res) => {
   }
 
   try {
-    const coupons = new Coupon()(data)
+    const coupons = new Coupon(data)
 
     await coupons.save()
 
@@ -94,9 +94,9 @@ const getCoupons = async (req, res) => {
 
   try {
     if (keyword) {
-      coupons = await Coupon().search({ page, limit, keyword })
+      coupons = await Coupon.search({ page, limit, keyword })
     } else {
-      coupons = await Coupon().findCoupons({ page, limit })
+      coupons = await Coupon.findCoupons({ page, limit })
     }
 
     res.status(200).send(coupons)
@@ -109,7 +109,7 @@ const getCoupon = async (req, res) => {
   const couponId = req.params.couponId
 
   try {
-    const coupon = await Coupon().findOne({ _id: couponId })
+    const coupon = await Coupon.findOne({ _id: couponId })
 
     res.status(200).send(coupon)
   } catch (err) {
@@ -121,7 +121,7 @@ const getCouponByCode = async (req, res) => {
   const couponCode = req.params.couponCode
 
   try {
-    const coupon = await Coupon().findCouponByCode(couponCode)
+    const coupon = await Coupon.findCouponByCode(couponCode)
 
     res.status(200).send(coupon)
   } catch (err) {
@@ -147,8 +147,8 @@ const updateCoupon = async (req, res) => {
   }
 
   try {
-    await Coupon().updateCoupon(couponId, data)
-    const coupon = await Coupon().findOne({ _id: couponId })
+    await Coupon.updateCoupon(couponId, data)
+    const coupon = await Coupon.findOne({ _id: couponId })
 
     res.status(200).send(coupon)
   } catch (err) {
@@ -158,7 +158,7 @@ const updateCoupon = async (req, res) => {
 
 const deleteCoupon = async (req, res) => {
   try {
-    await Coupon().deleteCoupon(req.params.couponId)
+    await Coupon.deleteCoupon(req.params.couponId)
 
     res.status(200).send({
       message: 'Coupon successfully deleted'

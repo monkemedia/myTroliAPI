@@ -89,7 +89,7 @@ const createProduct = async (req, res) => {
   }
 
   try {
-    const products = new Product()({ ...data, customer_id })
+    const products = new Product({ ...data, customer_id })
 
     await products.save()
 
@@ -108,9 +108,9 @@ const getProducts = async (req, res) => {
     let products
 
     if (keyword) {
-      products = await Product().search({ page, keyword, limit })
+      products = await Product.search({ page, keyword, limit })
     } else {
-      products = await Product().findProducts({ page, limit })
+      products = await Product.findProducts({ page, limit })
     }
     res.status(200).send(products)
   } catch (err) {
@@ -120,14 +120,14 @@ const getProducts = async (req, res) => {
 
 const getProduct = async (req, res) => {
   const productId = req.params.productId
-  const product = await Product().findProduct(productId)
+  const product = await Product.findProduct(productId)
 
   res.status(200).send(product)
 }
 
 const getProductCount = async (req, res) => {
   const isRatings = req.query.ratings
-  const product = await Product().getCount(isRatings)
+  const product = await Product.getCount(isRatings)
 
   res.status(200).send(product)
 }
@@ -150,7 +150,7 @@ const updateProduct = async (req, res) => {
   }
 
   try {
-    const product = await Product().updateProduct(productId, data)
+    const product = await Product.updateProduct(productId, data)
 
     res.status(200).send(product)
   } catch (err) {
@@ -161,7 +161,7 @@ const updateProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
   try {
-    await Product().deleteProduct(req.params.productId)
+    await Product.deleteProduct(req.params.productId)
 
     res.status(200).send({
       message: 'Product successfully deleted'

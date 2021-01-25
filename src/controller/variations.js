@@ -26,7 +26,7 @@ const createVariation = async (req, res) => {
   }
 
   try {
-    const variation = new Variation()(data)
+    const variation = new Variation(data)
 
     await variation.save()
 
@@ -38,7 +38,7 @@ const createVariation = async (req, res) => {
 
 const getVariations = async (req, res) => {
   try {
-    const variation = await Variation().findVariations()
+    const variation = await Variation.findVariations()
 
     res.status(200).send(variation)
   } catch (err) {
@@ -47,7 +47,7 @@ const getVariations = async (req, res) => {
 }
 
 const getVariation = async (req, res) => {
-  const variation = await Variation().findOne({ _id: req.params.variationId })
+  const variation = await Variation.findOne({ _id: req.params.variationId })
 
   res.status(200).send(variation)
 }
@@ -70,8 +70,8 @@ const updateVariation = async (req, res) => {
   }
 
   try {
-    await Variation().updateVariation(variationId, data)
-    const variation = await Variation().findOne({ _id: variationId })
+    await Variation.updateVariation(variationId, data)
+    const variation = await Variation.findOne({ _id: variationId })
 
     res.status(200).send(variation)
   } catch (err) {
@@ -100,7 +100,7 @@ const deleteVariation = async (req, res) => {
     })
 
     // Now delete variation
-    await Variation().deleteVariation(req.params.variationId)
+    await Variation.deleteVariation(req.params.variationId)
 
     res.status(200).send({
       message: 'Variation successfully deleted'

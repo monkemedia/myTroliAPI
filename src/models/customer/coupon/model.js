@@ -1,5 +1,5 @@
+const mongoose = require('mongoose')
 const CustomerCouponSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy')
 
 // Find customer coupons
 CustomerCouponSchema.statics.findCustomerCoupons = async () => {
@@ -37,7 +37,6 @@ CustomerCouponSchema.statics.deleteCustomerCoupon = async (couponId) => {
   return coupon
 }
 
-const CustomerCoupon = function () {
-  return tenantModel('CustomerCoupon', CustomerCouponSchema)
-}
+const CustomerCoupon = mongoose.model('CustomerCoupon', CustomerCouponSchema)
+
 module.exports = CustomerCoupon

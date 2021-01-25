@@ -8,7 +8,7 @@ const createCustomer = async (req, res) => {
     const data = req.body
     const { first_name, last_name, email, password, type } = data
 
-    const customerExists = await Customer().findByEmail(email)
+    const customerExists = await Customer.findByEmail(email)
 
     if (!first_name) {
       return res.status(401).send({
@@ -54,7 +54,7 @@ const createCustomer = async (req, res) => {
 
     delete data.store_credit
 
-    const customer = new Customer()(data)
+    const customer = new Customer(data)
     const token = await customer.generateVerifyToken('1hr')
     customer.verify_token = token
     await customer.save()
@@ -79,9 +79,9 @@ const getCustomers = async (req, res) => {
 
   try {
     if (keyword) {
-      customers = await Customer().search({ page, limit, keyword })
+      customers = await Customer.search({ page, limit, keyword })
     } else {
-      customers = await Customer().findCustomers({ page, limit })
+      customers = await Customer.findCustomers({ page, limit })
     }
 
     res.status(200).send(customers)
@@ -94,9 +94,9 @@ const getCustomer = async (req, res) => {
   const customerId = req.params.customerId
   let customer
   if (customerId === 'count') {
-    customer = await Customer().getCount()
+    customer = await Customer.getCount()
   } else {
-    customer = await Customer().findOne({ _id: customerId }).select('-password')
+    customer = await Customer.findOne({ _id: customerId }).select('-password')
   }
 
   res.status(200).send(customer)
@@ -120,8 +120,8 @@ const updateCustomer = async (req, res) => {
   }
 
   try {
-    await Customer().updateCustomer(customerId, data)
-    const customer = await Customer()
+    await Customer.updateCustomer(customerId, data)
+    const customer = await Customer
       .findOne({ _id: customerId })
       .select('-password')
 
@@ -133,7 +133,7 @@ const updateCustomer = async (req, res) => {
 
 const deleteCustomer = async (req, res) => {
   try {
-    await Customer().deleteCustomer(req.params.customerId)
+    await Customer.deleteCustomer(req.params.customerId)
 
     res.status(200).send({
       message: 'Customer successfully deleted'
@@ -160,7 +160,7 @@ const resendVerificationEmail = async (req, res) => {
       })
     }
 
-    const customer = await Customer().findOne({ _id: req.params.customerId }).select('-password')
+    const customer = await Customer.findOne({ _id: req.params.customerId }).select('-password')
     const token = await customer.generateVerifyToken('1hr')
 
     customer.verify_token = token

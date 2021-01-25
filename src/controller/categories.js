@@ -35,7 +35,7 @@ const createCategory = async (req, res) => {
   }
 
   try {
-    const categories = new Category()(data)
+    const categories = new Category(data)
 
     await categories.save()
 
@@ -54,9 +54,9 @@ const getCategories = async (req, res) => {
 
   try {
     if (keyword) {
-      categories = await Category().search({ page, limit, keyword })
+      categories = await Category.search({ page, limit, keyword })
     } else {
-      categories = await Category().findCategories({ page, limit })
+      categories = await Category.findCategories({ page, limit })
     }
 
     res.status(200).send(categories)
@@ -69,9 +69,9 @@ const getCategory = async (req, res) => {
   const categoryId = req.params.categoryId
   let category
   if (categoryId === 'count') {
-    category = await Category().getCount()
+    category = await Category.getCount()
   } else {
-    category = await Category().findOne({ _id: categoryId })
+    category = await Category.findOne({ _id: categoryId })
   }
 
   res.status(200).send(category)
@@ -95,8 +95,8 @@ const updateCategory = async (req, res) => {
   }
 
   try {
-    await Category().updateCategory(categoryId, data)
-    const category = await Category().findOne({ _id: categoryId })
+    await Category.updateCategory(categoryId, data)
+    const category = await Category.findOne({ _id: categoryId })
 
     res.status(200).send(category)
   } catch (err) {
@@ -106,7 +106,7 @@ const updateCategory = async (req, res) => {
 
 const deleteCategory = async (req, res) => {
   try {
-    await Category().deleteCategory(req.params.categoryId)
+    await Category.deleteCategory(req.params.categoryId)
 
     res.status(200).send({
       message: 'Category successfully deleted'

@@ -1,6 +1,6 @@
+const mongoose = require('mongoose')
 const BrandSchema = require('./schema')
 const Product = require('../product')
-const { tenantModel } = require('../../utils/multitenancy')
 
 // Get brands
 BrandSchema.statics.findBrands = async ({ page, limit }) => {
@@ -76,8 +76,6 @@ BrandSchema.statics.deleteBrand = async (brandId) => {
   return brand
 }
 
+const Brand = mongoose.model('Brand', BrandSchema)
 
-const Brand = function () {
-  return tenantModel('Brand', BrandSchema)
-}
 module.exports = Brand

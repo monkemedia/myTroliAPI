@@ -1,6 +1,6 @@
+const mongoose = require('mongoose')
 const ProductReviewSchema = require('./schema')
 const Product = require('../model')
-const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get product reviews
 ProductReviewSchema.statics.findProductReviews = async ({page, limit, productId}) => {
@@ -63,7 +63,7 @@ ProductReviewSchema.statics.search = async ({ page, limit, keyword }) => {
 
 // Update product review
 ProductReviewSchema.statics.updateProductReview = async (reviewId, productReviewDetails) => {
-  const productReview = await ProductReview().updateOne({ _id: reviewId }, {
+  const productReview = await ProductReview.updateOne({ _id: reviewId }, {
     ...productReviewDetails,
     updated_at: Date.now()
   })
@@ -78,11 +78,10 @@ ProductReviewSchema.statics.deleteProductReview = async (reviewId, productId) =>
     },
     updated_at: Date.now()
   })
-  const productReview = await ProductReview().deleteOne({ _id: reviewId })
+  const productReview = await ProductReview.deleteOne({ _id: reviewId })
   return productReview
 }
 
-const ProductReview = function () {
-  return tenantModel('ProductReview', ProductReviewSchema)
-}
+const ProductReview = mongoose.model('ProductReview', ProductReviewSchema)
+
 module.exports = ProductReview

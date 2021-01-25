@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const cls = require('cls-hooked')
@@ -6,7 +7,6 @@ const errorHandler = require('../../utils/errorHandler')
 const CustomerSchema = require('./schema.js')
 const CustomerAddress = require('./address')
 const CustomerCoupon = require('./coupon')
-const { tenantModel } = require('../../utils/multitenancy')
 
 // Hash the password before saving the customer model
 // Delete store credit if it exists
@@ -183,7 +183,6 @@ CustomerSchema.statics.deleteCustomer = async (customerId) => {
   }
 }
 
-const Customer = function (storeHash) {
-  return tenantModel('Customer', CustomerSchema, storeHash)
-}
+const Customer = mongoose.model('Customer', CustomerSchema)
+
 module.exports = Customer

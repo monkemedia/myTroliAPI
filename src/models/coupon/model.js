@@ -1,6 +1,6 @@
+const mongoose = require('mongoose')
 const CouponSchema = require('./schema')
 const errorHandler = require('../../utils/errorHandler')
-const { tenantModel } = require('../../utils/multitenancy')
 
 CouponSchema.pre('save', async function (next) {
   const coupon = this
@@ -106,7 +106,6 @@ CouponSchema.statics.deleteCoupon = async (_id) => {
   return coupon
 }
 
-const Coupon = function () {
-  return tenantModel('Coupon', CouponSchema)
-}
+const Coupon = mongoose.model('Coupon', CouponSchema)
+
 module.exports = Coupon

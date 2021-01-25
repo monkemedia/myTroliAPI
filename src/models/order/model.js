@@ -3,7 +3,6 @@ const OrderSchema = require('./schema')
 const Product = require('../product')
 const ProductVariants = require('../product/variant')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
-const { tenantModel } = require('../../utils/multitenancy')
 
 OrderSchema.plugin(AutoIncrement, {
   inc_field: 'id',
@@ -11,7 +10,7 @@ OrderSchema.plugin(AutoIncrement, {
 })
 
 async function updateTotalSold (productId, quantity, direction) {
-  const product = await Product().updateOne({ _id: productId }, {
+  const product = await Product.updateOne({ _id: productId }, {
     $inc: {
       total_sold: direction === 'increase' ? quantity : -quantity
     }
@@ -25,11 +24,11 @@ async function updateProductStock ({ productId, variantId, trackInventory, curre
   let update
 
   if (trackInventory === 'variant-inventory') {
-    update = await ProductVariants().updateOne({ _id: variantId }, {
+    update = await ProductVariants.updateOne({ _id: variantId }, {
       stock: newStock
     })
   } else if (trackInventory === 'product-inventory') {
-    update = await Product().updateOne({ _id: productId }, {
+    update = await Product.updateOne({ _id: productId }, {
       stock: newStock
     })
   }
@@ -45,10 +44,10 @@ async function stockLevelHandler (product) {
   let stock
 
   if (trackInventory === 'variant-inventory') {
-    const productVariant = await ProductVariants().findOne({ _id: variantId })
+    const productVariant = await ProductVariants.findOne({ _id: variantId })
     stock = productVariant.stock
   } else if (trackInventory === 'product-inventory') {
-    const prod = await Product().findOne({ _id: productId })
+    const prod = await Product.findOne({ _id: productId })
     stock = prod.stock
   }
 
@@ -321,7 +320,6 @@ OrderSchema.statics.deleteOrder = async (orderId) => {
   return order
 }
 
-const Order = function () {
-  return tenantModel('Order', OrderSchema)
-}
+const Order = mongoose.model('Order', OrderSchema)
+
 module.exports = Order

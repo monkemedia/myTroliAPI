@@ -1,9 +1,9 @@
+const mongoose = require('mongoose')
 const OrderRefundSchema = require('./schema')
 const Order = require('../index.js')
 const Product = require('../../product')
 const Customer = require('../../customer')
 const PaymentRefund = require('../../payment/refund')
-const { tenantModel } = require('../../../utils/multitenancy')
 
 const getTotalAmount = (items) => {
   let sum = 0
@@ -83,7 +83,6 @@ OrderRefundSchema.statics.findOrderRefunds = async (orderId) => {
   return orderRefunds
 }
 
-const OrderRefund = function () {
-  return tenantModel('OrderRefund', OrderRefundSchema)
-}
+const OrderRefund = mongoose.model('OrderRefund', OrderRefundSchema)
+
 module.exports = OrderRefund

@@ -1,10 +1,10 @@
+const mongoose = require('mongoose')
 const ProductFilteringSchema = require('./schema')
 const Product = require('../product')
-const { tenantModel } = require('../../utils/multitenancy')
 
 // Update facet settings
 ProductFilteringSchema.statics.updateFacetSettings = async (data) => {
-  const facets = await ProductFiltering().findOneAndUpdate({ type: 'product-filtering' }, {
+  const facets = await ProductFiltering.findOneAndUpdate({ type: 'product-filtering' }, {
     ...data,
     updated_at: Date.now()
   }, {
@@ -16,7 +16,7 @@ ProductFilteringSchema.statics.updateFacetSettings = async (data) => {
 
 // Get facet settings
 ProductFilteringSchema.statics.findFacetSettings = async () => {
-  const facetSettings = await ProductFiltering().findOne({})
+  const facetSettings = await ProductFiltering.findOne({})
   return facetSettings
 }
 
@@ -152,7 +152,6 @@ ProductFilteringSchema.statics.findFacets = async () => {
   return facets
 }
 
-const ProductFiltering = function () {
-  return tenantModel('ProductFiltering', ProductFilteringSchema)
-}
+const ProductFiltering = mongoose.model('ProductFiltering', ProductFilteringSchema)
+
 module.exports = ProductFiltering

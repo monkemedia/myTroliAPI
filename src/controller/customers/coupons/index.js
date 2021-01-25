@@ -27,7 +27,7 @@ const createCustomerCoupon = async (req, res) => {
   }
 
   try {
-    const customerCoupon = new CustomerCoupon()({
+    const customerCoupon = new CustomerCoupon({
       ...data,
       customer_id,
       uses: 1
@@ -44,7 +44,7 @@ const createCustomerCoupon = async (req, res) => {
 const getCustomerCoupons = async (req, res) => {
   try {
     const customerId = req.params.customerId
-    const customerCoupons = await CustomerCoupon().findCustomerCoupons(customerId)
+    const customerCoupons = await CustomerCoupon.findCustomerCoupons(customerId)
 
     res.status(200).send(customerCoupons)
   } catch (err) {
@@ -56,7 +56,7 @@ const getCustomerCoupon = async (req, res) => {
   try {
     const customerId = req.params.customerId
     const couponId = req.params.couponId
-    const customerCoupon = await CustomerCoupon().findCustomerCoupon(customerId, couponId)
+    const customerCoupon = await CustomerCoupon.findCustomerCoupon(customerId, couponId)
 
     res.status(200).send(customerCoupon)
   } catch (err) {
@@ -69,8 +69,8 @@ const incrementCustomerCoupon = async (req, res) => {
   const couponId = req.params.couponId
 
   try {
-    await CustomerCoupon().incrementCustomerCoupon(customerId, couponId)
-    const customerCoupon = await CustomerCoupon().findCustomerCoupon(customerId, couponId)
+    await CustomerCoupon.incrementCustomerCoupon(customerId, couponId)
+    const customerCoupon = await CustomerCoupon.findCustomerCoupon(customerId, couponId)
 
     res.status(200).send(customerCoupon)
   } catch (err) {
@@ -82,7 +82,7 @@ const deleteCustomerCoupon = async (req, res) => {
   try {
     const couponId = req.params.couponId
 
-    await CustomerCoupon().deleteCustomerCoupon(couponId)
+    await CustomerCoupon.deleteCustomerCoupon(couponId)
 
     res.status(200).send({
       message: 'Customer coupon successfully deleted'
