@@ -213,10 +213,10 @@ ProductSchema.statics.updateProduct = async (_id, productDetails) => {
     ...productDetails,
     updated_at: Date.now()
   })
-  const productResp = await product
+  const productResp = await Product
     .aggregate([
       {
-        $match: { _id: mongoose.Types.ObjectId(id)}
+        $match: { _id: mongoose.Types.ObjectId(_id)}
       },
       {
         $limit: 1

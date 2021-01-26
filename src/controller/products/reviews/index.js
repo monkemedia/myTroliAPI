@@ -57,7 +57,7 @@ const getProductReviews = async (req, res) => {
     if (keyword) {
       productReviews = await ProductReview.search({ page, keyword, limit, store_hash })
     } else {
-      productReviews = await ProductReview.findProductReviews({page, limit, productId, storeHash })
+      productReviews = await ProductReview.findProductReviews({ page, limit, productId, store_hash })
     }
 
     res.status(200).send(productReviews)
