@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const OrderStatusSchema = require('./schema')
 
 // Get order statuses
-OrderStatusSchema.statics.findOrderStatuses = async () => {
-  const orderStatuses = await OrderStatus.find({})
+OrderStatusSchema.statics.findOrderStatuses = async (store_hash) => {
+  const orderStatuses = await OrderStatus.find({ store_hash })
 
   return orderStatuses
 }

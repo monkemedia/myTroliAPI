@@ -1,8 +1,9 @@
 const Setting = require('../models/setting')
 
 const getSettings = async (req, res) => {
+  const store_hash = req.params.storeHash
   try {
-    const settings = await Setting.findSettings()
+    const settings = await Setting.findSettings(store_hash)
 
     res.status(200).send(settings)
   } catch (err) {
@@ -13,6 +14,7 @@ const getSettings = async (req, res) => {
 const updateSettings = async (req, res) => {
   const data = req.body
   const { type } = data
+  const store_hash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -27,8 +29,8 @@ const updateSettings = async (req, res) => {
   }
 
   try {
-    await Setting.updateSettings(data)
-    const settings = await Setting.findSettings()
+    await Setting.updateSettings(data, store_hash)
+    const settings = await Setting.findSettings(store_hash)
 
     res.status(200).send(settings)
   } catch (err) {

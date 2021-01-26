@@ -6,6 +6,10 @@ const VariantSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   value: {
     type: String,
     required: true

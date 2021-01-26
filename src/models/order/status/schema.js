@@ -6,6 +6,10 @@ const OrderStatusSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   status_id: {
     type: Number,
     required: true,

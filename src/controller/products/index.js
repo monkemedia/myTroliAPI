@@ -3,6 +3,7 @@ const Product = require('../../models/product')
 const errorHandler = require('../../utils/errorHandler')
 
 const createProduct = async (req, res) => {
+  const store_hash = req.params.storeHash
   const customer_id = req.params.customerId
   const data = req.body
   const {
@@ -89,7 +90,7 @@ const createProduct = async (req, res) => {
   }
 
   try {
-    const products = new Product({ ...data, customer_id })
+    const products = new Product({ ...data, customer_id, store_hash })
 
     await products.save()
 
@@ -105,12 +106,13 @@ const getProducts = async (req, res) => {
     const page = parseInt(query.page) || 1
     const limit = parseInt(query.limit) || 20
     const keyword = query && query.keyword
+    const store_hash = req.params.storeHash
     let products
 
     if (keyword) {
-      products = await Product.search({ page, keyword, limit })
+      products = await Product.search({ page, keyword, limit, store_hash })
     } else {
-      products = await Product.findProducts({ page, limit })
+      products = await Product.findProducts({ page, limit, store_hash })
     }
     res.status(200).send(products)
   } catch (err) {
@@ -126,8 +128,9 @@ const getProduct = async (req, res) => {
 }
 
 const getProductCount = async (req, res) => {
+  const storeHash = req.params.storeHash
   const isRatings = req.query.ratings
-  const product = await Product.getCount(isRatings)
+  const product = await Product.getCount(isRatings, storeHash)
 
   res.status(200).send(product)
 }

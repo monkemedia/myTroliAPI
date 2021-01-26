@@ -7,6 +7,7 @@ const createCustomerCoupon = async (req, res) => {
     coupon_id
   } = data
   const customer_id = req.params.customerId
+  const store_hash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -30,6 +31,7 @@ const createCustomerCoupon = async (req, res) => {
     const customerCoupon = new CustomerCoupon({
       ...data,
       customer_id,
+      store_hash,
       uses: 1
     })
 

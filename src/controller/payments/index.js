@@ -11,6 +11,7 @@ const createPayment = async (req, res) => {
     receipt_email,
     source
   } = data
+  const store_hash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -25,7 +26,7 @@ const createPayment = async (req, res) => {
   }
 
   try {
-    const chargeCustomer = await Payment.createPayment({ source, receipt_email, currency, amount })
+    const chargeCustomer = await Payment.createPayment({ source, receipt_email, currency, amount, store_hash })
 
     res.status(200).send(chargeCustomer)
   } catch (err) {

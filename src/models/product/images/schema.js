@@ -6,6 +6,10 @@ const ProductImageSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   image_id: {
     type: String,
     required: true,

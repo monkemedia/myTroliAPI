@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const VariationSchema = require('./schema')
 
 // Get variations
-VariationSchema.statics.findVariations = async () => {
-  const variations = await Variation.find({})
+VariationSchema.statics.findVariations = async (store_hash) => {
+  const variations = await Variation.find({ store_hash })
 
   return variations
 }

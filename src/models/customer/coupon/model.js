@@ -2,14 +2,14 @@ const mongoose = require('mongoose')
 const CustomerCouponSchema = require('./schema')
 
 // Find customer coupons
-CustomerCouponSchema.statics.findCustomerCoupons = async () => {
-  const coupons = await CustomerCoupon().find()
+CustomerCouponSchema.statics.findCustomerCoupons = async (store_hash) => {
+  const coupons = await CustomerCoupon.find({ store_hash })
   return coupons
 }
 
 // Find customer coupon
 CustomerCouponSchema.statics.findCustomerCoupon = async (customerId, couponId) => {
-  const coupon = await CustomerCoupon().findOne({
+  const coupon = await CustomerCoupon.findOne({
     customer_id: customerId,
     _id: couponId
   })
@@ -18,7 +18,7 @@ CustomerCouponSchema.statics.findCustomerCoupon = async (customerId, couponId) =
 
 // Update customer coupon
 CustomerCouponSchema.statics.incrementCustomerCoupon = async (customerId, couponId) => {
-  const coupon = await CustomerCoupon().updateOne({
+  const coupon = await CustomerCoupon.updateOne({
     customer_id: customerId,
     coupon_id: couponId
   }, {
@@ -33,7 +33,7 @@ CustomerCouponSchema.statics.incrementCustomerCoupon = async (customerId, coupon
 
 // Delete customer coupon
 CustomerCouponSchema.statics.deleteCustomerCoupon = async (couponId) => {
-  const coupon = await CustomerCoupon().deleteOne({ _id: couponId })
+  const coupon = await CustomerCoupon.deleteOne({ _id: couponId })
   return coupon
 }
 

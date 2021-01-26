@@ -12,6 +12,7 @@ const createCustomerAddress = async (req, res) => {
     country_code
   } = data
   const customer_id = req.params.customerId
+  const store_hash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -62,7 +63,7 @@ const createCustomerAddress = async (req, res) => {
   }
 
   try {
-    const customerAddresses = new CustomerAddress({ ...data, customer_id })
+    const customerAddresses = new CustomerAddress({ ...data, customer_id, store_hash })
 
     await customerAddresses.save()
 

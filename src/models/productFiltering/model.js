@@ -3,8 +3,8 @@ const ProductFilteringSchema = require('./schema')
 const Product = require('../product')
 
 // Update facet settings
-ProductFilteringSchema.statics.updateFacetSettings = async (data) => {
-  const facets = await ProductFiltering.findOneAndUpdate({ type: 'product-filtering' }, {
+ProductFilteringSchema.statics.updateFacetSettings = async (data, store_hash) => {
+  const facets = await ProductFiltering.findOneAndUpdate({ type: 'product-filtering', store_hash }, {
     ...data,
     updated_at: Date.now()
   }, {
@@ -15,14 +15,14 @@ ProductFilteringSchema.statics.updateFacetSettings = async (data) => {
 }
 
 // Get facet settings
-ProductFilteringSchema.statics.findFacetSettings = async () => {
-  const facetSettings = await ProductFiltering.findOne({})
+ProductFilteringSchema.statics.findFacetSettings = async (store_hash) => {
+  const facetSettings = await ProductFiltering.findOne({ store_hash })
   return facetSettings
 }
 
 // Get facets
-ProductFilteringSchema.statics.findFacets = async () => {
-  const facets = await Product()
+ProductFilteringSchema.statics.findFacets = async (store_hash) => {
+  const facets = await Product
     .aggregate([
       {
         $lookup: {
@@ -55,6 +55,9 @@ ProductFilteringSchema.statics.findFacets = async () => {
           foreignField: '_id',
           as: 'custom_fields'
         }
+      },
+      {
+        $match: { store_hash }
       },
       {
         $facet: {

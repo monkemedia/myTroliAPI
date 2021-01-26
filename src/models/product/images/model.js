@@ -5,31 +5,31 @@ const ProductImageSchema = require('./schema')
 ProductImageSchema.plugin(uniqueArrayPlugin)
 
 // Get all product images
-ProductImageSchema.statics.findAllProductImages = async (productId) => {
-  const productImages = await ProductImage.find({ product_id: productId })
+ProductImageSchema.statics.findAllProductImages = async (product_id) => {
+  const productImages = await ProductImage.find({ product_id })
   return productImages
 }
 
 // Get product images by query
-ProductImageSchema.statics.findProductImagesByQuery = async (productId, query) => {
+ProductImageSchema.statics.findProductImagesByQuery = async (product_id, query) => {
   const productImages = await ProductImage.find({
-    product_id: productId,
+    product_id,
     ...query
   })
   return productImages
 }
 
 // Get a product image
-ProductImageSchema.statics.findProductImage = async (productId, imageId) => {
-  const productImage = await ProductImage.findOne({ product_id: productId, _id: imageId })
+ProductImageSchema.statics.findProductImage = async (product_id, imageId) => {
+  const productImage = await ProductImage.findOne({ product_id, _id: imageId })
   return productImage
 }
 
 // Update product image
-ProductImageSchema.statics.updateProductImage = async (productId, imageId, data) => {
+ProductImageSchema.statics.updateProductImage = async (product_id, imageId, data) => {
   const productImage = await ProductImage.updateOne({
     _id: imageId,
-    product_id: productId
+    product_id
   }, {
     ...data,
     updated_at: Date.now()

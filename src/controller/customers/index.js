@@ -9,6 +9,7 @@ const createCustomer = async (req, res) => {
     const { first_name, last_name, email, password, type } = data
 
     const customerExists = await Customer.findByEmail(email)
+    const storeHash = req.params.storeHash
 
     if (!first_name) {
       return res.status(401).send({
@@ -53,6 +54,7 @@ const createCustomer = async (req, res) => {
     }
 
     delete data.store_credit
+    data.store_hash = storeHash
 
     const customer = new Customer(data)
     const token = await customer.generateVerifyToken('1hr')
@@ -75,13 +77,14 @@ const getCustomers = async (req, res) => {
   const page = parseInt(query.page) || 1
   const limit = parseInt(query.limit) || 20
   const keyword = query && query.keyword
+  const store_hash = req.params.storeHash
   let customers
 
   try {
     if (keyword) {
-      customers = await Customer.search({ page, limit, keyword })
+      customers = await Customer.search({ page, limit, keyword, store_hash })
     } else {
-      customers = await Customer.findCustomers({ page, limit })
+      customers = await Customer.findCustomers({ page, limit, store_hash })
     }
 
     res.status(200).send(customers)
@@ -92,9 +95,10 @@ const getCustomers = async (req, res) => {
 
 const getCustomer = async (req, res) => {
   const customerId = req.params.customerId
+  const store_hash = req.params.storeHash
   let customer
   if (customerId === 'count') {
-    customer = await Customer.getCount()
+    customer = await Customer.getCount(store_hash)
   } else {
     customer = await Customer.findOne({ _id: customerId }).select('-password')
   }
@@ -197,7 +201,7 @@ const verifyCustomer = async (req, res) => {
     try {
       const decode = jwt.verify(verify_token, process.env.VERIFY_SECRET)
 
-      const customer = await Customer(decode.store_hash).verifyToken(decode.store_hash, verify_token)
+      const customer = await Customer.verifyToken(decode.store_hash, verify_token)
 
       if (!customer) {
         // customer doesn't exist but we can't tell users that

@@ -6,6 +6,7 @@ const createProductVariantImage = async (req, res) => {
   const data = req.body
   const productId = req.params.productId
   const variantId = req.params.variantId
+  const storeHash = req.params.storeHash
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
@@ -35,6 +36,7 @@ const createProductVariantImage = async (req, res) => {
     const promise = data.map(async obj => {
       obj.product_id = productId
       obj.variant_id = variantId
+      obj.store_hash = storeHash
       const images = new ProductVariantImage(obj)
       const save = await images.save()
       return save
@@ -92,6 +94,7 @@ const getProductVariantImage = async (req, res) => {
   const productId = req.params.productId
   const variantId = req.params.variantId
   const imageId = req.params.imageId
+
   const productVariantImage = await ProductVariantImage.findProductVariantImage(productId, variantId, imageId)
 
   res.status(200).send(productVariantImage)
@@ -147,8 +150,9 @@ const deleteProductVariantImage = async (req, res) => {
   try {
     await ProductVariantImage.deleteImage(data._id)
     const productVariant = await ProductVariant.findOne({ _id: variantId, product_id: productId })
+
     if (productVariant) {
-      await Image.deleteImage(data.image_id)
+      await Image.deleteImage(data.image_id, storeHash)
       await productVariant.images.pull(data._id)
       productVariant.save()
     }

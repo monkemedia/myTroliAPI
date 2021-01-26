@@ -10,6 +10,7 @@ const createProductVariant = async (req, res) => {
     option_values
   } = data
   const productId = req.params.productId
+  const store_hash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -60,6 +61,7 @@ const createProductVariant = async (req, res) => {
     const results = await Promise.all(updateOptionValues)
 
     product.option_values = results
+    product.store_hash = store_hash
 
     const savedProductOption = new ProductVariant(product)
 

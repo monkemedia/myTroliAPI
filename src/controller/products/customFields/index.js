@@ -9,6 +9,7 @@ const createProductCustomField = async (req, res) => {
     value
   } = data
   const productId = req.params.productId
+  const storeHash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -37,11 +38,12 @@ const createProductCustomField = async (req, res) => {
   try {
     const productCustomField = new ProductCustomField({
       product_id: productId,
+      store_hash: storeHash,
       ...data
     })
     await productCustomField.save()
 
-    await Product().updateOne({ _id: productId }, {
+    await Product.updateOne({ _id: productId }, {
       $push: {
         custom_fields: productCustomField._id
       },

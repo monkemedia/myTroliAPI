@@ -3,6 +3,7 @@ const emailTemplate = require('../../utils/emailTemplate')
 
 const createOrder = async (req, res) => {
   const data = req.body
+  const store_hash = req.params.storeHash
   const { type, line_items, billing_address, shipping_address, send_invoice } = data
 
   if (!type) {
@@ -40,7 +41,10 @@ const createOrder = async (req, res) => {
   }
 
   try {
-    const order = new Order(data)
+    const order = new Order({
+      store_hash,
+      ...data
+    })
 
     await order.save()
 
@@ -65,14 +69,15 @@ const getOrders = async (req, res) => {
     const limit = parseInt(query.limit) || 20
     const keyword = query.keyword
     const statusId = query.status_id
+    const store_hash = req.params.storeHash
     let orders
 
     if (keyword) {
-      orders = await Order.search({ page, keyword, limit })
+      orders = await Order.search({ page, keyword, limit, store_hash })
     } else if (statusId) {
       orders = await Order.findOrdersByStatusId({ page, limit, statusId })
     } else {
-      orders = await Order.findOrders({ page, limit })
+      orders = await Order.findOrders({ page, limit, store_hash })
     }
 
     res.status(200).send(orders)

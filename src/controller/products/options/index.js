@@ -9,6 +9,7 @@ const createProductOption = async (req, res) => {
     option_values
   } = data
   const productId = req.params.productId
+  const storeHash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -37,7 +38,8 @@ const createProductOption = async (req, res) => {
   try {
     var productOption = new ProductOption({
       ...data,
-      product_id: productId
+      product_id: productId,
+      store_hash: storeHash
     })
 
     const savedProductOptions = await productOption.save()
@@ -104,6 +106,7 @@ const updateProductOption = async (req, res) => {
 const deleteProductOption = async (req, res) => {
   const productId = req.params.productId
   const optionId = req.params.optionId
+
   try {
     await Product.updateOne({ _id: productId }, 
       {

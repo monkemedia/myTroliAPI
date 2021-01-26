@@ -14,10 +14,6 @@ const MerchantSchema = new Schema({
   password: {
     type: String
   },
-  store_name: {
-    type: String,
-    required: true,
-  },
   store_hash: {
     type: String,
     required: true,

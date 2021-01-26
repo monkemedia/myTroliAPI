@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const ShippingZoneSchema = require('./schema')
 
 // Get zones
-ShippingZoneSchema.statics.findZones = async () => {
-  const zones = await ShippingZone.find({})
+ShippingZoneSchema.statics.findZones = async (store_hash) => {
+  const zones = await ShippingZone.find({ store_hash })
   return zones
 }
 
@@ -14,8 +14,8 @@ ShippingZoneSchema.statics.findZone = async (zoneId) => {
 }
 
 // Get zone by country code
-ShippingZoneSchema.statics.findZoneByCountryCode = async (countryCode) => {
-  const zone = await ShippingZone.findOne({ country_code: countryCode })
+ShippingZoneSchema.statics.findZoneByCountryCode = async (country_code, store_hash) => {
+  const zone = await ShippingZone.findOne({ country_code, store_hash })
   return zone
 }
 

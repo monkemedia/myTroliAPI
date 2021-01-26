@@ -6,10 +6,12 @@ const ProductVariantImage = require('./variant/images')
 const ProductOption = require('./option')
 
 // Get all products
-ProductSchema.statics.findProducts = async ({ page, limit }) => {
-  const product = new Product()
-  const products = await product
+ProductSchema.statics.findProducts = async ({ page, limit, store_hash }) => {
+  const products = await Product
     .aggregate([
+      {
+        $match: { store_hash }
+      },
       {
         $lookup: {
           from: 'productimages',
@@ -44,7 +46,8 @@ ProductSchema.statics.findProducts = async ({ page, limit }) => {
       { $skip: (page - 1) * limit },
       { $limit: limit }
     ])
-  const total = await product.countDocuments()
+
+  const total = await Product.countDocuments({ store_hash })
   return {
     data: products,
     meta: {
@@ -60,16 +63,16 @@ ProductSchema.statics.findProducts = async ({ page, limit }) => {
 }
 
 // Search products by Name, SKU or Search Keywords
-ProductSchema.statics.search = async ({ page, limit, keyword }) => {
+ProductSchema.statics.search = async ({ page, limit, keyword, store_hash }) => {
   const searchQuery = {
+    store_hash, 
     $or: [
       { name: { $regex: keyword, $options: 'i' } },
       { sku: { $regex: keyword, $options: 'i' } },
       { search_keywords: { $regex: keyword, $options: 'i' } }
     ]
   }
-  const product = new Product()
-  const products = await product
+  const products = await Product
     .aggregate([
       {
         $match: searchQuery
@@ -109,7 +112,7 @@ ProductSchema.statics.search = async ({ page, limit, keyword }) => {
       { $limit: limit }
     ])
 
-  const total = await product.countDocuments(searchQuery)
+  const total = await Product.countDocuments(searchQuery)
   return {
     data: products,
     meta: {
@@ -129,7 +132,7 @@ ProductSchema.statics.findProduct = async (id) => {
   const product = await Product
     .aggregate([
       {
-        $match: { _id: mongoose.Types.ObjectId(id) }
+        $match: { _id: mongoose.Types.ObjectId(id)}
       },
       {
         $limit: 1
@@ -163,8 +166,10 @@ ProductSchema.statics.findProduct = async (id) => {
 }
 
 // Get product count
-ProductSchema.statics.getCount = async (isRatings) => {
-  const query = {}
+ProductSchema.statics.getCount = async (isRatings, store_hash) => {
+  const query = {
+    store_hash
+  }
 
   if (isRatings) {
     Object.assign(query, {
@@ -203,16 +208,15 @@ ProductSchema.statics.getCount = async (isRatings) => {
 }
 
 // Update product
-ProductSchema.statics.updateProduct = async (id, productDetails) => {
-  const product = new Product()
-  await product.updateOne({ _id: id }, {
+ProductSchema.statics.updateProduct = async (_id, productDetails) => {
+  await Product.updateOne({ _id }, {
     ...productDetails,
     updated_at: Date.now()
   })
   const productResp = await product
     .aggregate([
       {
-        $match: { _id: mongoose.Types.ObjectId(id) }
+        $match: { _id: mongoose.Types.ObjectId(id)}
       },
       {
         $limit: 1
@@ -246,13 +250,13 @@ ProductSchema.statics.updateProduct = async (id, productDetails) => {
 }
 
 // Delete product by id
-ProductSchema.statics.deleteProduct = async (productId) => {
-  await ProductImage().deleteMany({ product_id: productId })
-  await ProductOption().deleteMany({ product_id: productId })
-  await ProductVariantImage().deleteMany({ product_id: productId })
-  await ProductVariant().deleteMany({ product_id: productId })
+ProductSchema.statics.deleteProduct = async (product_id) => {
+  await ProductImage.deleteMany({ product_id })
+  await ProductOption.deleteMany({ product_id })
+  await ProductVariantImage.deleteMany({ product_id })
+  await ProductVariant.deleteMany({ product_id })
 
-  const product = await Product().deleteOne({ _id: productId })
+  const product = await Product.deleteOne({ _id: product_id })
   return product
 }
 

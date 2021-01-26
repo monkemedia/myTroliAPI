@@ -7,6 +7,7 @@ const conditions = [
 const createShippingMethod = async (req, res) => {
   let data = req.body
   const zoneId = req.params.zoneId
+  const store_hash = req.params.storeHash
 
   data = {
     ...data,
@@ -40,7 +41,10 @@ const createShippingMethod = async (req, res) => {
   }
 
   try {
-    const shippingMethod = new ShippingMethod(data)
+    const shippingMethod = new ShippingMethod({
+      ...data,
+      store_hash
+    })
     const savedShippingMethod = await shippingMethod.save()
 
     res.status(201).send(savedShippingMethod)
@@ -51,7 +55,8 @@ const createShippingMethod = async (req, res) => {
 
 const getShippingMethods = async (req, res) => {
   try {
-    const shippingMethods = await ShippingMethod.findMethods()
+    const store_hash = req.params.storeHash
+    const shippingMethods = await ShippingMethod.findMethods(store_hash)
     res.status(200).send(shippingMethods)
   } catch (err) {
     res.status(400).send(err)

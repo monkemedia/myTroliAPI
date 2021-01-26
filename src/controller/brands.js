@@ -3,6 +3,7 @@ const Brand = require('../models/brand')
 const createBrand = async (req, res) => {
   const data = req.body
   const { type, name } = data
+  const store_hash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -23,7 +24,10 @@ const createBrand = async (req, res) => {
   }
 
   try {
-    const brand = new Brand(data)
+    const brand = new Brand({
+      ...data,
+      store_hash
+    })
     await brand.save()
 
     res.status(201).send(brand)
@@ -37,13 +41,14 @@ const getBrands = async (req, res) => {
   const page = parseInt(query.page) || 1
   const limit = parseInt(query.limit) || 20
   const keyword = query && query.keyword
+  const store_hash = req.params.storeHash
   let brands
 
   try {
     if (keyword) {
-      brands = await Brand.search({ page, limit, keyword })
+      brands = await Brand.search({ page, limit, keyword, store_hash })
     } else {
-      brands = await Brand.findBrands({ page, limit })
+      brands = await Brand.findBrands({ page, limit, store_hash })
     }
 
     res.status(200).send(brands)
@@ -54,9 +59,10 @@ const getBrands = async (req, res) => {
 
 const getBrand = async (req, res) => {
   const brandId = req.params.brandId
+  const store_hash = req.params.storeHash
   let brand
   if (brandId === 'count') {
-    brand = await Brand.getCount()
+    brand = await Brand.getCount(store_hash)
   } else {
     brand = await Brand.findOne({ _id: brandId })
   }

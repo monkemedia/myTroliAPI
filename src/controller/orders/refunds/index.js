@@ -3,7 +3,8 @@ const OrderRefund = require('../../../models/order/refund')
 
 const createOrderRefund = async (req, res) => {
   const data = req.body
-  const orderId = req.params.orderId
+  const order_id = req.params.orderId
+  const store_hash = req.params.storeHash
 
   const { type, items, payment } = data
 
@@ -40,12 +41,13 @@ const createOrderRefund = async (req, res) => {
   try {
     const orderRefund = new OrderRefund({
       order_id: orderId,
+      store_hash,
       ...data
     })
 
     await orderRefund.save()
 
-    const getRefunds = await OrderRefund.find({ order_id: orderId })
+    const getRefunds = await OrderRefund.find({ order_id })
     const order = await Order.findOne({ id: orderId })
     let totalAmountSum = 0
 

@@ -3,6 +3,7 @@ const Category = require('../models/category')
 const createCategory = async (req, res) => {
   const data = req.body
   const { type, name, slug, status } = data
+  const store_hash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -35,7 +36,10 @@ const createCategory = async (req, res) => {
   }
 
   try {
-    const categories = new Category(data)
+    const categories = new Category({
+      ...data,
+      store_hash
+    })
 
     await categories.save()
 
@@ -50,13 +54,14 @@ const getCategories = async (req, res) => {
   const page = parseInt(query.page) || 1
   const limit = parseInt(query.limit) || 20
   const keyword = query && query.keyword
+  const store_hash = req.params.storeHash
   let categories
 
   try {
     if (keyword) {
-      categories = await Category.search({ page, limit, keyword })
+      categories = await Category.search({ page, limit, keyword, store_hash })
     } else {
-      categories = await Category.findCategories({ page, limit })
+      categories = await Category.findCategories({ page, limit, store_hash })
     }
 
     res.status(200).send(categories)
@@ -67,9 +72,10 @@ const getCategories = async (req, res) => {
 
 const getCategory = async (req, res) => {
   const categoryId = req.params.categoryId
+  const store_hash = req.params.storeHash
   let category
   if (categoryId === 'count') {
-    category = await Category.getCount()
+    category = await Category.getCount(store_hash)
   } else {
     category = await Category.findOne({ _id: categoryId })
   }

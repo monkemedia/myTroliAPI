@@ -2,9 +2,10 @@ const ShippingAddress = require('../../../models/shipping/address')
 
 const createShippingAddress = async (req, res) => {
   const data = req.body
+  const store_hash = req.params.storeHash
 
   // Lets see if shipping address already exists
-  const shippingAddress = await ShippingAddress.findOne()
+  const shippingAddress = await ShippingAddress.findOne({ store_hash })
 
   if (shippingAddress) {
     return res.status(401).send({
@@ -25,7 +26,10 @@ const createShippingAddress = async (req, res) => {
   }
 
   try {
-    const shippingAddress = new ShippingAddress(data)
+    const shippingAddress = new ShippingAddress({
+      ...data,
+      store_hash
+    })
     const savedShippingAddress = await shippingAddress.save()
 
     res.status(201).send(savedShippingAddress)
@@ -36,7 +40,8 @@ const createShippingAddress = async (req, res) => {
 
 const getShippingAddress = async (req, res) => {
   try {
-    const shippingAddress = await ShippingAddress.findOne()
+    const store_hash = req.params.storeHash
+    const shippingAddress = await ShippingAddress.findOne({ store_hash })
 
     res.status(200).send(shippingAddress)
   } catch (err) {
@@ -46,6 +51,7 @@ const getShippingAddress = async (req, res) => {
 
 const updateShippingAddress = async (req, res) => {
   const data = req.body
+  const store_hash = req.params.storeHash
 
   if (!data.type) {
     return res.status(401).send({
@@ -60,8 +66,8 @@ const updateShippingAddress = async (req, res) => {
   }
 
   try {
-    await ShippingAddress.updateShippingAddress(data)
-    const shippingAddress = await ShippingAddress.findOne()
+    await ShippingAddress.updateShippingAddress(data, store_hash)
+    const shippingAddress = await ShippingAddress.findOne({ store_hash })
 
     res.status(200).send(shippingAddress)
   } catch (err) {
@@ -71,7 +77,8 @@ const updateShippingAddress = async (req, res) => {
 
 const deleteShippingAddress = async (req, res) => {
   try {
-    await ShippingAddress.deleteShippingAddress
+    const store_hash = req.params.storeHash
+    await ShippingAddress.deleteShippingAddress(store_hash)
 
     res.status(200).send({
       message: 'Shipping address successfully deleted'

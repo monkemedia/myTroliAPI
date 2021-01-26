@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 const ShippingMethodSchema = require('./schema')
 
 // Get methods
-ShippingMethodSchema.statics.findMethods = async () => {
-  const methods = await ShippingMethod.find({})
+ShippingMethodSchema.statics.findMethods = async (store_hash) => {
+  const methods = await ShippingMethod.find({ store_hash })
   return methods
 }
 

@@ -3,9 +3,9 @@ const ProductCustomFieldSchema = require('./schema')
 const Product = require('../model')
 
 // Get product custom fields
-ProductCustomFieldSchema.statics.findProductCustomFields = async (productId) => {
+ProductCustomFieldSchema.statics.findProductCustomFields = async (product_id) => {
   const productCustomFields = await ProductCustomField
-    .find({ product_id: productId })
+    .find({ product_id })
     .sort({ sort_order: 1 })
 
   return productCustomFields

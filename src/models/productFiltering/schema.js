@@ -5,6 +5,10 @@ const ProductFilterSchema = new Schema({
   type: {
     type: String
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   facets: [{
     name: {
       type: String
