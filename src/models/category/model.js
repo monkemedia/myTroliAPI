@@ -1,16 +1,15 @@
 
+const mongoose = require('mongoose')
 const CategorySchema = require('./schema')
-const { tenantModel } = require('../../utils/multitenancy')
 
 // Get categories
-CategorySchema.statics.findCategories = async ({ page, limit }) => {
-  const category = new Category()
-  const categories = await category
-    .find({})
+CategorySchema.statics.findCategories = async ({ page, limit, store_hash }) => {
+  const categories = await Category
+    .find({ store_hash })
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await category.countDocuments()
+  const total = await Category.countDocuments({ store_hash })
   return {
     data: categories,
     meta: {
@@ -26,19 +25,18 @@ CategorySchema.statics.findCategories = async ({ page, limit }) => {
 }
 
 // Search categories by name
-CategorySchema.statics.search = async ({ page, limit, keyword }) => {
+CategorySchema.statics.search = async ({ page, limit, keyword, store_hash }) => {
   const searchArray = [
     { name: { $regex: keyword, $options: 'i' } },
     { slug: { $regex: keyword, $options: 'i' } }
   ]
-  const category = new Category()
-  const categories = await category
-    .find()
+  const categories = await Category
+    .find({ store_hash })
     .or(searchArray)
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await category.countDocuments(searchArray)
+  const total = await Category.find({ store_hash }).countDocuments(searchArray)
   return {
     data: categories,
     meta: {
@@ -54,8 +52,8 @@ CategorySchema.statics.search = async ({ page, limit, keyword }) => {
 }
 
 // Get category count
-CategorySchema.statics.getCount = async () => {
-  const total = await Category().countDocuments()
+CategorySchema.statics.getCount = async (store_hash) => {
+  const total = await Category.countDocuments({ store_hash })
   return {
     count: total
   }
@@ -63,17 +61,16 @@ CategorySchema.statics.getCount = async () => {
 
 // Update category
 CategorySchema.statics.updateCategory = async (categoryId, categoryDetails) => {
-  const category = await Category().updateOne({ _id: categoryId }, categoryDetails)
+  const category = await Category.updateOne({ _id: categoryId }, categoryDetails)
   return category
 }
 
 // Delete category
 CategorySchema.statics.deleteCategory = async (categoryId) => {
-  const category = await Category().deleteOne({ _id: categoryId })
+  const category = await Category.deleteOne({ _id: categoryId })
   return category
 }
 
-const Category = function () {
-  return tenantModel('Category', CategorySchema)
-}
+const Category = mongoose.model('Category', CategorySchema)
+
 module.exports = Category

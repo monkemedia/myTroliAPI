@@ -6,7 +6,7 @@ const StoreSchema = new Schema({
     type: String,
     required: true
   },
-  domain: {
+  store_hash: {
     type: String,
     required: true
   },

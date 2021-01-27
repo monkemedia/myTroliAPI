@@ -3,7 +3,7 @@ const OrderStatusSchema = require('./schema')
 
 // Get order statuses
 OrderStatusSchema.statics.findOrderStatuses = async () => {
-  const orderStatuses = await OrderStatus.find({})
+  const orderStatuses = await OrderStatus.find()
 
   return orderStatuses
 }

@@ -4,7 +4,7 @@ const emailTemplate = require('../utils/emailTemplate')
 
 const createMerchant = async (req, res) => {
   const data = req.body
-  const { email, name, store_hash, store_name, role, type } = data
+  const { email, name, store_hash, role, type } = data
   const merchantExists = await Merchant.findByEmailAddress(email)
 
   if (!type) {
@@ -34,12 +34,6 @@ const createMerchant = async (req, res) => {
   if (!store_hash) {
     return res.status(401).send({
       message: 'Store hash is required'
-    })
-  }
-
-  if (!store_name) {
-    return res.status(401).send({
-      message: 'Store name is required'
     })
   }
 

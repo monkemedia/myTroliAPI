@@ -6,6 +6,10 @@ const SettingSchema = Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   variant_presets: {
     type: Array
   },

@@ -6,6 +6,10 @@ const OrderSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   order_source: {
     type: String,
     enum: ['manual', 'external']

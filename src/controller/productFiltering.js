@@ -3,6 +3,7 @@ const ProductFiltering = require('../models/productFiltering')
 const updateFacetSettings = async (req, res) => {
   const data = req.body
   const { type } = data
+  const storeHash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -17,8 +18,8 @@ const updateFacetSettings = async (req, res) => {
   }
 
   try {
-    await ProductFiltering().updateFacetSettings(data)
-    const facets = await ProductFiltering().findFacetSettings()
+    await ProductFiltering.updateFacetSettings(data, storeHash)
+    const facets = await ProductFiltering.findFacetSettings(storeHash)
 
     res.status(200).send(facets)
   } catch (err) {
@@ -27,8 +28,9 @@ const updateFacetSettings = async (req, res) => {
 }
 
 const getFacetSettings = async (req, res) => {
+  const storeHash = req.params.storeHash
   try {
-    const facets = await ProductFiltering().findFacetSettings()
+    const facets = await ProductFiltering.findFacetSettings(storeHash)
 
     res.status(200).send(facets)
   } catch (err) {
@@ -37,8 +39,9 @@ const getFacetSettings = async (req, res) => {
 }
 
 const getFacets = async (req, res) => {
+  const storeHash = req.params.storeHash
   try {
-    const facets = await ProductFiltering().findFacets()
+    const facets = await ProductFiltering.findFacets(storeHash)
 
     res.status(200).send(facets)
   } catch (err) {

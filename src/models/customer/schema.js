@@ -8,6 +8,10 @@ const CustomerSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   first_name: {
     type: String,
     required: true

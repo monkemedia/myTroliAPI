@@ -6,6 +6,10 @@ const ProductFieldSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   title: {
     type: String
   },
@@ -29,6 +33,7 @@ const ProductFieldSchema = new Schema({
   product_id: {
     type: String
   },
+  
   created_at: {
     type: Date,
     default: Date.now

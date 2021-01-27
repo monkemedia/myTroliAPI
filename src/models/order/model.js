@@ -3,7 +3,6 @@ const OrderSchema = require('./schema')
 const Product = require('../product')
 const ProductVariants = require('../product/variant')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
-const { tenantModel } = require('../../utils/multitenancy')
 
 OrderSchema.plugin(AutoIncrement, {
   inc_field: 'id',
@@ -11,7 +10,7 @@ OrderSchema.plugin(AutoIncrement, {
 })
 
 async function updateTotalSold (productId, quantity, direction) {
-  const product = await Product().updateOne({ _id: productId }, {
+  const product = await Product.updateOne({ _id: productId }, {
     $inc: {
       total_sold: direction === 'increase' ? quantity : -quantity
     }
@@ -25,11 +24,11 @@ async function updateProductStock ({ productId, variantId, trackInventory, curre
   let update
 
   if (trackInventory === 'variant-inventory') {
-    update = await ProductVariants().updateOne({ _id: variantId }, {
+    update = await ProductVariants.updateOne({ _id: variantId }, {
       stock: newStock
     })
   } else if (trackInventory === 'product-inventory') {
-    update = await Product().updateOne({ _id: productId }, {
+    update = await Product.updateOne({ _id: productId }, {
       stock: newStock
     })
   }
@@ -45,10 +44,10 @@ async function stockLevelHandler (product) {
   let stock
 
   if (trackInventory === 'variant-inventory') {
-    const productVariant = await ProductVariants().findOne({ _id: variantId })
+    const productVariant = await ProductVariants.findOne({ _id: variantId })
     stock = productVariant.stock
   } else if (trackInventory === 'product-inventory') {
-    const prod = await Product().findOne({ _id: productId })
+    const prod = await Product.findOne({ _id: productId })
     stock = prod.stock
   }
 
@@ -96,10 +95,12 @@ OrderSchema.pre('save', async function (next) {
 })
 
 // Get orders
-OrderSchema.statics.findOrders = async ({ page, limit }) => {
-  const order = new Order()
-  const orders = await order
+OrderSchema.statics.findOrders = async ({ page, limit, store_hash }) => {
+  const orders = await Order
     .aggregate([
+      {
+        $match: { store_hash }
+      },
       {
         $lookup: {
           from: 'orderrefunds',
@@ -113,7 +114,7 @@ OrderSchema.statics.findOrders = async ({ page, limit }) => {
       { $limit: limit }
     ])
 
-  const total = await order.countDocuments()
+  const total = await Order.countDocuments({ store_hash })
   return {
     data: orders,
     meta: {
@@ -152,14 +153,13 @@ OrderSchema.statics.findOrder = async (id) => {
 }
 
 // Get orders by status id
-OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => {
+OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId, store_hash }) => {
   const statusIdCollection = statusId ? statusId.split(',') : []
   const convertToNumbers = statusIdCollection.length > 0 ? statusIdCollection.map(val => parseInt(val)) : []
-  const order = new Order()
-  const orders = await order
+  const orders = await Order
     .aggregate([
       {
-        $match: { status_id: { $in: convertToNumbers } }
+        $match: { status_id: { $in: convertToNumbers }, store_hash }
       },
       {
         $lookup: {
@@ -174,7 +174,7 @@ OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => 
       { $limit: limit }
     ])
 
-  const total = await order.countDocuments()
+  const total = await Order.countDocuments({ store_hash })
   return {
     data: orders,
     meta: {
@@ -190,12 +190,12 @@ OrderSchema.statics.findOrdersByStatusId = async ({ page, limit, statusId }) => 
 }
 
 // Get orders count
-OrderSchema.statics.getCount = async (statusId) => {
+OrderSchema.statics.getCount = async (status_id, store_hash) => {
   let total
-  if (!statusId) {
-    total = await Order().countDocuments({ })
+  if (!status_id) {
+    total = await Order.countDocuments({ store_hash })
   } else {
-    total = await Order().countDocuments({ status_id: statusId })
+    total = await Order.countDocuments({ status_id, store_hash })
   }
   return {
     count: total
@@ -203,13 +203,12 @@ OrderSchema.statics.getCount = async (statusId) => {
 }
 
 // Search orders by order id or customer name
-OrderSchema.statics.search = async ({ page, keyword, limit }) => {
+OrderSchema.statics.search = async ({ page, keyword, limit, store_hash }) => {
   const searchString = new RegExp(decodeURIComponent(keyword), 'i')
   const fullname = {
     fullname: { $concat: ['$billing_address.first_name', ' ', '$billing_address.last_name'] }
   }
-  const order = new Order()
-  const orders = await order
+  const orders = await Order
     .aggregate([
       {
         $lookup: {
@@ -222,6 +221,7 @@ OrderSchema.statics.search = async ({ page, keyword, limit }) => {
     ])
     .addFields(fullname)
     .match({
+      store_hash,
       $or: [
         { fullname: searchString },
         { id: parseInt(keyword) }
@@ -231,10 +231,11 @@ OrderSchema.statics.search = async ({ page, keyword, limit }) => {
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await order
+  const total = await Order
     .aggregate()
     .addFields(fullname)
     .match({
+      store_hash,
       $or: [
         { fullname: searchString },
         { id: parseInt(keyword) }
@@ -259,13 +260,12 @@ OrderSchema.statics.search = async ({ page, keyword, limit }) => {
 OrderSchema.statics.updateOrder = async (orderId, orderDetails) => {
   // const currentOrderQty =
   const lineItems = orderDetails.line_items
-  const order = new Order()
 
   if (lineItems) {
     const promise = await lineItems.map(async orderProduct => {
-      const storedOrder = await order.findOne({ id: orderId })
+      const storedOrder = await Order.findOne({ id: orderId })
       const storedOrderProduct = storedOrder.line_items.find((order) => {
-        return order._id.toString() === orderProduct._id
+        return storedOrder._id.toString() === orderProduct._id
       })
       const storedOrderProductQty = storedOrderProduct ? storedOrderProduct.quantity : 0
       const orderQty = orderProduct.quantity
@@ -317,11 +317,10 @@ OrderSchema.statics.updateOrder = async (orderId, orderDetails) => {
 
 // Delete order
 OrderSchema.statics.deleteOrder = async (orderId) => {
-  const order = await Order().deleteOne({ id: orderId })
+  const order = await Order.deleteOne({ id: orderId })
   return order
 }
 
-const Order = function () {
-  return tenantModel('Order', OrderSchema)
-}
+const Order = mongoose.model('Order', OrderSchema)
+
 module.exports = Order
