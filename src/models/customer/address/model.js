@@ -1,5 +1,17 @@
 const mongoose = require('mongoose')
 const CustomerAddressSchema = require('./schema')
+const Country = require('../../country')
+
+// Convert country code to string
+CustomerAddressSchema.pre('save', async function (next) {
+  const address = this
+  const countryCode = address.country_code
+  const countries = await Country.findCountries()
+
+  address.country = countries.find(country => country.country_iso === countryCode).country
+  console.log('address', address)
+  next()
+})
 
 // Find address
 CustomerAddressSchema.statics.findCustomerAddresses = async (customerId) => {
