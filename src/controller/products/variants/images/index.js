@@ -6,6 +6,7 @@ const createProductVariantImage = async (req, res) => {
   const data = req.body
   const productId = req.params.productId
   const variantId = req.params.variantId
+  const storeHash = req.params.storeHash
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
@@ -35,13 +36,14 @@ const createProductVariantImage = async (req, res) => {
     const promise = data.map(async obj => {
       obj.product_id = productId
       obj.variant_id = variantId
-      const images = new ProductVariantImage()(obj)
+      obj.store_hash = storeHash
+      const images = new ProductVariantImage(obj)
       const save = await images.save()
       return save
     })
     const savedProductVariantImage = await Promise.all(promise)
 
-    const productVariant = await ProductVariant().findOne({ _id: variantId, product_id: productId })
+    const productVariant = await ProductVariant.findOne({ _id: variantId, product_id: productId })
 
     savedProductVariantImage.map(spi => {
       productVariant.images.push(spi)
@@ -78,9 +80,9 @@ const getProductVariantImages = async (req, res) => {
     let productVariantImages
 
     if (query) {
-      productVariantImages = await ProductVariantImage().findProductVariantImagesByQuery(productId, variantId, queryObj)
+      productVariantImages = await ProductVariantImage.findProductVariantImagesByQuery(productId, variantId, queryObj)
     } else {
-      productVariantImages = await ProductVariantImage().findAllProductVariantImages(productId, variantId)
+      productVariantImages = await ProductVariantImage.findAllProductVariantImages(productId, variantId)
     }
     res.status(200).send(productVariantImages)
   } catch (err) {
@@ -92,7 +94,8 @@ const getProductVariantImage = async (req, res) => {
   const productId = req.params.productId
   const variantId = req.params.variantId
   const imageId = req.params.imageId
-  const productVariantImage = await ProductVariantImage().findProductVariantImage(productId, variantId, imageId)
+
+  const productVariantImage = await ProductVariantImage.findProductVariantImage(productId, variantId, imageId)
 
   res.status(200).send(productVariantImage)
 }
@@ -117,8 +120,8 @@ const updateProductVariantImage = async (req, res) => {
   }
 
   try {
-    await ProductVariantImage().updateProductVariantImage(productId, variantId, data)
-    const productVariantImage = await ProductVariantImage().findProductVariantImage(productId, variantId, imageId)
+    await ProductVariantImage.updateProductVariantImage(productId, variantId, data)
+    const productVariantImage = await ProductVariantImage.findProductVariantImage(productId, variantId, imageId)
 
     res.status(200).send(productVariantImage)
   } catch (err) {
@@ -145,11 +148,12 @@ const deleteProductVariantImage = async (req, res) => {
   }
 
   try {
-    await ProductVariantImage().deleteImage(data._id)
-    const productVariant = await ProductVariant().findOne({ _id: variantId, product_id: productId })
+    await ProductVariantImage.deleteImage(data._id)
+    const productVariant = await ProductVariant.findOne({ _id: variantId, product_id: productId })
+
     if (productVariant) {
-      await Image().deleteImage(data.image_id)
-      await productVariant().images.pull(data._id)
+      await Image.deleteImage(data.image_id, storeHash)
+      await productVariant.images.pull(data._id)
       productVariant.save()
     }
 

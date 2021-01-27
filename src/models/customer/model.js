@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const cls = require('cls-hooked')
@@ -6,7 +7,6 @@ const errorHandler = require('../../utils/errorHandler')
 const CustomerSchema = require('./schema.js')
 const CustomerAddress = require('./address')
 const CustomerCoupon = require('./coupon')
-const { tenantModel } = require('../../utils/multitenancy')
 
 // Hash the password before saving the customer model
 // Delete store credit if it exists
@@ -42,15 +42,14 @@ CustomerSchema.methods.generateAccessToken = async function () {
 }
 
 // Get customers
-CustomerSchema.statics.findCustomers = async ({ page, limit }) => {
-  const customer = new Customer()
-  const customers = await customer
-    .find({})
+CustomerSchema.statics.findCustomers = async ({ page, limit, store_hash }) => {
+  const customers = await Customer
+    .find({ store_hash })
     .skip((page - 1) * limit)
     .limit(limit)
     .select('-password')
 
-  const total = await customer.countDocuments()
+  const total = await Customer.countDocuments({ store_hash })
   return {
     data: customers,
     meta: {
@@ -66,24 +65,27 @@ CustomerSchema.statics.findCustomers = async ({ page, limit }) => {
 }
 
 // Search customers by name or email address
-CustomerSchema.statics.search = async ({ keyword, page, limit }) => {
+CustomerSchema.statics.search = async ({ keyword, page, limit, store_hash }) => {
   const searchString = new RegExp(decodeURIComponent(keyword), 'i')
   const searchQuery = {
     fullname: { $concat: ['$first_name', ' ', '$last_name'] },
     first_name: 1,
     last_name: 1,
-    email: 1
+    email: 1,
+    store_hash: 1
   }
-  const searchArray = { $or: [{ fullname: searchString }, { email: searchString }] }
-  const customer = new Customer()
-  const customers = await customer
+  const searchArray = { 
+    store_hash,
+    $or: [{ fullname: searchString }, { email: searchString }] 
+  }
+  const customers = await Customer
     .aggregate()
     .project(searchQuery)
     .match(searchArray)
     .skip((page - 1) * limit)
     .limit(limit)
 
-  const total = await customer.countDocuments(searchArray)
+  const total = await Customer.countDocuments(searchArray)
   return {
     data: customers,
     meta: {
@@ -100,7 +102,7 @@ CustomerSchema.statics.search = async ({ keyword, page, limit }) => {
 
 // Find customer by email address
 CustomerSchema.statics.findByEmail = async (email) => {
-  const customer = await Customer()
+  const customer = await Customer
     .findOne({ email })
     .select('-password')
 
@@ -108,8 +110,8 @@ CustomerSchema.statics.findByEmail = async (email) => {
 }
 
 // Find customer by verify token
-CustomerSchema.statics.verifyToken = async (hash, verify_token) => {
-  const customer = await Customer(hash).updateOne({ verify_token }, {
+CustomerSchema.statics.verifyToken = async (store_hash, verify_token) => {
+  const customer = await Customer.updateOne({ store_hash, verify_token }, {
     verified: true,
     verify_token: null
   }).select('-password')
@@ -118,7 +120,7 @@ CustomerSchema.statics.verifyToken = async (hash, verify_token) => {
 
 // Find customer by email and password
 CustomerSchema.statics.findByCredentials = async (email, password) => {
-  const customer = await Customer().findOne({ email }).select('-password')
+  const customer = await Customer.findOne({ email }).select('-password')
 
   if (!customer) {
     throw errorHandler(422, 'Customer does not exists')
@@ -134,8 +136,8 @@ CustomerSchema.statics.findByCredentials = async (email, password) => {
 }
 
 // Get customers count
-CustomerSchema.statics.getCount = async () => {
-  const total = await Customer().countDocuments()
+CustomerSchema.statics.getCount = async (store_hash) => {
+  const total = await Customer.countDocuments({ store_hash })
   return {
     count: total
   }
@@ -144,8 +146,7 @@ CustomerSchema.statics.getCount = async () => {
 // Update customer
 CustomerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
   let { password } = customerDetails
-  const customer = new Customer()
-  const savedPassword = await customer.findOne({ _id: customerId }).select('password')
+  const savedPassword = await Customer.findOne({ _id: customerId }).select('password')
 
   if (!password) {
     password = savedPassword.password
@@ -159,7 +160,7 @@ CustomerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
 
 // Update customers store credit
 CustomerSchema.statics.updateCustomersStoreCredit = async (customerId, storeCredit) => {
-  const customer = await Customer().updateOne({
+  const customer = await Customer.updateOne({
     _id: customerId
   }, {
     $inc: {
@@ -172,18 +173,17 @@ CustomerSchema.statics.updateCustomersStoreCredit = async (customerId, storeCred
 }
 
 // Delete customer by id
-CustomerSchema.statics.deleteCustomer = async (customerId) => {
+CustomerSchema.statics.deleteCustomer = async (customer_id) => {
   try {
-    await CustomerAddress().deleteMany({ customer_id: customerId })
-    await CustomerCoupon().deleteMany({ customer_id: customerId })
-    const customer = await Customer().deleteOne({ _id: customerId })
+    await CustomerAddress.deleteMany({ customer_id })
+    await CustomerCoupon.deleteMany({ customer_id })
+    const customer = await Customer.deleteOne({ _id: customer_id })
     return customer
   } catch (err) {
     throw new Error(err)
   }
 }
 
-const Customer = function (storeHash) {
-  return tenantModel('Customer', CustomerSchema, storeHash)
-}
+const Customer = mongoose.model('Customer', CustomerSchema)
+
 module.exports = Customer

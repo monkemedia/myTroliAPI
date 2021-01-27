@@ -6,6 +6,10 @@ const ProductVariantSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   price: {
     type: Number,
     required: true

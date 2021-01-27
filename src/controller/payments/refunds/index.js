@@ -8,6 +8,7 @@ const createPaymentRefund = async (req, res) => {
     amount
   } = data
   const charge = req.params.chargeId
+  const storeHash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -22,7 +23,7 @@ const createPaymentRefund = async (req, res) => {
   }
 
   try {
-    const paymentRefund = await PaymentRefund.createPaymentRefund(charge, amount)
+    const paymentRefund = await PaymentRefund.createPaymentRefund(charge, amount, storeHash)
 
     res.status(200).send(paymentRefund)
   } catch (err) {

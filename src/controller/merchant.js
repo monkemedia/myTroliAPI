@@ -3,9 +3,12 @@ const Merchant = require('../models/merchant')
 const emailTemplate = require('../utils/emailTemplate')
 
 const createMerchant = async (req, res) => {
+  const OWNER = 'owner'
   const data = req.body
-  const { email, name, store_hash, store_name, role, type } = data
-  const merchantExists = await Merchant.findByEmailAddress(email)
+  const store_hash = req.params.storeHash
+  const { email, name, role, type } = data
+  const currentMerchant = await Merchant.findByEmailAddress(email)
+  const ownerAlreadyExists = await Merchant.find({ store_hash, role: OWNER })
 
   if (!type) {
     return res.status(401).send({
@@ -31,32 +34,29 @@ const createMerchant = async (req, res) => {
     })
   }
 
-  if (!store_hash) {
-    return res.status(401).send({
-      message: 'Store hash is required'
-    })
-  }
-
-  if (!store_name) {
-    return res.status(401).send({
-      message: 'Store name is required'
-    })
-  }
-
   if (!role) {
     return res.status(401).send({
       message: 'Role is required'
     })
   }
 
-  if (merchantExists) {
+  if (currentMerchant) {
     return res.status(401).send({
       message: 'Merchant already exists'
     })
   }
 
+  if (ownerAlreadyExists && role === OWNER) {
+    return res.status(401).send({
+      message: 'Merchant already has a owner'
+    })
+  }
+
   try {
-    const merchant = new Merchant(data)
+    const merchant = new Merchant({
+      ...data,
+      store_hash
+    })
     const activateToken = await merchant.generateToken('1hr')
 
     merchant.reset_token = activateToken
@@ -74,6 +74,7 @@ const createMerchant = async (req, res) => {
 
     res.status(201).send(merchantCopy)
   } catch (err) {
+    console.log(err)
     res.status(err.status).send(err)
   }
 }

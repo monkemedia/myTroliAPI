@@ -6,6 +6,10 @@ const ShippingAddressSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   company_name: {
     type: String
   },

@@ -6,6 +6,10 @@ const BrandSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true
@@ -15,9 +19,15 @@ const BrandSchema = new Schema({
     required: true,
     unique: true
   },
+  description: {
+    type: String
+  },
   search_keywords: {
     type: String
   },
+  status: {
+    type: String
+  }
 }, { versionKey: false })
 
 module.exports = BrandSchema
