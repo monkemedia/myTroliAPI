@@ -71,9 +71,13 @@ CustomerSchema.statics.search = async ({ keyword, page, limit, store_hash }) => 
     fullname: { $concat: ['$first_name', ' ', '$last_name'] },
     first_name: 1,
     last_name: 1,
-    email: 1
+    email: 1,
+    store_hash: 1
   }
-  const searchArray = { $or: [{ fullname: searchString }, { email: searchString }], store_hash }
+  const searchArray = { 
+    store_hash,
+    $or: [{ fullname: searchString }, { email: searchString }] 
+  }
   const customers = await Customer
     .aggregate()
     .project(searchQuery)

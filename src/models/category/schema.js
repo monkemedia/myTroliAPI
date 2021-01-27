@@ -26,7 +26,7 @@ const CategorySchema = new Schema({
     type: String
   },
   status: {
-    type: Object
+    type: String
   }
 }, { versionKey: false })
 

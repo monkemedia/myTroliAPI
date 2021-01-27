@@ -1,9 +1,8 @@
 const OrderStatus = require('../../../models/order/status')
 
 const getOrderStatuses = async (req, res) => {
-  const storeHash = req.params.storeHash
   try {
-    const orders = await OrderStatus.findOrderStatuses(storeHash)
+    const orders = await OrderStatus.findOrderStatuses()
 
     res.status(200).send(orders)
   } catch (err) {

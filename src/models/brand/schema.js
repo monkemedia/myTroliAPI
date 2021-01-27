@@ -19,9 +19,15 @@ const BrandSchema = new Schema({
     required: true,
     unique: true
   },
+  description: {
+    type: String
+  },
   search_keywords: {
     type: String
   },
+  status: {
+    type: String
+  }
 }, { versionKey: false })
 
 module.exports = BrandSchema

@@ -9,7 +9,7 @@ const createCustomer = async (req, res) => {
     const { first_name, last_name, email, password, type } = data
 
     const customerExists = await Customer.findByEmail(email)
-    const storeHash = req.params.storeHash
+    const store_hash = req.params.storeHash
 
     if (!first_name) {
       return res.status(401).send({
@@ -54,9 +54,11 @@ const createCustomer = async (req, res) => {
     }
 
     delete data.store_credit
-    data.store_hash = storeHash
 
-    const customer = new Customer(data)
+    const customer = new Customer({
+      ...data,
+      store_hash
+    })
     const token = await customer.generateVerifyToken('1hr')
     customer.verify_token = token
     await customer.save()
