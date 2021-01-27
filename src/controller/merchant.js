@@ -10,9 +10,6 @@ const createMerchant = async (req, res) => {
   const currentMerchant = await Merchant.findByEmailAddress(email)
   const ownerAlreadyExists = await Merchant.find({ store_hash, role: OWNER })
 
-  console.log(ownerAlreadyExists)
-
-
   if (!type) {
     return res.status(401).send({
       message: 'Type is required'
