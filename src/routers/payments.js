@@ -18,7 +18,7 @@ const upload = multer({ dest: 'uploads/' })
 // Create new Payment
 router.post('/:storeHash/payments', auth, (req, res) => createPayment(req, res))
 // Create account
-router.post('/:storeHash/payments/create-account', auth, (req, res) => createAccount(req, res))
+router.post('/:storeHash/payments/accounts', auth, (req, res) => createAccount(req, res))
 //Update account
 router.put('/:storeHash/payments/accounts/:accountId', auth, (req, res) => updateAccount(req, res))
 //Get account

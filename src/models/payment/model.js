@@ -6,7 +6,7 @@ const fs = require('fs')
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
 // Create account
-paymentSchema.statics.createAccount = async ({ country }) => {  
+paymentSchema.statics.createAccount = async ({ country, business_type }) => {  
   const account = await stripe.accounts.create({
     type: 'custom',
     capabilities: {
@@ -17,7 +17,8 @@ paymentSchema.statics.createAccount = async ({ country }) => {
         requested: true,
       }
     },
-    country
+    country,
+    business_type
   })
 
   return account

@@ -7,7 +7,8 @@ const createAccount = async (req, res) => {
   const data = req.body
   const {
     type,
-    country
+    country,
+    business_type
   } = data
 
   if (!type) {
@@ -28,8 +29,14 @@ const createAccount = async (req, res) => {
     })
   }
 
+  if (!business_type) {
+    return res.status(401).send({
+      message: 'Business type is required'
+    })
+  }
+
   try {
-    const account = await Payment.createAccount({ country })
+    const account = await Payment.createAccount({ country, business_type })
 
     res.status(200).send(account)
   } catch (err) {
