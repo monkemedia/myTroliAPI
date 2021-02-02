@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const merchants = require('./merchants.js')
+const merchantCategoryCodes = require('./merchantCategoryCodes.js')
 const customers = require('./customers/index.js')
 const customerAddresses = require('./customers/addresses/index.js')
 const customerCoupons = require('./customers/coupons/index.js')
@@ -33,6 +34,7 @@ const router = Router()
 
 router.use(
   merchants,
+  merchantCategoryCodes,
   customers,
   coupons,
   customerAddresses,
