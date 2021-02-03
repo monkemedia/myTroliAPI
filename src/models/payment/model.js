@@ -38,17 +38,30 @@ paymentSchema.statics.getAccount = async (accountId) => {
   return account
 }
 
-// Get person
-paymentSchema.statics.getPerson = async (accountId, personId) => {  
-  const account = await stripe.accounts.retrievePerson(accountId, personId)
+// Create person
+paymentSchema.statics.createPerson = async (accountId, data) => {  
+  const account = await stripe.accounts.createPerson(accountId, data)
 
   return account
 }
 
 // Update person
 paymentSchema.statics.updatePerson = async (accountId, personId, data) => {  
-  console.log('data', data)
   const account = await stripe.accounts.updatePerson(accountId, personId, data)
+
+  return account
+}
+
+// Get persons
+paymentSchema.statics.getPersons = async (accountId) => {  
+  const account = await stripe.accounts.listPersons(accountId)
+
+  return account
+}
+
+// Get person
+paymentSchema.statics.getPerson = async (accountId, personId) => {  
+  const account = await stripe.accounts.retrievePerson(accountId, personId)
 
   return account
 }

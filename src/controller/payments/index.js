@@ -92,6 +92,46 @@ const getAccount = async (req, res) => {
   }
 }
 
+const createPerson = async (req, res) => {
+  const data = req.body
+  const { type } = data
+  const accountId = req.params.accountId
+
+  if (!type) {
+    return res.status(401).send({
+      message: 'Type is required'
+    })
+  }
+
+  if (type && type !== 'payments') {
+    return res.status(401).send({
+      message: 'Correct type is required'
+    })
+  }
+
+  delete data.type
+
+  try {
+    const person = await Payment.createPerson(accountId, data)
+
+    res.status(200).send(person)
+  } catch (err) {
+    res.status(400).send(errorHandler(400, err))
+  }
+}
+
+const getPersons = async (req, res) => {
+  const accountId = req.params.accountId
+
+  try {
+    const person = await Payment.getPersons(accountId)
+
+    res.status(200).send(person)
+  } catch (err) {
+    res.status(400).send(errorHandler(400, err))
+  }
+}
+
 const getPerson = async (req, res) => {
   const accountId = req.params.accountId
   const personId = req.params.personId
@@ -203,6 +243,8 @@ module.exports = {
   createAccount,
   updateAccount,
   getAccount,
+  createPerson,
+  getPersons,
   getPerson,
   updatePerson,
   uploadFile,
