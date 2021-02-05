@@ -11,11 +11,11 @@ const getMerchantCategoryCodes = async (req, res) => {
 }
 
 const getMerchantCategoryCode = async (req, res) => {
-  const mcc = req.params.mcc
+  const code = req.params.mcc
   
   try {
-    const code = await MerchantCategoryCode.findOne({ mcc })
-    res.status(200).send(code)
+    const response = await MerchantCategoryCode.findOne({ code })
+    res.status(200).send(response)
   } catch (err) {
     res.status(400).send(err)
   }
