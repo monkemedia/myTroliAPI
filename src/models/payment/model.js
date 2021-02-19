@@ -6,7 +6,7 @@ const fs = require('fs')
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
 // Create account
-paymentSchema.statics.createAccount = async ({ country, business_type }) => {  
+paymentSchema.statics.createAccount = async ({ country, business_type, client_ip_address }) => {  
   const account = await stripe.accounts.create({
     type: 'custom',
     capabilities: {
@@ -16,6 +16,10 @@ paymentSchema.statics.createAccount = async ({ country, business_type }) => {
       transfers: {
         requested: true,
       }
+    },
+    tos_acceptance: {
+      date: Math.floor(Date.now() / 1000),
+      ip: client_ip_address
     },
     country,
     business_type
@@ -62,6 +66,13 @@ paymentSchema.statics.getPersons = async (accountId) => {
 // Get person
 paymentSchema.statics.getPerson = async (accountId, personId) => {  
   const account = await stripe.accounts.retrievePerson(accountId, personId)
+
+  return account
+}
+
+// Delete person
+paymentSchema.statics.deletePerson = async (accountId, personId) => {  
+  const account = await stripe.accounts.deletePerson(accountId, personId)
 
   return account
 }

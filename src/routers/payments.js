@@ -9,6 +9,7 @@ const {
   createPerson,
   getPersons,
   getPerson,
+  deletePerson,
   updatePerson,
   uploadFile,
   getPayment,
@@ -35,6 +36,8 @@ router.get('/:storeHash/payments/accounts/:accountId/persons', auth, (req, res) 
 router.get('/:storeHash/payments/accounts/:accountId/persons/:personId', auth, (req, res) => getPerson(req, res))
 // Update person
 router.put('/:storeHash/payments/accounts/:accountId/persons/:personId', auth, (req, res) => updatePerson(req, res))
+// Delete person
+router.delete('/:storeHash/payments/accounts/:accountId/persons/:personId', auth, (req, res) => deletePerson(req, res))
 // Get payment
 router.get('/:storeHash/payments/:chargeId', auth, (req, res) => getPayment(req, res))
 // Update image

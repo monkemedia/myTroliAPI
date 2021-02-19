@@ -1,27 +1,14 @@
 
 const Payment = require('../../models/payment')
 const errorHandler = require('../../utils/errorHandler')
-const requestIp = require('request-ip')
 
 const createAccount = async (req, res) => {
   const data = req.body
   const {
-    type,
     country,
-    business_type
+    business_type,
+    client_ip_address
   } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'payments') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!country) {
     return res.status(401).send({
@@ -35,8 +22,18 @@ const createAccount = async (req, res) => {
     })
   }
 
+  if (!client_ip_address) {
+    return res.status(401).send({
+      message: 'Client IP address is required'
+    })
+  }
+
   try {
-    const account = await Payment.createAccount({ country, business_type })
+    const account = await Payment.createAccount({ 
+      client_ip_address,
+      country,
+      business_type 
+    })
 
     res.status(200).send(account)
   } catch (err) {
@@ -46,33 +43,10 @@ const createAccount = async (req, res) => {
 
 const updateAccount = async (req, res) => {
   const data = req.body
-  const { type } = data
   const accountId = req.params.accountId
-  const ip = requestIp.getClientIp(req)
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'payments') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
-
-  delete data.type
-
 
   try {
-    const account = await Payment.updateAccount(accountId, {
-      ...data,
-      // tos_acceptance: {
-      //   date: Math.floor(Date.now() / 1000),
-      //   ip
-      // }
-    })
+    const account = await Payment.updateAccount(accountId, data)
 
     res.status(200).send(account)
   } catch (err) {
@@ -94,22 +68,7 @@ const getAccount = async (req, res) => {
 
 const createPerson = async (req, res) => {
   const data = req.body
-  const { type } = data
   const accountId = req.params.accountId
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'payments') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
-
-  delete data.type
 
   try {
     const person = await Payment.createPerson(accountId, data)
@@ -147,23 +106,8 @@ const getPerson = async (req, res) => {
 
 const updatePerson = async (req, res) => {
   const data = req.body
-  const { type } = data
   const accountId = req.params.accountId
   const personId = req.params.personId
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'payments') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
-
-  delete data.type
 
   try {
     const person = await Payment.updatePerson(accountId, personId, data)
@@ -174,23 +118,23 @@ const updatePerson = async (req, res) => {
   }
 }
 
+const deletePerson = async (req, res) => {
+  const accountId = req.params.accountId
+  const personId = req.params.personId
+
+  try {
+    const person = await Payment.deletePerson(accountId, personId)
+
+    res.status(200).send(person)
+  } catch (err) {
+    res.status(400).send(errorHandler(400, err))
+  }
+}
+
 const uploadFile = async (req, res) => {
   const file = req.file
-  const type = req.body.type
   const purpose = req.body.purpose
   const accountId = req.params.accountId
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'payments') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!purpose) {
     return res.status(401).send({
@@ -246,6 +190,7 @@ module.exports = {
   createPerson,
   getPersons,
   getPerson,
+  deletePerson,
   updatePerson,
   uploadFile,
   createPayment
