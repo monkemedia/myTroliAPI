@@ -4,6 +4,7 @@ const paymentSchema = require('./schema')
 const Store = require('../store')
 const fs = require('fs')
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
+const _isEmpty = require('lodash/isEmpty')
 
 // Create account
 paymentSchema.statics.createAccount = async ({ country, business_type, client_ip_address }) => {  
@@ -44,42 +45,63 @@ paymentSchema.statics.getAccount = async (accountId) => {
 
 // Create person
 paymentSchema.statics.createPerson = async (accountId, data) => {  
-  const account = await stripe.accounts.createPerson(accountId, data)
+  const person = await stripe.accounts.createPerson(accountId, data)
 
-  return account
+  return person
 }
 
 // Update person
 paymentSchema.statics.updatePerson = async (accountId, personId, data) => {  
-  const account = await stripe.accounts.updatePerson(accountId, personId, data)
+  const person = await stripe.accounts.updatePerson(accountId, personId, data)
 
-  return account
+  return person
 }
 
 // Get persons
 paymentSchema.statics.getPersons = async (accountId) => {  
-  const account = await stripe.accounts.listPersons(accountId)
+  const persons = await stripe.accounts.listPersons(accountId)
 
-  return account
+  const company = {
+    directors_provided: false,
+    owners_provided: false,
+    executives_provided: false
+  }
+
+  if (persons.data.some(person => person.relationship.director)) {
+    company.directors_provided = true
+  } 
+  
+  if (persons.data.some(person => person.relationship.owner)) {
+    company.owners_provided = true
+  }
+  
+  if (persons.data.some(person => person.relationship.executive)) {
+    company.executives_provided = true
+  }
+
+  if (!_isEmpty(company)) {
+    await stripe.accounts.update(accountId, { company })
+  }
+
+  return persons
 }
 
 // Get person
 paymentSchema.statics.getPerson = async (accountId, personId) => {  
-  const account = await stripe.accounts.retrievePerson(accountId, personId)
+  const person = await stripe.accounts.retrievePerson(accountId, personId)
 
-  return account
+  return person
 }
 
 // Delete person
 paymentSchema.statics.deletePerson = async (accountId, personId) => {  
-  const account = await stripe.accounts.deletePerson(accountId, personId)
+  const person = await stripe.accounts.deletePerson(accountId, personId)
 
-  return account
+  return person
 }
 
 // Upload file
 paymentSchema.statics.uploadFile = async (accountId, purpose, file) => {  
-  console.log('file', file)
   const files = await stripe.files.create({
     purpose,
     file: {
