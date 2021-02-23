@@ -1,9 +1,9 @@
+const mongoose = require('mongoose')
 const ProductVariantSchema = require('./schema')
-const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get product variants
 ProductVariantSchema.statics.findProductVariants = async (productId) => {
-  const productVariants = await ProductVariant()
+  const productVariants = await ProductVariant
     .aggregate([
       {
         $match: { product_id: productId }
@@ -26,7 +26,7 @@ ProductVariantSchema.statics.findProductVariants = async (productId) => {
 
 // Update product variant
 ProductVariantSchema.statics.updateProductVariant = async (variantId, productVariantDetails) => {
-  const productVariant = await ProductVariant().updateOne({ _id: variantId }, {
+  const productVariant = await ProductVariant.updateOne({ _id: variantId }, {
     ...productVariantDetails,
     updated_at: Date.now()
   })
@@ -35,11 +35,10 @@ ProductVariantSchema.statics.updateProductVariant = async (variantId, productVar
 
 // Delete product variant
 ProductVariantSchema.statics.deleteProductVariant = async (variantId) => {
-  const productVariant = await ProductVariant().deleteOne({ _id: variantId })
+  const productVariant = await ProductVariant.deleteOne({ _id: variantId })
   return productVariant
 }
 
-const ProductVariant = function () {
-  return tenantModel('ProductVariant', ProductVariantSchema)
-}
+const ProductVariant = mongoose.model('ProductVariant', ProductVariantSchema)
+
 module.exports = ProductVariant

@@ -10,6 +10,7 @@ const createProductVariant = async (req, res) => {
     option_values
   } = data
   const productId = req.params.productId
+  const store_hash = req.params.storeHash
 
   if (!type) {
     return res.status(401).send({
@@ -44,7 +45,7 @@ const createProductVariant = async (req, res) => {
     const updateOptionValues = await product.option_values.map(async option => {
       const id = option.id
       const optionId = option.option_id
-      const productOption = await ProductOption().findProductOption(productId, id)
+      const productOption = await ProductOption.findProductOption(productId, id)
       const label = await productOption.option_values.filter(val => {
         return JSON.stringify(val._id) === JSON.stringify(optionId)
       })[0].label
@@ -60,12 +61,13 @@ const createProductVariant = async (req, res) => {
     const results = await Promise.all(updateOptionValues)
 
     product.option_values = results
+    product.store_hash = store_hash
 
-    const savedProductOption = new ProductVariant()(product)
+    const savedProductOption = new ProductVariant(product)
 
     await savedProductOption.save()
 
-    const actualProduct = await Product().findById(productId)
+    const actualProduct = await Product.findById(productId)
 
     actualProduct.variants.push(savedProductOption)
 
@@ -80,7 +82,7 @@ const createProductVariant = async (req, res) => {
 const getProductVariants = async (req, res) => {
   try {
     const productId = req.params.productId
-    const productVariants = await ProductVariant().findProductVariants(productId)
+    const productVariants = await ProductVariant.findProductVariants(productId)
 
     res.status(200).send(productVariants)
   } catch (err) {
@@ -91,7 +93,7 @@ const getProductVariants = async (req, res) => {
 const getProductVariant = async (req, res) => {
   const variantId = req.params.variantId
   const productId = req.params.productId
-  const productVariant = await ProductVariant()
+  const productVariant = await ProductVariant
     .findOne({ _id: variantId, product_id: productId })
     .populate('images')
 
@@ -125,7 +127,7 @@ const updateProductVariant = async (req, res) => {
     const updateOptionValues = await product.option_values.map(async option => {
       const id = option.id
       const optionId = option.option_id
-      const productOption = await ProductOption().findProductOption(productId, id)
+      const productOption = await ProductOption.findProductOption(productId, id)
       const label = productOption.option_values.filter(val => {
         return JSON.stringify(val._id) === JSON.stringify(optionId)
       })[0].label
@@ -142,8 +144,8 @@ const updateProductVariant = async (req, res) => {
 
     product.option_values = results
 
-    await ProductVariant().updateProductVariant(variantId, product)
-    const productVariant = await ProductVariant()
+    await ProductVariant.updateProductVariant(variantId, product)
+    const productVariant = await ProductVariant
       .findOne({ _id: variantId, product_id: productId })
       .populate('images')
 
@@ -158,9 +160,9 @@ const deleteProductVariant = async (req, res) => {
     const variantId = req.params.variantId
     const productId = req.params.productId
 
-    await ProductVariant().deleteProductVariant(variantId)
+    await ProductVariant.deleteProductVariant(variantId)
 
-    const actualProduct = await Product().findById(productId)
+    const actualProduct = await Product.findById(productId)
 
     actualProduct.variants.pull(variantId)
 

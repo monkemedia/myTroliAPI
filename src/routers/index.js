@@ -1,5 +1,6 @@
 const { Router } = require('express')
 const merchants = require('./merchants.js')
+const merchantCategoryCodes = require('./merchantCategoryCodes.js')
 const customers = require('./customers/index.js')
 const customerAddresses = require('./customers/addresses/index.js')
 const customerCoupons = require('./customers/coupons/index.js')
@@ -16,7 +17,7 @@ const shippingAddress = require('./shipping/address/index.js')
 const shippingZones = require('./shipping/zones/index.js')
 const shippingMethods = require('./shipping/zones/methods/index.js')
 const settings = require('./settings.js')
-const payments = require('./payments/index.js')
+const payments = require('./payments.js')
 const productVariants = require('./products/variants/index.js')
 const productVariantImages = require('./products/variants/images/index.js')
 const productOptions = require('./products/options/index.js')
@@ -33,6 +34,7 @@ const router = Router()
 
 router.use(
   merchants,
+  merchantCategoryCodes,
   customers,
   coupons,
   customerAddresses,

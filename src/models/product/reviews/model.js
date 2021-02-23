@@ -1,21 +1,20 @@
+const mongoose = require('mongoose')
 const ProductReviewSchema = require('./schema')
 const Product = require('../model')
-const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get product reviews
-ProductReviewSchema.statics.findProductReviews = async ({page, limit, productId}) => {
-  const query = {}
+ProductReviewSchema.statics.findProductReviews = async ({ page, limit, productId, store_hash }) => {
+  const query = { store_hash }
 
   if (productId) {
     Object.assign(query, { product_id: productId })
   }
-  const productReview = new ProductReview()
-  const productReviews = await productReview
+  const productReviews = await ProductReview
     .find(query)
     .sort({ sort_order: 1 })
     .skip((page - 1) * limit)
     .limit(limit)
-  const total = await productReview.countDocuments()
+  const total = await ProductReview.countDocuments({ store_hash })
 
   return {
     data: productReviews,
@@ -32,21 +31,22 @@ ProductReviewSchema.statics.findProductReviews = async ({page, limit, productId}
 }
 
 // Search product reviews by Author or status
-ProductReviewSchema.statics.search = async ({ page, limit, keyword }) => {
+ProductReviewSchema.statics.search = async ({ page, limit, keyword, store_hash }) => {
   const searchQuery = {
+    store_hash,
     $or: [
       { name: { $regex: keyword, $options: 'i' } },
       { status: { $regex: keyword, $options: 'i' } }
     ]
   }
-  const productReview = new ProductReview()
-  const productReviews = await productReview
+
+  const productReviews = await ProductReview
     .find(searchQuery)
     .skip((page - 1) * limit)
     .limit(limit)
     .populate('images')
 
-  const total = await productReview.countDocuments(searchQuery)
+  const total = await ProductReview.countDocuments(searchQuery)
   return {
     data: productReviews,
     meta: {
@@ -63,7 +63,7 @@ ProductReviewSchema.statics.search = async ({ page, limit, keyword }) => {
 
 // Update product review
 ProductReviewSchema.statics.updateProductReview = async (reviewId, productReviewDetails) => {
-  const productReview = await ProductReview().updateOne({ _id: reviewId }, {
+  const productReview = await ProductReview.updateOne({ _id: reviewId }, {
     ...productReviewDetails,
     updated_at: Date.now()
   })
@@ -72,17 +72,16 @@ ProductReviewSchema.statics.updateProductReview = async (reviewId, productReview
 
 // Delete product review
 ProductReviewSchema.statics.deleteProductReview = async (reviewId, productId) => {
-  await Product().updateOne({ _id: productId }, {
+  await Product.updateOne({ _id: productId }, {
     $pull: {
       custom_fields: reviewId
     },
     updated_at: Date.now()
   })
-  const productReview = await ProductReview().deleteOne({ _id: reviewId })
+  const productReview = await ProductReview.deleteOne({ _id: reviewId, store_hash })
   return productReview
 }
 
-const ProductReview = function () {
-  return tenantModel('ProductReview', ProductReviewSchema)
-}
+const ProductReview = mongoose.model('ProductReview', ProductReviewSchema)
+
 module.exports = ProductReview

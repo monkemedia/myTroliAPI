@@ -1,26 +1,14 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const ShippingZoneSchema = new Schema({
-  type: {
+const MerchantCategoryCodeSchema = new Schema({
+  code: {
     type: String,
     required: true
   },
-  store_hash: {
+  category: {
     type: String,
     required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  country_code: {
-    type: String,
-    required: true
-  },
-  enabled: {
-    type: Boolean,
-    default: false
   },
   created_at: {
     type: Date,
@@ -31,4 +19,4 @@ const ShippingZoneSchema = new Schema({
   }
 }, { versionKey: false })
 
-module.exports = ShippingZoneSchema
+module.exports = MerchantCategoryCodeSchema

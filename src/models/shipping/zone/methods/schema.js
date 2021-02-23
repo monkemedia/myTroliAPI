@@ -6,6 +6,10 @@ const ShippingZoneSchema = new Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   name: {
     type: String
   },

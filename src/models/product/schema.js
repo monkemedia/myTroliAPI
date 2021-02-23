@@ -6,6 +6,10 @@ const ProductSchema = Schema({
     type: String,
     required: true
   },
+  store_hash: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true

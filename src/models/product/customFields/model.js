@@ -1,11 +1,11 @@
+const mongoose = require('mongoose')
 const ProductCustomFieldSchema = require('./schema')
 const Product = require('../model')
-const { tenantModel } = require('../../../utils/multitenancy')
 
 // Get product custom fields
-ProductCustomFieldSchema.statics.findProductCustomFields = async (productId) => {
-  const productCustomFields = await ProductCustomField()
-    .find({ product_id: productId })
+ProductCustomFieldSchema.statics.findProductCustomFields = async (product_id) => {
+  const productCustomFields = await ProductCustomField
+    .find({ product_id })
     .sort({ sort_order: 1 })
 
   return productCustomFields
@@ -13,7 +13,7 @@ ProductCustomFieldSchema.statics.findProductCustomFields = async (productId) => 
 
 // Update product custome field
 ProductCustomFieldSchema.statics.updateProductCustomField = async (customFieldId, productCustomFieldDetails) => {
-  const productCustomField = await ProductCustomField().updateOne({ _id: customFieldId }, {
+  const productCustomField = await ProductCustomField.updateOne({ _id: customFieldId }, {
     ...productCustomFieldDetails,
     updated_at: Date.now()
   })
@@ -22,17 +22,16 @@ ProductCustomFieldSchema.statics.updateProductCustomField = async (customFieldId
 
 // Delete product custome field
 ProductCustomFieldSchema.statics.deleteProductCustomField = async (customFieldId, productId) => {
-  await Product().updateOne({ _id: productId }, {
+  await Product.updateOne({ _id: productId }, {
     $pull: {
       custom_fields: customFieldId
     },
     updated_at: Date.now()
   })
-  const productCustomField = await ProductCustomField().deleteOne({ _id: customFieldId })
+  const productCustomField = await ProductCustomField.deleteOne({ _id: customFieldId })
   return productCustomField
 }
 
-const ProductCustomField = function () {
-  return tenantModel('ProductCustomField', ProductCustomFieldSchema)
-}
+const ProductCustomField = mongoose.model('ProductCustomField', ProductCustomFieldSchema)
+
 module.exports = ProductCustomField

@@ -6,7 +6,7 @@ const StoreSchema = new Schema({
     type: String,
     required: true
   },
-  domain: {
+  store_hash: {
     type: String,
     required: true
   },
@@ -45,14 +45,6 @@ const StoreSchema = new Schema({
     type: Number,
     default: 0
   },
-  stripe_publishable_key: {
-    type: String,
-    default: ''
-  },
-  stripe_secret_key: {
-    type: String,
-    default: ''
-  },
   language: {
     type: String
   },
@@ -60,6 +52,9 @@ const StoreSchema = new Schema({
     type: String
   },
   weight_unit: {
+    type: String
+  },
+  stripe_account_id: {
     type: String
   },
   created_at: {

@@ -5,6 +5,7 @@ const Image = require('../../../models/image')
 const createProductImage = async (req, res) => {
   const data = req.body
   const productId = req.params.productId
+  const storeHash = req.params.storeHash
 
   if (data.some(val => !val.type)) {
     return res.status(401).send({
@@ -31,10 +32,11 @@ const createProductImage = async (req, res) => {
   }
 
   try {
-    const product = await Product().findById(productId)
+    const product = await Product.findOne({ _id: productId })
     const promise = data.map(async obj => {
       obj.product_id = productId
-      const images = new ProductImage()(obj)
+      obj.store_hash = storeHash
+      const images = new ProductImage(obj)
       const save = await images.save()
       product.images.push(save)
       await product.save()
@@ -51,6 +53,7 @@ const createProductImage = async (req, res) => {
 const getProductImages = async (req, res) => {
   const query = req.query
   const queryObj = {}
+  
 
   // Queries with 'true' or 'false' need to be converted into Booleans
   Object.entries(query).forEach(([key, value]) => {
@@ -70,9 +73,9 @@ const getProductImages = async (req, res) => {
     let productImages
 
     if (query) {
-      productImages = await ProductImage().findProductImagesByQuery(productId, queryObj)
+      productImages = await ProductImage.findProductImagesByQuery(productId, queryObj)
     } else {
-      productImages = await ProductImage().findAllProductImages(productId)
+      productImages = await ProductImage.findAllProductImages(productId)
     }
     res.status(200).send(productImages)
   } catch (err) {
@@ -83,7 +86,7 @@ const getProductImages = async (req, res) => {
 const getProductImage = async (req, res) => {
   const productId = req.params.productId
   const imageId = req.params.imageId
-  const productImage = await ProductImage().findProductImage(productId, imageId)
+  const productImage = await ProductImage.findProductImage(productId, imageId)
 
   res.status(200).send(productImage)
 }
@@ -107,8 +110,8 @@ const updateProductImage = async (req, res) => {
   }
 
   try {
-    await ProductImage().updateProductImage(productId, imageId, data)
-    const productImage = await ProductImage().findProductImage(productId, imageId)
+    await ProductImage.updateProductImage(productId, imageId, data)
+    const productImage = await ProductImage.findProductImage(productId, imageId)
 
     res.status(200).send(productImage)
   } catch (err) {
@@ -133,11 +136,11 @@ const deleteProductImage = async (req, res) => {
   }
 
   try {
-    const product = await Product().findById(productId)
+    const product = await Product.find({ _id: productId })
     const promise = await data.map(async obj => {
       // Delete image from uploadcare first
       await Image.deleteImage(obj.image_id)
-      await ProductImage().deleteImage(obj._id)
+      await ProductImage.deleteImage(obj._id)
       await product.images.pull(obj._id)
     })
 
