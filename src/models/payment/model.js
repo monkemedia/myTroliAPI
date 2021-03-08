@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 const Stripe = require('stripe')
 const paymentSchema = require('./schema')
-const Store = require('../store')
 const fs = require('fs')
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 const _isEmpty = require('lodash/isEmpty')
@@ -62,21 +61,9 @@ paymentSchema.statics.getPersons = async (accountId) => {
   const persons = await stripe.accounts.listPersons(accountId)
 
   const company = {
-    directors_provided: false,
-    owners_provided: false,
-    executives_provided: false
-  }
-
-  if (persons.data.some(person => person.relationship.director)) {
-    company.directors_provided = true
-  } 
-  
-  if (persons.data.some(person => person.relationship.owner)) {
-    company.owners_provided = true
-  }
-  
-  if (persons.data.some(person => person.relationship.executive)) {
-    company.executives_provided = true
+    directors_provided: true,
+    owners_provided: true,
+    executives_provided: true
   }
 
   if (!_isEmpty(company)) {
@@ -117,17 +104,31 @@ paymentSchema.statics.uploadFile = async (accountId, purpose, file) => {
 }
 
 // Create payment
-paymentSchema.statics.createPayment = async ({ source, receipt_email, currency, amount, store_hash }) => {
-  const store = await Store.findOne({ store_hash })
-  
-  const payment = await Stripe(store.stripe_secret_key).charges.create({
-    source,
-    receipt_email,
-    currency,
-    amount,
-    store_hash
-  })
-  return payment
+paymentSchema.statics.createPayment = async (data) => {
+  const stripeAccount = data.stripe_account_id
+  const amount = data.amount / 100
+  const _PERCENTAGE = 5 // 5%
+  const percentage = _PERCENTAGE / 100 // 0.05
+  const troliFee = (percentage * amount).toFixed(2) * 100
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      payment_method_types: ['card'],
+      application_fee_amount: troliFee,
+      // transfer_data: {
+      //   amount: (amount - deductAmount) * 100,
+      //   destination: data.stripe_account_id,
+      // },
+      amount: data.amount,
+      currency: data.currency
+    }, { stripeAccount })
+
+    return {
+      client_secret: paymentIntent.client_secret
+    }
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 const Payment = mongoose.model('Payment', paymentSchema)
