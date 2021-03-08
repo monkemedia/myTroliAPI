@@ -105,21 +105,22 @@ paymentSchema.statics.uploadFile = async (accountId, purpose, file) => {
 
 // Create payment
 paymentSchema.statics.createPayment = async (data) => {
+  const stripeAccount = data.stripe_account_id
   const amount = data.amount / 100
   const percentage = 5 / 100 // 5%
-  const deductAmount = (percentage * amount).toFixed(2)
+  const troliFee = (percentage * amount).toFixed(2) * 100
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       payment_method_types: ['card'],
-      // application_fee_amount: (percentage * amount).toFixed(2) * 100,
-      transfer_data: {
-        amount: (amount - deductAmount) * 100,
-        destination: data.stripe_account_id,
-      },
+      application_fee_amount: troliFee,
+      // transfer_data: {
+      //   amount: (amount - deductAmount) * 100,
+      //   destination: data.stripe_account_id,
+      // },
       amount: data.amount,
       currency: data.currency
-    })
+    }, { stripeAccount })
 
     return {
       client_secret: paymentIntent.client_secret
