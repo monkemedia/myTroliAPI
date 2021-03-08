@@ -131,7 +131,7 @@ OrderSchema.statics.findOrders = async ({ page, limit, store_hash }) => {
 
 // Get order
 OrderSchema.statics.findOrder = async (id) => {
-  const order = await Order()
+  const order = await Order
     .aggregate([
       {
         $match: { id: parseInt(id) }
