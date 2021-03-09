@@ -44,12 +44,14 @@ const updateOrder = async (orderId, refundId) => {
 
 const refundMonies = async (payment, customerId) => {
   const paymentProvider = payment.provider
-  const chargeId = payment.charge_id
+  const stripePaymentIntentId = payment.stripe_payment_intent_id
+  const stripeAccountId = payment.stripe_account_id
+  const amount = payment.amount
 
   if (paymentProvider === 'store_credit') {
-    await Customer.updateCustomersStoreCredit(customerId, payment.amount)
+    await Customer.updateCustomersStoreCredit(customerId, amount)
   } else if (paymentProvider === 'stripe') {
-    await PaymentRefund.createPaymentRefund(chargeId, payment.amount)
+    await PaymentRefund.createPaymentRefund(stripePaymentIntentId, amount, stripeAccountId)
   }
 }
 
@@ -66,7 +68,6 @@ OrderRefundSchema.pre('save', async function (next) {
     await refundMonies(payment, customerId, orderRefund)
     await updateProductsTotalSold(items)
     await updateOrder(orderId, refundId) // Adds refund ID to Order endpoint
-
     orderRefund.total_amount = totalAmountToRefund
     next()
   } catch (err) {

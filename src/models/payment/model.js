@@ -124,7 +124,8 @@ paymentSchema.statics.createPayment = async (data) => {
     }, { stripeAccount })
 
     return {
-      client_secret: paymentIntent.client_secret
+      client_secret: paymentIntent.client_secret,
+      payment_intent_id: paymentIntent.id
     }
   } catch (err) {
     console.log(err)

@@ -1,20 +1,25 @@
 const mongoose = require('mongoose')
 const Stripe = require('stripe')
-const Store = require('../../store')
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 const paymentRefundSchema = require('./schema')
 
 // Create payment refund
-paymentRefundSchema.statics.createPaymentRefund = async (charge, amount) => {
-  const store = await Store().findOne()
-  const paymentRefund = await Stripe(store.stripe_secret_key).refunds.create({ charge, amount })
+paymentRefundSchema.statics.createPaymentRefund = async (stripePaymentIntentId, amount, stripeAccount) => {
+  const { charges } = await stripe.paymentIntents.retrieve(stripePaymentIntentId, { stripeAccount })
+  const charge = charges.data[0].id
+
+  const paymentRefund = await stripe.refunds.create({ 
+    refund_application_fee: false,
+    charge,
+    amount 
+  }, { stripeAccount })
 
   return paymentRefund
 }
 
 // Get payment refund
 paymentRefundSchema.statics.getPaymentRefund = async (id) => {
-  const store = await Store().findOne()
-  const paymentRefund = await Stripe(store.stripe_secret_key).refunds.retrieve(id)
+  const paymentRefund = await stripe.refunds.retrieve(id)
   return paymentRefund
 }
 
