@@ -34,7 +34,7 @@ const updateProductsTotalSold = async (items) => {
 }
 
 const updateOrder = async (orderId, refundId) => {
-  await Order().updateOne({ id: orderId }, {
+  await Order.updateOne({ id: orderId }, {
     $push: {
       refunded: refundId
     },
