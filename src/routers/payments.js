@@ -12,14 +12,11 @@ const {
   deletePerson,
   updatePerson,
   uploadFile,
-  getPayment,
-  updatePayment
+  getPayment
 } = require('../controller/payments')
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
-// Create new Payment
-router.post('/:storeHash/payments', auth, (req, res) => createPayment(req, res))
 // Create account
 router.post('/:storeHash/payments/accounts', auth, (req, res) => createAccount(req, res))
 // Update account
@@ -38,9 +35,10 @@ router.get('/:storeHash/payments/accounts/:accountId/persons/:personId', auth, (
 router.put('/:storeHash/payments/accounts/:accountId/persons/:personId', auth, (req, res) => updatePerson(req, res))
 // Delete person
 router.delete('/:storeHash/payments/accounts/:accountId/persons/:personId', auth, (req, res) => deletePerson(req, res))
+
+// Create new Payment
+router.post('/:storeHash/payments', auth, (req, res) => createPayment(req, res))
 // Get payment
 router.get('/:storeHash/payments/:paymentIntentId', auth, (req, res) => getPayment(req, res))
-// Update image
-router.put('/:storeHash/payments/:paymentIntentId', auth, (req, res) => updatePayment(req, res))
 
 module.exports = router
