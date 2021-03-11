@@ -100,10 +100,13 @@ const OrderSchema = new Schema({
   payment_provider: {
     type: String
   },
-  payment_charge_id: {
+  payment_status: {
     type: String
   },
-  payment_status: {
+  stripe_account_id: {
+    type: String
+  },
+  stripe_payment_intent_id: {
     type: String
   },
   order_is_digital: {

@@ -6,19 +6,7 @@ const createOrderRefund = async (req, res) => {
   const order_id = req.params.orderId
   const store_hash = req.params.storeHash
 
-  const { type, items, payment } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'order-refund') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
+  const { items, payment } = data
 
   if (!items) {
     return res.status(401).send({
@@ -40,7 +28,7 @@ const createOrderRefund = async (req, res) => {
 
   try {
     const orderRefund = new OrderRefund({
-      order_id: orderId,
+      order_id,
       store_hash,
       ...data
     })
@@ -48,20 +36,22 @@ const createOrderRefund = async (req, res) => {
     await orderRefund.save()
 
     const getRefunds = await OrderRefund.find({ order_id })
-    const order = await Order.findOne({ id: orderId })
+
+    const order = await Order.findOne({ id: order_id})
+
     let totalAmountSum = 0
 
-    getRefunds.map((refund) => {
+    getRefunds.forEach((refund) => {
       totalAmountSum += refund.payment.amount
     })
 
     // Updates order status with either 'refunded' or 'partially refunded'
     order.status_id = totalAmountSum === order.total_inc_tax ? 4 : 14
-
     await order.save()
 
     res.status(201).send(orderRefund)
   } catch (err) {
+    console.log('err', err)
     let error = {}
     err.message ? error.message = err.message : error = err
     res.status(400).send(error)

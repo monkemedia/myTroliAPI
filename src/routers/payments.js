@@ -39,8 +39,8 @@ router.put('/:storeHash/payments/accounts/:accountId/persons/:personId', auth, (
 // Delete person
 router.delete('/:storeHash/payments/accounts/:accountId/persons/:personId', auth, (req, res) => deletePerson(req, res))
 // Get payment
-router.get('/:storeHash/payments/:chargeId', auth, (req, res) => getPayment(req, res))
+router.get('/:storeHash/payments/:paymentIntentId', auth, (req, res) => getPayment(req, res))
 // Update image
-router.put('/:storeHash/payments/:chargeId', auth, (req, res) => updatePayment(req, res))
+router.put('/:storeHash/payments/:paymentIntentId', auth, (req, res) => updatePayment(req, res))
 
 module.exports = router

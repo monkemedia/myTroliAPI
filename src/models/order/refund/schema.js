@@ -2,10 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const OrderRefundSchema = new Schema({
-  type: {
-    type: String,
-    required: true
-  },
   store_hash: {
     type: String,
     required: true
@@ -52,7 +48,10 @@ const OrderRefundSchema = new Schema({
       type: String,
       required: true
     },
-    charge_id: {
+    stripe_payment_intent_id: {
+      type: String
+    },
+    stripe_account_id: {
       type: String
     },
     amount: {
