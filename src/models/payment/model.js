@@ -108,7 +108,7 @@ paymentSchema.statics.createPayment = async (data) => {
   const stripeAccount = data.stripe_account_id
   const amount = data.amount
   const _PERCENTAGE = 5 // 5%
-  const fee = amount * (parseFloat(_PERCENTAGE) / 100) + parseFloat(0.20)
+  const fee = amount * (parseFloat(_PERCENTAGE) / 100)
   const troliFee = Math.round(fee)
 
   try {
