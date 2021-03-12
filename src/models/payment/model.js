@@ -4,6 +4,7 @@ const paymentSchema = require('./schema')
 const fs = require('fs')
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 const _isEmpty = require('lodash/isEmpty')
+const errorHandler = require('../../utils/errorHandler')
 
 // Create account
 paymentSchema.statics.createAccount = async ({ country, business_type, client_ip_address }) => {  
@@ -105,30 +106,31 @@ paymentSchema.statics.uploadFile = async (accountId, purpose, file) => {
 
 // Create payment
 paymentSchema.statics.createPayment = async (data) => {
-  const stripeAccount = data.stripe_account_id
-  const amount = data.amount
+  const { amount, payment_method_id, currency, stripe_account_id } = data
   const _PERCENTAGE = 5 // 5%
   const fee = amount * (parseFloat(_PERCENTAGE) / 100)
   const troliFee = Math.round(fee)
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      payment_method_types: ['card'],
+      payment_method: payment_method_id,
+      payment_method_options: {
+        card: {
+          moto: true
+        }
+      },
+      confirm: true,
       application_fee_amount: troliFee,
-      // transfer_data: {
-      //   amount: (amount - deductAmount) * 100,
-      //   destination: data.stripe_account_id,
-      // },
-      amount: data.amount,
-      currency: data.currency
-    }, { stripeAccount })
+      amount,
+      currency
+    }, { stripeAccount: stripe_account_id })
 
     return {
-      client_secret: paymentIntent.client_secret,
       payment_intent_id: paymentIntent.id
     }
   } catch (err) {
-    console.log(err)
+    console.log('ERROR BABT', errorHandler(422, err.raw.message))
+    throw errorHandler(422, err.raw.message)
   }
 }
 

@@ -155,9 +155,9 @@ const createPayment = async (req, res) => {
   const data = req.body
 
   try {
-    const chargeCustomer = await Payment.createPayment(data)
+    const payment = await Payment.createPayment(data)
 
-    res.status(200).send(chargeCustomer)
+    res.status(200).send(payment)
   } catch (err) {
     res.status(400).send(errorHandler(400, err))
   }
