@@ -1,10 +1,13 @@
 const mongoose = require('mongoose')
 const ShippingAddressSchema = require('./schema')
+const { convertISOToCountry} = require('../../../utils/helpers')
 
 // Update shipping address
 ShippingAddressSchema.statics.updateShippingAddress = async (data, store_hash) => {
+  const country = await convertISOToCountry(data.country_code)
   const shippingAddress = await ShippingAddress.updateOne({ store_hash }, {
     ...data,
+    country,
     updated_at: Date.now()
   })
   return shippingAddress

@@ -3,23 +3,10 @@ const errorHandler = require('../utils/errorHandler')
 
 const uploadImage = async (req, res) => {
   const image = req.file
-  const type = req.body.type
 
   if (!image) {
     return res.status(401).send({
       message: 'Image is required'
-    })
-  }
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'image') {
-    return res.status(401).send({
-      message: 'Correct type is required'
     })
   }
 

@@ -3,7 +3,6 @@ const CustomerAddress = require('../../../models/customer/address')
 const createCustomerAddress = async (req, res) => {
   const data = req.body
   const {
-    type,
     first_name,
     last_name,
     line_1,
@@ -13,18 +12,6 @@ const createCustomerAddress = async (req, res) => {
   } = data
   const customer_id = req.params.customerId
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'customer-address') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!first_name) {
     return res.status(401).send({
@@ -98,19 +85,6 @@ const getCustomerAddress = async (req, res) => {
 const updateCustomerAddress = async (req, res) => {
   const addressId = req.params.addressId
   const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'customer-address') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await CustomerAddress.updateCustomerAddress(addressId, data)

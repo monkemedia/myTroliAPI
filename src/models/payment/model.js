@@ -9,7 +9,6 @@ const errorHandler = require('../../utils/errorHandler')
 // Create account
 paymentSchema.statics.createAccount = async ({ country, business_type, client_ip_address }) => {  
   const account = await stripe.accounts.create({
-    type: 'custom',
     capabilities: {
       card_payments: {
         requested: true,

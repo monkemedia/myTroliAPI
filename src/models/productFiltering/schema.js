@@ -2,9 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ProductFilterSchema = new Schema({
-  type: {
-    type: String
-  },
   store_hash: {
     type: String,
     required: true

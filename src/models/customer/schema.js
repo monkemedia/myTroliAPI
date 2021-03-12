@@ -4,10 +4,6 @@ const validator = require('validator')
 const errorHandler = require('../../utils/errorHandler')
 
 const CustomerSchema = new Schema({
-  type: {
-    type: String,
-    required: true
-  },
   store_hash: {
     type: String,
     required: true

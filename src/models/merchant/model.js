@@ -16,8 +16,7 @@ MerchantSchema.pre('save', async function (next) {
 MerchantSchema.methods.generateToken = async function (expiresIn) {
   const merchant = this
   const accessToken = jwt.sign({
-    merchant_id: merchant._id,
-    type: merchant.type
+    merchant_id: merchant._id
   }, process.env.API_SECRET, { expiresIn: expiresIn || '24hrs' })
 
   return accessToken

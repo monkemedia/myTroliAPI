@@ -9,8 +9,7 @@ SettingSchema.statics.findSettings = async (store_hash) => {
 
 // Update setting
 SettingSchema.statics.updateSettings = async (data, store_hash) => {
-  delete data.type
-  const setting = await Setting.findOneAndUpdate({ type: 'settings', store_hash }, {
+  const setting = await Setting.findOneAndUpdate({ store_hash }, {
     ...data,
     updated_at: Date.now()
   }, {

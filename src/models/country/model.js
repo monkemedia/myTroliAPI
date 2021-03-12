@@ -16,6 +16,12 @@ CountrySchema.statics.findCountries = async () => {
   return countries
 }
 
+CountrySchema.statics.findCountryByISO = async (iso) => {
+  const { country } = await Country.findOne({ country_iso: iso })
+  
+  return country
+}
+
 const Country = mongoose.model('Country', CountrySchema)
 
 module.exports = Country

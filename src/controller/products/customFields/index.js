@@ -4,24 +4,11 @@ const Product = require('../../../models/product')
 const createProductCustomField = async (req, res) => {
   const data = req.body
   const {
-    type,
     name,
     value
   } = data
   const productId = req.params.productId
   const storeHash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-custom-field') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!name) {
     return res.status(401).send({
@@ -77,21 +64,8 @@ const getProductCustomField = async (req, res) => {
 
 const updateProductCustomField = async (req, res) => {
   const data = req.body
-  const { type } = data
   const productId = req.params.productId
   const customFieldId = req.params.customFieldId
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-custom-field') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await ProductCustomField.updateProductCustomField(customFieldId, data)

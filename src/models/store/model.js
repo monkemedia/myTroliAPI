@@ -3,8 +3,7 @@ const StoreSchema = require('./schema.js')
 
 // Update store
 StoreSchema.statics.updateStore = async (data, store_hash) => {
-  delete data.type
-  const store = await Store.findOneAndUpdate({ type: 'store', store_hash }, {
+  const store = await Store.findOneAndUpdate({ store_hash }, {
     ...data,
     updated_at: Date.now()
   }, { upsert: true })

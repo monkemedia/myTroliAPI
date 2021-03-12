@@ -6,21 +6,9 @@ const createMerchant = async (req, res) => {
   const OWNER = 'owner'
   const data = req.body
   const store_hash = req.params.storeHash
-  const { email, name, role, type } = data
+  const { email, name, role } = data
   const currentMerchant = await Merchant.findByEmailAddress(email)
   const ownerAlreadyExists = await Merchant.find({ store_hash, role: OWNER })
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type !== 'merchant_credentials') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!email) {
     return res.status(401).send({
@@ -125,19 +113,6 @@ const getMerchant = async (req, res) => {
 const updateMerchant = async (req, res) => {
   const merchantId = req.params.merchantId
   const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type !== 'merchant_credentials') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     if (data.password) {
@@ -173,20 +148,7 @@ const deleteMerchant = async (req, res) => {
 const resendActivationEmail = async (req, res) => {
   try {
     const data = req.body
-    const { type, name, email } = data
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type !== 'merchant_credentials') {
-      return res.status(401).send({
-        message: 'Correct type is required'
-      })
-    }
-
+    const { name, email } = data
     const merchant = await Merchant.findOne({ _id: req.params.merchantId }).select('-password')
     const activateToken = await merchant.generateToken('1hr')
 

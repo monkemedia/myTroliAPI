@@ -2,20 +2,8 @@ const Category = require('../models/category')
 
 const createCategory = async (req, res) => {
   const data = req.body
-  const { type, name, slug, status } = data
+  const { name, slug, status } = data
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'categories') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!name) {
     return res.status(401).send({
@@ -86,19 +74,6 @@ const getCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
   const categoryId = req.params.categoryId
   const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'categories') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await Category.updateCategory(categoryId, data)

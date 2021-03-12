@@ -5,20 +5,8 @@ const ProductOption = require('../models/product/option')
 
 const createVariation = async (req, res) => {
   const data = req.body
-  const { type, value } = data
+  const { value } = data
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'variation') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!value) {
     return res.status(401).send({
@@ -60,19 +48,6 @@ const getVariation = async (req, res) => {
 const updateVariation = async (req, res) => {
   const variationId = req.params.variationId
   const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'variation') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await Variation.updateVariation(variationId, data)

@@ -7,7 +7,6 @@ const createProduct = async (req, res) => {
   const customer_id = req.params.customerId
   const data = req.body
   const {
-    type,
     name,
     slug,
     sku,
@@ -16,18 +15,6 @@ const createProduct = async (req, res) => {
     description,
     commodity_type
   } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!name) {
     return res.status(401).send({
@@ -138,19 +125,6 @@ const getProductCount = async (req, res) => {
 const updateProduct = async (req, res) => {
   const productId = req.params.productId
   const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     const product = await Product.updateProduct(productId, data)

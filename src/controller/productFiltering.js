@@ -2,20 +2,7 @@ const ProductFiltering = require('../models/productFiltering')
 
 const updateFacetSettings = async (req, res) => {
   const data = req.body
-  const { type } = data
   const storeHash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-filtering') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await ProductFiltering.updateFacetSettings(data, storeHash)

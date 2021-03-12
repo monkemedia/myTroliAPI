@@ -2,10 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const CustomerAddressSchema = new Schema({
-  type: {
-    type: String,
-    required: true
-  },
   customer_id: {
     type: String,
     required: true

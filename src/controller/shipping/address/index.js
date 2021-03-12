@@ -13,19 +13,8 @@ const createShippingAddress = async (req, res) => {
     })
   }
 
-  if (!data.type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (data.type !== 'shipping-address') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
-
   try {
+    delete data.country // Converting ISO to country is handled on backend
     const shippingAddress = new ShippingAddress({
       ...data,
       store_hash
@@ -52,18 +41,7 @@ const getShippingAddress = async (req, res) => {
 const updateShippingAddress = async (req, res) => {
   const data = req.body
   const store_hash = req.params.storeHash
-
-  if (!data.type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (data.type !== 'shipping-address') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
+  delete data.country // Converting ISO to country is handled on backend
 
   try {
     await ShippingAddress.updateShippingAddress(data, store_hash)
