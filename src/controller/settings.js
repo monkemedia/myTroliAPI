@@ -13,20 +13,7 @@ const getSettings = async (req, res) => {
 
 const updateSettings = async (req, res) => {
   const data = req.body
-  const { type } = data
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'settings') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await Setting.updateSettings(data, store_hash)

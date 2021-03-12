@@ -12,20 +12,7 @@ const getStore = async (req, res) => {
 
 const updateStore = async (req, res) => {
   const data = req.body
-  const { type } = data
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type !== 'store') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await Store.updateStore(data, store_hash)

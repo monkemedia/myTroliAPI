@@ -1,5 +1,13 @@
 const mongoose = require('mongoose')
 const ShippingZoneSchema = require('./schema')
+const { convertISOToCountry} = require('../../../utils/helpers')
+
+ShippingZoneSchema.pre('save', async function (next) {
+  const zone = this
+  console.log('zone', zone)
+  zone.country = await convertISOToCountry(zone.country_code)
+  next()
+})
 
 // Get zones
 ShippingZoneSchema.statics.findZones = async (store_hash) => {

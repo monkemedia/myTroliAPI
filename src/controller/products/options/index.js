@@ -4,24 +4,11 @@ const Product = require('../../../models/product')
 const createProductOption = async (req, res) => {
   const data = req.body
   const {
-    type,
     display_name,
     option_values
   } = data
   const productId = req.params.productId
   const storeHash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-options') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!display_name) {
     return res.status(401).send({
@@ -77,21 +64,8 @@ const getProductOption = async (req, res) => {
 
 const updateProductOption = async (req, res) => {
   const data = req.body
-  const { type } = data
   const productId = req.params.productId
   const optionId = req.params.optionId
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-options') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await ProductOption.updateProductOption(productId, optionId, data)

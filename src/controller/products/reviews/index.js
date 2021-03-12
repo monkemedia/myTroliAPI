@@ -4,23 +4,10 @@ const Product = require('../../../models/product')
 const createProductReview = async (req, res) => {
   const data = req.body
   const {
-    type,
     title
   } = data
   const productId = req.params.productId
   const storeHash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-review') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!title) {
     return res.status(401).send({
@@ -76,22 +63,9 @@ const getProductReview = async (req, res) => {
 
 const updateProductReview = async (req, res) => {
   const data = req.body
-  const { type, status } = data
+  const { status } = data
   const productId = req.params.productId
   const reviewId = req.params.reviewId
-  
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-review') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await ProductReview.updateProductReview(reviewId, data)

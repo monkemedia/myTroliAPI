@@ -6,7 +6,7 @@ const createCustomer = async (req, res) => {
   try {
     // Check to see if customer already exists
     const data = req.body
-    const { first_name, last_name, email, password, type } = data
+    const { first_name, last_name, email, password } = data
 
     const customerExists = await Customer.findByEmail(email)
     const store_hash = req.params.storeHash
@@ -32,18 +32,6 @@ const createCustomer = async (req, res) => {
     if (!password) {
       return res.status(401).send({
         message: 'Password is required'
-      })
-    }
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type && type !== 'customer') {
-      return res.status(401).send({
-        message: 'Correct type is required'
       })
     }
 
@@ -111,19 +99,6 @@ const getCustomer = async (req, res) => {
 const updateCustomer = async (req, res) => {
   const customerId = req.params.customerId
   const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'customer') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await Customer.updateCustomer(customerId, data)
@@ -152,19 +127,7 @@ const deleteCustomer = async (req, res) => {
 const resendVerificationEmail = async (req, res) => {
   try {
     const data = req.body
-    const { type, first_name, last_name, email } = data
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type !== 'customer') {
-      return res.status(401).send({
-        message: 'Correct type is required'
-      })
-    }
+    const { first_name, last_name, email } = data
 
     const customer = await Customer.findOne({ _id: req.params.customerId }).select('-password')
     const token = await customer.generateVerifyToken('1hr')
@@ -186,19 +149,7 @@ const resendVerificationEmail = async (req, res) => {
 
 const verifyCustomer = async (req, res) => {
   try {
-    const { type, verify_token } = req.body
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type !== 'verify_customer') {
-      return res.status(401).send({
-        message: 'Correct type is required'
-      })
-    }
+    const { verify_token } = req.body
 
     try {
       const decode = jwt.verify(verify_token, process.env.VERIFY_SECRET)

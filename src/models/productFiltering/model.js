@@ -4,7 +4,7 @@ const Product = require('../product')
 
 // Update facet settings
 ProductFilteringSchema.statics.updateFacetSettings = async (data, store_hash) => {
-  const facets = await ProductFiltering.findOneAndUpdate({ type: 'product-filtering', store_hash }, {
+  const facets = await ProductFiltering.findOneAndUpdate({ store_hash }, {
     ...data,
     updated_at: Date.now()
   }, {

@@ -4,24 +4,6 @@ const createShippingZone = async (req, res) => {
   const data = req.body
   const store_hash = req.params.storeHash
 
-  if (!data.type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (data.type !== 'shipping-zone') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
-
-  if (!data.name) {
-    return res.status(401).send({
-      message: 'Name is required'
-    })
-  }
-
   if (!data.country_code) {
     return res.status(401).send({
       message: 'Country code is required'
@@ -36,6 +18,8 @@ const createShippingZone = async (req, res) => {
         message: 'Zone already exists'
       })
     }
+
+    console.log('HERE')
     const shippingZone = new ShippingZone({
       ...data,
       store_hash
@@ -73,18 +57,6 @@ const getShippingZone = async (req, res) => {
 const updateShippingZone = async (req, res) => {
   const data = req.body
   const zoneId = req.params.zoneId
-
-  if (!data.type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (data.type !== 'shipping-zone') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await ShippingZone.updateZone(zoneId, data)

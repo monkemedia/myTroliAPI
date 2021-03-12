@@ -2,20 +2,8 @@ const Brand = require('../models/brand')
 
 const createBrand = async (req, res) => {
   const data = req.body
-  const { type, name } = data
+  const { name } = data
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'brands') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!name) {
     return res.status(401).send({
@@ -73,19 +61,6 @@ const getBrand = async (req, res) => {
 const updateBrand = async (req, res) => {
   const brandId = req.params.brandId
   const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'brands') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await Brand.updateBrand(brandId, data)

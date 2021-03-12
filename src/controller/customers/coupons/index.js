@@ -3,23 +3,10 @@ const CustomerCoupon = require('../../../models/customer/coupon')
 const createCustomerCoupon = async (req, res) => {
   const data = req.body
   const {
-    type,
     coupon_id
   } = data
   const customer_id = req.params.customerId
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'customer-coupon') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!coupon_id) {
     return res.status(401).send({

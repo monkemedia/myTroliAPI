@@ -8,18 +8,6 @@ const createProductVariantImage = async (req, res) => {
   const variantId = req.params.variantId
   const storeHash = req.params.storeHash
 
-  if (data.some(val => !val.type)) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (data.some(val => val.type !== 'product-variant-image')) {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
-
   if (data.some(val => !val.image_id)) {
     return res.status(401).send({
       message: 'Image ID is required'
@@ -102,22 +90,9 @@ const getProductVariantImage = async (req, res) => {
 
 const updateProductVariantImage = async (req, res) => {
   const data = req.body
-  const { type } = data
   const productId = req.params.productId
   const variantId = req.params.variantId
   const imageId = data._id
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-variant-image') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await ProductVariantImage.updateProductVariantImage(productId, variantId, data)
@@ -131,21 +106,8 @@ const updateProductVariantImage = async (req, res) => {
 
 const deleteProductVariantImage = async (req, res) => {
   const data = req.body
-  const { type } = data
   const productId = req.params.productId
   const variantId = req.params.variantId
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type !== 'product-variant-image') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await ProductVariantImage.deleteImage(data._id)

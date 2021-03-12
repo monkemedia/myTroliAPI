@@ -2,10 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const MerchantSchema = new Schema({
-  type: {
-    type: String,
-    required: true
-  },
   email: {
     type: String,
     required: true

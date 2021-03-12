@@ -2,10 +2,6 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const ShippingZoneSchema = new Schema({
-  type: {
-    type: String,
-    required: true
-  },
   store_hash: {
     type: String,
     required: true

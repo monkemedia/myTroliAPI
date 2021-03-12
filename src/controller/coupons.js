@@ -12,7 +12,6 @@ const couponTypes = [
 const createCoupon = async (req, res) => {
   const data = req.body
   const {
-    type,
     name,
     code,
     coupon_type,
@@ -20,18 +19,6 @@ const createCoupon = async (req, res) => {
     enabled
   } = data
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'coupon') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!name) {
     return res.status(401).send({
@@ -138,19 +125,6 @@ const getCouponByCode = async (req, res) => {
 const updateCoupon = async (req, res) => {
   const couponId = req.params.couponId
   const data = req.body
-  const { type } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'coupon') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await Coupon.updateCoupon(couponId, data)

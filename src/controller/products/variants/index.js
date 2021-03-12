@@ -5,24 +5,11 @@ const Product = require('../../../models/product')
 const createProductVariant = async (req, res) => {
   const data = req.body
   const {
-    type,
     sku,
     option_values
   } = data
   const productId = req.params.productId
   const store_hash = req.params.storeHash
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-variant') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   if (!sku) {
     return res.status(401).send({
@@ -102,21 +89,8 @@ const getProductVariant = async (req, res) => {
 
 const updateProductVariant = async (req, res) => {
   const data = req.body
-  const { type } = data
   const productId = req.params.productId
   const variantId = req.params.variantId
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'product-variant') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     const product = {

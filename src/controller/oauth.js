@@ -9,19 +9,7 @@ const refreshTokenTime = '48hr'
 
 const refreshToken = async (req, res) => {
   try {
-    const { type, refresh_token } = req.body
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type !== 'refresh_token') {
-      return res.status(401).send({
-        message: 'Correct type is required'
-      })
-    }
+    const { refresh_token } = req.body
 
     if (!refresh_token) {
       return res.status(401).send({
@@ -72,7 +60,7 @@ const refreshToken = async (req, res) => {
 
 const accessToken = async (req, res) => {
   try {
-    const { type, email, password } = req.body
+    const { email, password } = req.body
 
     if (!email) {
       return res.status(401).send({
@@ -83,18 +71,6 @@ const accessToken = async (req, res) => {
     if (!password) {
       return res.status(401).send({
         message: 'Password is required'
-      })
-    }
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type !== 'merchant_credentials') {
-      return res.status(401).send({
-        message: 'Correct type is required'
       })
     }
 
@@ -124,7 +100,6 @@ const accessToken = async (req, res) => {
     await merchant.save()
 
     res.status(200).send({
-      type: 'merchant_credentials',
       expires_in: 3600,
       access_token: accessToken,
       merchant_id: merchant._id,
@@ -139,23 +114,11 @@ const accessToken = async (req, res) => {
 
 const resetToken = async (req, res) => {
   try {
-    const { type, email } = req.body
+    const { email } = req.body
 
     if (!email) {
       return res.status(401).send({
         message: 'Email is required'
-      })
-    }
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type !== 'reset_token') {
-      return res.status(401).send({
-        message: 'Correct type is required'
       })
     }
 
@@ -179,7 +142,6 @@ const resetToken = async (req, res) => {
     })
 
     res.status(200).send({
-      type: 'reset_token',
       reset_token: resetToken
     })
   } catch (err) {
@@ -189,7 +151,7 @@ const resetToken = async (req, res) => {
 
 const resetPassword = async (req, res) => {
   try {
-    const { type, password, reset_token } = req.body
+    const { password, reset_token } = req.body
 
     if (!password) {
       return res.status(401).send({
@@ -200,18 +162,6 @@ const resetPassword = async (req, res) => {
     if (!reset_token) {
       return res.status(401).send({
         message: 'Reset Token is required'
-      })
-    }
-
-    if (!type) {
-      return res.status(401).send({
-        message: 'Type is required'
-      })
-    }
-
-    if (type !== 'reset_password') {
-      return res.status(401).send({
-        message: 'Correct type is required'
       })
     }
 

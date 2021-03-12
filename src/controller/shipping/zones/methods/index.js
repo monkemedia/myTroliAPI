@@ -14,20 +14,6 @@ const createShippingMethod = async (req, res) => {
     shipping_zone_id: zoneId
   }
 
-  if (!data.type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  const validateType = conditions.some(condition => data.type.includes(condition))
-
-  if (!validateType) {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
-
   if (!data.name) {
     return res.status(401).send({
       message: 'Name is required'
@@ -77,20 +63,6 @@ const getShippingMethod = async (req, res) => {
 const updateShippingMethod = async (req, res) => {
   const data = req.body
   const methodId = req.params.methodId
-
-  if (!data.type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  const validateType = conditions.some(condition => data.type.includes(condition))
-
-  if (!validateType) {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await ShippingMethod.updateMethod(methodId, data)
