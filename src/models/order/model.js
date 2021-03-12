@@ -308,7 +308,7 @@ OrderSchema.statics.updateOrder = async (orderId, orderDetails) => {
 
     await Promise.all(promise)
   }
-  const orderResp = await order.updateOne({ id: orderId }, {
+  const orderResp = await Order.updateOne({ id: orderId }, {
     ...orderDetails,
     updated_at: Date.now()
   })

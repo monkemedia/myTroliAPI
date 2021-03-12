@@ -4,19 +4,7 @@ const emailTemplate = require('../../utils/emailTemplate')
 const createOrder = async (req, res) => {
   const data = req.body
   const store_hash = req.params.storeHash
-  const { type, line_items, billing_address, shipping_address, send_invoice } = data
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'order') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
+  const { line_items, billing_address, shipping_address, send_invoice } = data
 
   if (!line_items) {
     return res.status(401).send({
@@ -104,23 +92,12 @@ const getOrder = async (req, res) => {
 const updateOrder = async (req, res) => {
   const orderId = req.params.orderId
   const data = req.body
-  const { type, billing_address, status_id } = data
+  const { billing_address, status_id } = data
   const currentOrder = await Order.findOne({ id: req.params.orderId })
-
-  if (!type) {
-    return res.status(401).send({
-      message: 'Type is required'
-    })
-  }
-
-  if (type && type !== 'order') {
-    return res.status(401).send({
-      message: 'Correct type is required'
-    })
-  }
 
   try {
     await Order.updateOrder(orderId, data)
+
     const order = await Order.findOne({ id: orderId })
 
     if (currentOrder.status_id !== status_id) {
@@ -132,6 +109,7 @@ const updateOrder = async (req, res) => {
 
     res.status(200).send(order)
   } catch (err) {
+    console.log('err', err)
     res.status(400).send({ err: err.message || err })
   }
 }
