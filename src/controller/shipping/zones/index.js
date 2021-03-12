@@ -18,8 +18,7 @@ const createShippingZone = async (req, res) => {
         message: 'Zone already exists'
       })
     }
-
-    console.log('HERE')
+    delete data.country // Converting ISO to country is handled on backend
     const shippingZone = new ShippingZone({
       ...data,
       store_hash
@@ -57,6 +56,7 @@ const getShippingZone = async (req, res) => {
 const updateShippingZone = async (req, res) => {
   const data = req.body
   const zoneId = req.params.zoneId
+  delete data.country // Converting ISO to country is handled on backend
 
   try {
     await ShippingZone.updateZone(zoneId, data)
