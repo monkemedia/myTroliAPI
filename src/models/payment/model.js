@@ -128,8 +128,7 @@ paymentSchema.statics.createPayment = async (data) => {
       payment_intent_id: paymentIntent.id
     }
   } catch (err) {
-    console.log('ERROR BABT', errorHandler(422, err.raw.message))
-    throw errorHandler(422, err.raw.message)
+    throw errorHandler(422, { message: err.raw.message, code: err.code })
   }
 }
 
