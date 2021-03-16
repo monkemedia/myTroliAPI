@@ -3,7 +3,6 @@ const OrderSchema = require('./schema')
 const Product = require('../product')
 const ProductVariants = require('../product/variant')
 const AutoIncrement = require('mongoose-sequence')(mongoose)
-const { convertISOToCountry} = require('../../utils/helpers')
 
 OrderSchema.plugin(AutoIncrement, {
   inc_field: 'id',
@@ -59,9 +58,6 @@ async function stockLevelHandler (product) {
 OrderSchema.pre('save', async function (next) {
   const order = this
   const lineItems = order.line_items
-
-  order.billing_address.country = await convertISOToCountry(order.billing_address.country_code)
-  order.shipping_address.country = await convertISOToCountry(order.shipping_address.country_code)
 
   const promise = await lineItems.map(async orderProduct => {
     const productId = orderProduct.product_id
@@ -312,8 +308,7 @@ OrderSchema.statics.updateOrder = async (orderId, orderDetails) => {
 
     await Promise.all(promise)
   }
-  orderDetails.billing_address.country = await convertISOToCountry(orderDetails.billing_address.country_code)
-  orderDetails.shipping_address.country = await convertISOToCountry(orderDetails.shipping_address.country_code)
+
   const orderResp = await Order.updateOne({ id: orderId }, {
     ...orderDetails,
     updated_at: Date.now()

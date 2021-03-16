@@ -6,9 +6,6 @@ const ShippingZoneSchema = new Schema({
     type: String,
     required: true
   },
-  country: {
-    type: String
-  },
   country_code: {
     type: String,
     required: true
