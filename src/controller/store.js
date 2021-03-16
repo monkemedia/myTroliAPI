@@ -13,6 +13,7 @@ const getStore = async (req, res) => {
 const updateStore = async (req, res) => {
   const data = req.body
   const store_hash = req.params.storeHash
+  delete data.country // Converting ISO to country is handled on backend
 
   try {
     await Store.updateStore(data, store_hash)

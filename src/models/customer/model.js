@@ -101,9 +101,9 @@ CustomerSchema.statics.search = async ({ keyword, page, limit, store_hash }) => 
 }
 
 // Find customer by email address
-CustomerSchema.statics.findByEmail = async (email) => {
+CustomerSchema.statics.findByEmail = async ({ email, store_hash }) => {
   const customer = await Customer
-    .findOne({ email })
+    .findOne({ email, store_hash })
     .select('-password')
 
   return customer

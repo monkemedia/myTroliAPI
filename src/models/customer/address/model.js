@@ -1,15 +1,12 @@
 const mongoose = require('mongoose')
 const CustomerAddressSchema = require('./schema')
-const Country = require('../../country')
+const { convertISOToCountry} = require('../../../utils/helpers')
 
 // Convert country code to string
 CustomerAddressSchema.pre('save', async function (next) {
   const address = this
-  const countryCode = address.country_code
-  const countries = await Country.findCountries()
 
-  address.country = countries.find(country => country.country_iso === countryCode).country
-  console.log('address', address)
+  address.country = await convertISOToCountry(address.country_code)
   next()
 })
 
@@ -27,6 +24,7 @@ CustomerAddressSchema.statics.findCustomerAddress = async (addressId) => {
 
 // Update address
 CustomerAddressSchema.statics.updateCustomerAddress = async (addressId, addressDetails) => {
+  addressDetails.country = await convertISOToCountry(addressDetails.country_code)
   const address = await CustomerAddress.updateOne({ _id: addressId }, {
     ...addressDetails,
     updated_at: Date.now()
