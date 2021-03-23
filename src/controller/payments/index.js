@@ -163,6 +163,33 @@ const createPayment = async (req, res) => {
   }
 }
 
+const updateBankAccount = async (req, res) => {
+  const data = req.body
+  const accountId = req.params.accountId
+  const bankAccountId = req.params.bankAccountId
+
+  try {
+    const bankAccount = await Payment.updateBankAccount(accountId, bankAccountId, data)
+
+    res.status(200).send(bankAccount)
+  } catch (err) {
+    res.status(400).send(errorHandler(400, err))
+  }
+}
+
+const deleteBankAccount = async (req, res) => {
+  const accountId = req.params.accountId
+  const bankAccountId = req.params.bankAccountId
+
+  try {
+    const bankAccount = await Payment.deleteBankAccount(accountId, bankAccountId)
+
+    res.status(200).send(bankAccount)
+  } catch (err) {
+    res.status(400).send(errorHandler(400, err))
+  }
+}
+
 module.exports = {
   createAccount,
   updateAccount,
@@ -173,5 +200,7 @@ module.exports = {
   deletePerson,
   updatePerson,
   uploadFile,
-  createPayment
+  createPayment,
+  updateBankAccount,
+  deleteBankAccount
 }
