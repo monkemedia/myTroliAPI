@@ -12,7 +12,9 @@ const {
   deletePerson,
   updatePerson,
   uploadFile,
-  getPayment
+  getPayment,
+  updateBankAccount,
+  deleteBankAccount
 } = require('../controller/payments')
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
@@ -40,5 +42,10 @@ router.delete('/:storeHash/payments/accounts/:accountId/persons/:personId', auth
 router.post('/:storeHash/payments', auth, (req, res) => createPayment(req, res))
 // Get payment
 router.get('/:storeHash/payments/:paymentIntentId', auth, (req, res) => getPayment(req, res))
+
+// Update bank account
+router.put('/:storeHash/payments/accounts/:accountId/bank/:bankAccountId', auth, (req, res) => updateBankAccount(req, res))
+// Delete bank account
+router.delete('/:storeHash/payments/accounts/:accountId/bank/:bankAccountId', auth, (req, res) => deleteBankAccount(req, res))
 
 module.exports = router

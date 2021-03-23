@@ -132,6 +132,20 @@ paymentSchema.statics.createPayment = async (data) => {
   }
 }
 
+// Update bank account
+paymentSchema.statics.updateBankAccount = async (accountId, bankAccountId, data) => {  
+  const bank = await stripe.accounts.updateExternalAccount(accountId, bankAccountId, data)
+
+  return bank
+}
+
+// Delete bank account
+paymentSchema.statics.deleteBankAccount = async (accountId, bankAccountId) => {  
+  const bank = await stripe.accounts.deleteExternalAccount(accountId, bankAccountId)
+
+  return bank
+}
+
 const Payment = mongoose.model('Payment', paymentSchema)
 
 module.exports = Payment
