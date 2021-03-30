@@ -145,6 +145,7 @@ CustomerSchema.statics.getCount = async (store_hash) => {
 
 // Update customer
 CustomerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
+
   let { password } = customerDetails
   const savedPassword = await Customer.findOne({ _id: customerId }).select('password')
 
@@ -153,8 +154,10 @@ CustomerSchema.statics.updateCustomer = async (customerId, customerDetails) => {
   } else {
     password = await bcrypt.hash(password, 8)
   }
+
   delete customerDetails.store_credit
-  const customerResp = await customer.updateOne({ _id: customerId }, { ...customerDetails, password, updated_at: Date.now() })
+
+  const customerResp = await Customer.updateOne({ _id: customerId }, { ...customerDetails, password, updated_at: Date.now() })
   return customerResp
 }
 
